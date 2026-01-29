@@ -1,0 +1,4 @@
+#Thu Jan 22 11:04:43 CET 2026
+org.modelio.app.diagram.editor.OpenedDiagrams0='Diagramme de cas d'utilisation f2' {69bd976c-3cd2-4e9d-8f6c-e732f3759b8e} Standard.UseCaseDiagram
+org.modelio.app.diagram.editor.OpenedDiagrams1='Diagramme de s\u00E9quence \: Visualiser une photo' {e1a342f7-de1a-432e-8189-5914dce97239} Standard.SequenceDiagram
+org.modelio.app.diagram.editor.OpenedDiagrams2='Diagramme de s\u00E9quence  \: D\u00E9coder le signal' {09713710-8d06-44ab-806a-28dc877512f6} Standard.SequenceDiagram

@@ -119,31 +119,48 @@ void aprsfi::fetchApiData() {
 
 void aprsfi::onApiReply(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << "Erreur API:" << reply->errorString();
+        qWarning() << "Erreur reseau:" << reply->errorString();
         reply->deleteLater();
         return;
     }
 
+    // On lit la reponse
     QByteArray response = reply->readAll();
+
+    // ---------------------------------------------------------
+    // LE DETECTIVE : On affiche la reponse brute dans la console
+    qDebug() << "--- REPONSE BRUTE DE L'API ---";
+    qDebug() << response;
+    qDebug() << "-------------------------------";
+    // ---------------------------------------------------------
+
     QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
 
     if (jsonDoc.isObject()) {
         QJsonObject jsonObj = jsonDoc.object();
 
+        // Est-ce que le resultat est "ok" ?
         if (jsonObj.value("result").toString() == "ok") {
             QJsonArray entries = jsonObj.value("entries").toArray();
+
             if (!entries.isEmpty()) {
-                // On boucle pour traiter TOUS les indicatifs reçus (Multi-suivi)
+                qDebug() << "Succes : Nombre de positions trouvees =" << entries.size();
                 for (const QJsonValue &value : entries) {
                     QJsonObject entry = value.toObject();
                     insertIntoDatabase(entry);
                 }
-
-                // On avertit le site web une fois que tout est inséré
                 broadcastUpdate();
+            } else {
+                qWarning() << "L'API dit OK, mais le tableau 'entries' est completement vide !";
             }
+        } else {
+            // Si le resultat n'est pas "ok" (ex: Rate limit, mauvaise cle API)
+            qWarning() << "L'API a refuse la requete. Motif :" << jsonObj.value("description").toString();
         }
+    } else {
+        qWarning() << "Impossible de decoder le JSON renvoye par l'API.";
     }
+
     reply->deleteLater();
 }
 

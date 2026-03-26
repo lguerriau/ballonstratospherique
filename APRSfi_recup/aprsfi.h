@@ -11,9 +11,12 @@
 #include <QWebSocket>
 #include <QList>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class aprsfi; }
-QT_END_NAMESPACE
+// Nouveaux includes pour l'interface graphique
+#include <QTextEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 class aprsfi : public QWidget {
     Q_OBJECT
@@ -22,10 +25,8 @@ public:
     explicit aprsfi(QWidget *parent = nullptr);
     ~aprsfi();
 
-    // Fonction pour lancer toute la logique (à appeler depuis ton main.cpp)
-    void startBackend();
-
 private slots:
+    void startBackend(); // Devient un slot pour le bouton "Lancer"
     void fetchApiData();
     void onApiReply(QNetworkReply *reply);
     void onNewWebSocketConnection();
@@ -33,9 +34,18 @@ private slots:
     void socketDisconnected();
 
 private:
-    Ui::aprsfi *ui;
+    // --- Elements de l'interface graphique ---
+    QPushButton *btnStart;
+    QPushButton *btnForce;
+    QPushButton *btnQuit;
+    QTextEdit *logTerminal;
+    QTextEdit *apiTerminal;
 
-    // --- Les variables et méthodes de notre backend ---
+    // --- Fonction utilitaire pour ecrire dans le terminal UI ---
+    void logToUI(const QString &message);
+
+    // --- Variables du backend ---
+    void setupUI(); // Fonction pour construire l'interface
     void loadSettings();
     bool connectToDatabase();
     void insertIntoDatabase(const QJsonObject &entry);
@@ -53,6 +63,7 @@ private:
     int apiInterval;
     QString dbHost, dbUser, dbPass, dbName;
     int wsPort;
+    bool isBackendRunning; // Pour eviter de lancer 2 fois
 };
 
 #endif // APRSFI_H

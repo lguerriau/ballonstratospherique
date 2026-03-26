@@ -21,7 +21,7 @@ aprsfi::aprsfi(QWidget *parent) :
     setupUI(); // Construit l'interface graphique
 
     // Chemin absolu vers le config.ini
-    QString configPath = "/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetQT/APRSfi_recup/config.ini";
+    QString configPath = "/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/APRSfi_recup/config.ini";
     settings = new QSettings(configPath, QSettings::IniFormat, this);
 
     networkManager = new QNetworkAccessManager(this);
@@ -46,7 +46,7 @@ void aprsfi::setupUI() {
     // Layout principal vertical
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-    // --- 1. Zone des boutons (en haut) ---
+    // --- 1. Zone des boutons ---
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     btnStart = new QPushButton("Lancer le Serveur", this);
     btnForce = new QPushButton("Forcer une requete API", this);
@@ -58,17 +58,17 @@ void aprsfi::setupUI() {
     buttonLayout->addWidget(btnForce);
     buttonLayout->addWidget(btnQuit);
 
-    // --- 2. Zone des terminaux (en bas) ---
+    // --- 2. Zone des terminaux ---
     QHBoxLayout *terminalLayout = new QHBoxLayout();
 
-    // Terminal Log (Gauche)
+    // Terminal Log
     QVBoxLayout *logLayout = new QVBoxLayout();
     logLayout->addWidget(new QLabel("Logs du Programme :", this));
     logTerminal = new QTextEdit(this);
     logTerminal->setReadOnly(true);
     logLayout->addWidget(logTerminal);
 
-    // Terminal API (Droite)
+    // Terminal API
     QVBoxLayout *apiLayout = new QVBoxLayout();
     apiLayout->addWidget(new QLabel("Reponse API (Brute) :", this));
     apiTerminal = new QTextEdit(this);
@@ -136,7 +136,6 @@ void aprsfi::loadSettings() {
     apiKey = settings->value("API/apikey", "").toString();
     apiFormat = settings->value("API/format", "json").toString();
     apiInterval = settings->value("API/interval", 60000).toInt();
-
     dbHost = settings->value("Database/host", "172.18.58.85").toString();
     dbUser = settings->value("Database/username", "root").toString();
     dbPass = settings->value("Database/password", "toto").toString();
@@ -169,7 +168,7 @@ void aprsfi::fetchApiData() {
     query.addQueryItem("apikey", apiKey);
     query.addQueryItem("format", apiFormat);
     url.setQuery(query);
-    logToUI("URL envoyee : " + url.toString());
+
     QNetworkRequest request(url);
     QNetworkReply *reply = networkManager->get(request);
     connect(reply, &QNetworkReply::finished, this, [this, reply]() { onApiReply(reply); });
@@ -224,8 +223,9 @@ void aprsfi::onApiReply(QNetworkReply *reply) {
 
 void aprsfi::insertIntoDatabase(const QJsonObject &entry) {
     QString name = entry.value("name").toString();
-    QSqlQuery query(db);
 
+    // --- 1. Insertion dans HISTORIQUE (On garde absolument tout) ---
+    QSqlQuery query(db);
     query.prepare("INSERT INTO HISTORIQUE (name, type, time, lasttime, lat, lng, symbol, srccall, dstcall, phg, comment, path) "
                   "VALUES (:name, :type, :time, :lasttime, :lat, :lng, :symbol, :srccall, :dstcall, :phg, :comment, :path)");
 
@@ -246,25 +246,39 @@ void aprsfi::insertIntoDatabase(const QJsonObject &entry) {
         logToUI("Erreur SQL HISTORIQUE : " + query.lastError().text());
     }
 
-    QSqlQuery posQuery(db);
-    posQuery.prepare("UPDATE POSITION SET lat = :lat, lng = :lng, lasttime = :lasttime WHERE name = :name");
-    posQuery.bindValue(":lat", entry.value("lat").toString());
-    posQuery.bindValue(":lng", entry.value("lng").toString());
-    posQuery.bindValue(":lasttime", entry.value("lasttime").toString());
-    posQuery.bindValue(":name", name);
+    // --- 2. Mise à jour de POSITION (On remplace les anciennes par les nouvelles) ---
+    QSqlQuery checkQuery(db);
 
-    if (!posQuery.exec()) {
-        logToUI("Erreur SQL POSITION (Update) : " + posQuery.lastError().text());
-    } else {
-        if (posQuery.numRowsAffected() == 0) {
+    // On compte combien de fois cet indicatif apparaît dans la table
+    checkQuery.prepare("SELECT COUNT(*) FROM POSITION WHERE name = :name");
+    checkQuery.bindValue(":name", name);
+
+    if (checkQuery.exec() && checkQuery.next()) {
+        int exists = checkQuery.value(0).toInt();
+
+        QSqlQuery posQuery(db);
+
+        if (exists > 0) {
+            // L'indicatif existe déjà -> On Ecrase les anciennes données (UPDATE)
+            posQuery.prepare("UPDATE POSITION SET lat = :lat, lng = :lng, lasttime = :lasttime WHERE name = :name");
+        } else {
+            // L'indicatif n'existe pas encore -> On le crée (INSERT)
             posQuery.prepare("INSERT INTO POSITION (name, lat, lng, lasttime) VALUES (:name, :lat, :lng, :lasttime)");
-            posQuery.bindValue(":name", name);
-            posQuery.bindValue(":lat", entry.value("lat").toString());
-            posQuery.bindValue(":lng", entry.value("lng").toString());
-            posQuery.bindValue(":lasttime", entry.value("lasttime").toString());
-            if (!posQuery.exec()) logToUI("Erreur SQL POSITION (Insert) : " + posQuery.lastError().text());
         }
-        logToUI("BDD a jour pour " + name + " !");
+
+        // On attache les variables pour l'UPDATE ou l'INSERT
+        posQuery.bindValue(":name", name);
+        posQuery.bindValue(":lat", entry.value("lat").toString());
+        posQuery.bindValue(":lng", entry.value("lng").toString());
+        posQuery.bindValue(":lasttime", entry.value("lasttime").toString());
+
+        if (!posQuery.exec()) {
+            logToUI("Erreur SQL POSITION : " + posQuery.lastError().text());
+        } else {
+            logToUI("BDD a jour pour " + name + " ! (Position ecrasee/creee)");
+        }
+    } else {
+        logToUI("Erreur verification POSITION : " + checkQuery.lastError().text());
     }
 }
 

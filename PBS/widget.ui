@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>850</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Mission Control - Nacelle Alpha</string>
+  </property>
+  <property name="styleSheet">
+   <string>
+    /* Le fond : Espace profond */
+    /* --- STYLE GLOBAL --- */
+QWidget {
+    background-color: #0a0e14; /* Un gris-bleu très sombre, moins fatiguant que le noir pur */
+    color: #d1d1d1; /* Texte général blanc cassé pour la lisibilité */
+    font-family: 'Segoe UI', 'Consolas', monospace;
+    font-size: 10pt;
+}
+
+/* --- ONGLETS (TABS) --- */
+QTabWidget::pane {
+    border: 2px solid #1a2533;
+    top: -1px;
+    background-color: #0f141d;
+}
+
+QTabBar::tab {
+    background: #161b22;
+    color: #58a6ff; /* Bleu plus doux pour l'inactif */
+    padding: 10px 30px;
+    border: 1px solid #1a2533;
+    border-bottom: none;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background: #0f141d;
+    color: #00ffcc; /* Cyan néon pour l'actif */
+    border: 2px solid #00ffcc;
+    border-bottom: 2px solid #0f141d; /* Fusionne avec le panneau */
+    font-weight: bold;
+}
+
+/* --- CADRES DE DONNÉES (GROUPBOX) --- */
+QGroupBox {
+    border: 1px solid #1a2533;
+    border-top: 3px solid #00ffcc; /* Rappel HUD en haut */
+    border-radius: 5px;
+    margin-top: 20px;
+    background-color: #121922;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 10px;
+    color: #00ffcc;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* --- LABELS DE TÉLÉMÉTRIE --- */
+QLabel#lbl_val_rssi, QLabel#lbl_val_snr, QLabel#lbl_val_temp, QLabel#lbl_val_alt, QLabel#lbl_val_pression {
+    color: #ffffff; /* Données en blanc pur pour ressortir */
+    font-weight: bold;
+}
+
+/* --- TABLEAU (LOGS) --- */
+QTableWidget {
+    background-color: #0d1117;
+    alternate-background-color: #161b22; /* Lignes alternées pour la lecture */
+    gridline-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    selection-background-color: #00ffcc;
+    selection-color: #0a0e14;
+}
+
+QHeaderView::section {
+    background-color: #161b22;
+    color: #58a6ff;
+    padding: 6px;
+    border: 1px solid #30363d;
+    font-weight: bold;
+}
+
+/* --- BOUTONS --- */
+QPushButton {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #363b42;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #30363d;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+}
+
+QPushButton:pressed {
+    background-color: #00ffcc;
+    color: #0a0e14;
+}
+
+/* Bouton spécial "Compiler Vidéo" */
+QPushButton#btn_generer_video {
+    background-color: #3e1a1a;
+    color: #ff6666;
+    border: 1px solid #662222;
+}
+
+QPushButton#btn_generer_video:hover {
+    background-color: #662222;
+    color: white;
+}
+
+/* --- MENU DÉROULANT (COMBOBOX) --- */
+QComboBox {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 5px;
+    color: #c9d1d9;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_main">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_requetes">
+      <attribute name="title">
+       <string>TRANSMISSIONS</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_req">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_send">
+         <item>
+          <widget class="QComboBox" name="combo_requetes">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <item>
+            <property name="text">
+             <string>RÉCUPÉRER RSSI &amp; SNR</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_envoyer">
+           <property name="text">
+            <string>ÉMETTRE REQUÊTE</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="table_requetes">
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         </property>
+         <column>
+          <property name="text">
+           <string>HORODATAGE</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>REQUÊTE / RÉPONSE</string>
+          </property>
+          <property name="font">
+           <font>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>LATENCE (ms)</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_valeurs">
+      <attribute name="title">
+       <string>TÉLÉMÉTRIE CAPTEURS</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_valeurs">
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="group_pression">
+         <property name="title">
+          <string>PRESSION ATMOSPHÉRIQUE</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_val_pression">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>20</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>-- hPa</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="group_alt">
+         <property name="title">
+          <string>ALTITUDE RELATIVE</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_val_alt">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>20</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>-- m</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="group_temp">
+         <property name="title">
+          <string>TEMPÉRATURE INTÉRIEURE</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_val_temp">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>20</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>-- °C</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_images">
+      <attribute name="title">
+       <string>FLUX OPTIQUE</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_img">
+       <item>
+        <widget class="QGroupBox" name="group_last_img">
+         <property name="title">
+          <string>DERNIÈRE CAPTURE [ EN ATTENTE DU SIGNAL... ]</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_img_main">
+          <item>
+           <widget class="QLabel" name="lbl_image_principale">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="text">
+             <string>[ AUCUN SIGNAL VIDÉO DÉTECTÉ ]</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="group_prev_imgs">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>CACHE TAMPON (HISTORIQUE RÉCENT)</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_prev_img">
+          <item>
+           <widget class="QLabel" name="lbl_img_prev1">
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="text">
+             <string>IMG T-1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_img_prev2">
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="text">
+             <string>IMG T-2</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_img_prev3">
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="text">
+             <string>IMG T-3</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_generer_video">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>COMPILER SÉQUENCE VIDÉO</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

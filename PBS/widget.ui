@@ -16,111 +16,127 @@
   <property name="styleSheet">
    <string>
     /* Le fond : Espace profond */
-    QWidget {
-        background-color: #05080f;
-        color: #00ffcc; /* Cyan Néon pour la télémétrie */
-        font-family: 'Consolas', 'Courier New', monospace; /* Look console informatique */
-    }
+    /* --- STYLE GLOBAL --- */
+QWidget {
+    background-color: #0a0e14; /* Un gris-bleu très sombre, moins fatiguant que le noir pur */
+    color: #d1d1d1; /* Texte général blanc cassé pour la lisibilité */
+    font-family: 'Segoe UI', 'Consolas', monospace;
+    font-size: 10pt;
+}
 
-    /* Le conteneur principal */
-    QTabWidget::pane {
-        border: 1px solid #005577;
-        background: #0b0f19;
-    }
+/* --- ONGLETS (TABS) --- */
+QTabWidget::pane {
+    border: 2px solid #1a2533;
+    top: -1px;
+    background-color: #0f141d;
+}
 
-    /* Les onglets : Écrans de contrôle inactifs */
-    QTabBar::tab {
-        background: #05080f;
-        color: #0088aa;
-        padding: 8px 25px;
-        border: 1px solid #005577;
-        border-bottom: none;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        margin-right: 2px;
-    }
+QTabBar::tab {
+    background: #161b22;
+    color: #58a6ff; /* Bleu plus doux pour l'inactif */
+    padding: 10px 30px;
+    border: 1px solid #1a2533;
+    border-bottom: none;
+    margin-right: 2px;
+}
 
-    /* L'onglet actif : Écran allumé */
-    QTabBar::tab:selected {
-        background: #0b0f19;
-        color: #00ffcc;
-        border: 1px solid #00ffcc;
-        border-bottom: none;
-        font-weight: bold;
-    }
+QTabBar::tab:selected {
+    background: #0f141d;
+    color: #00ffcc; /* Cyan néon pour l'actif */
+    border: 2px solid #00ffcc;
+    border-bottom: 2px solid #0f141d; /* Fusionne avec le panneau */
+    font-weight: bold;
+}
 
-    /* Les cadres de données (Température, etc.) : Interface HUD */
-    QGroupBox {
-        border: 1px solid #0088aa;
-        border-radius: 4px;
-        margin-top: 15px;
-        background-color: rgba(11, 15, 25, 0.8);
-    }
-    QGroupBox::title {
-        subcontrol-origin: margin;
-        left: 10px;
-        padding: 0 5px;
-        color: #ffffff;
-        font-weight: bold;
-    }
+/* --- CADRES DE DONNÉES (GROUPBOX) --- */
+QGroupBox {
+    border: 1px solid #1a2533;
+    border-top: 3px solid #00ffcc; /* Rappel HUD en haut */
+    border-radius: 5px;
+    margin-top: 20px;
+    background-color: #121922;
+}
 
-    /* Les labels (Les valeurs elles-mêmes) */
-    QLabel {
-        color: #ffffff; /* Valeurs en blanc pour contraster avec le cyan */
-    }
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 10px;
+    color: #00ffcc;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
 
-    /* Les boutons : Panneaux d'activation */
-    QPushButton {
-        background-color: #003344;
-        color: #00ffcc;
-        border: 1px solid #0088aa;
-        border-radius: 3px;
-        padding: 8px 15px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    QPushButton:hover {
-        background-color: #005577;
-        border: 1px solid #00ffcc;
-        color: #ffffff;
-    }
+/* --- LABELS DE TÉLÉMÉTRIE --- */
+QLabel#lbl_val_rssi, QLabel#lbl_val_snr, QLabel#lbl_val_temp, QLabel#lbl_val_alt, QLabel#lbl_val_pression {
+    color: #ffffff; /* Données en blanc pur pour ressortir */
+    font-weight: bold;
+}
 
-    /* Bouton d'action principale (Vidéo) : Surcharge propulseur */
-    QPushButton#btn_generer_video {
-        background-color: #4a0011;
-        color: #ff3366;
-        border: 1px solid #aa0033;
-    }
-    QPushButton#btn_generer_video:hover {
-        background-color: #770022;
-        color: #ffffff;
-        border: 1px solid #ff3366;
-    }
+/* --- TABLEAU (LOGS) --- */
+QTableWidget {
+    background-color: #0d1117;
+    alternate-background-color: #161b22; /* Lignes alternées pour la lecture */
+    gridline-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    selection-background-color: #00ffcc;
+    selection-color: #0a0e14;
+}
 
-    /* Le tableau des requêtes : Journal de bord */
-    QTableWidget {
-        background-color: #020408;
-        gridline-color: #004466;
-        color: #aaddff;
-        border: 1px solid #005577;
-        selection-background-color: #005577;
-        selection-color: #ffffff;
-    }
-    QHeaderView::section {
-        background-color: #002233;
-        color: #00ffcc;
-        font-weight: bold;
-        border: 1px solid #004466;
-        padding: 4px;
-    }
-    
-    /* Combobox (Menu déroulant des requêtes) */
-    QComboBox {
-        background-color: #003344;
-        color: #00ffcc;
-        border: 1px solid #0088aa;
-        padding: 5px;
-    }
+QHeaderView::section {
+    background-color: #161b22;
+    color: #58a6ff;
+    padding: 6px;
+    border: 1px solid #30363d;
+    font-weight: bold;
+}
+
+/* --- BOUTONS --- */
+QPushButton {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #363b42;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #30363d;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+}
+
+QPushButton:pressed {
+    background-color: #00ffcc;
+    color: #0a0e14;
+}
+
+/* Bouton spécial "Compiler Vidéo" */
+QPushButton#btn_generer_video {
+    background-color: #3e1a1a;
+    color: #ff6666;
+    border: 1px solid #662222;
+}
+
+QPushButton#btn_generer_video:hover {
+    background-color: #662222;
+    color: white;
+}
+
+/* --- MENU DÉROULANT (COMBOBOX) --- */
+QComboBox {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 5px;
+    color: #c9d1d9;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
    </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_main">

@@ -15,11 +15,10 @@
   </property>
   <property name="styleSheet">
    <string>
-    /* Le fond : Espace profond */
     /* --- STYLE GLOBAL --- */
 QWidget {
-    background-color: #0a0e14; /* Un gris-bleu très sombre, moins fatiguant que le noir pur */
-    color: #d1d1d1; /* Texte général blanc cassé pour la lisibilité */
+    background-color: #0a0e14;
+    color: #d1d1d1;
     font-family: 'Segoe UI', 'Consolas', monospace;
     font-size: 10pt;
 }
@@ -33,7 +32,7 @@ QTabWidget::pane {
 
 QTabBar::tab {
     background: #161b22;
-    color: #58a6ff; /* Bleu plus doux pour l'inactif */
+    color: #58a6ff;
     padding: 10px 30px;
     border: 1px solid #1a2533;
     border-bottom: none;
@@ -42,16 +41,16 @@ QTabBar::tab {
 
 QTabBar::tab:selected {
     background: #0f141d;
-    color: #00ffcc; /* Cyan néon pour l'actif */
+    color: #00ffcc;
     border: 2px solid #00ffcc;
-    border-bottom: 2px solid #0f141d; /* Fusionne avec le panneau */
+    border-bottom: 2px solid #0f141d;
     font-weight: bold;
 }
 
 /* --- CADRES DE DONNÉES (GROUPBOX) --- */
 QGroupBox {
     border: 1px solid #1a2533;
-    border-top: 3px solid #00ffcc; /* Rappel HUD en haut */
+    border-top: 3px solid #00ffcc;
     border-radius: 5px;
     margin-top: 20px;
     background-color: #121922;
@@ -69,14 +68,14 @@ QGroupBox::title {
 
 /* --- LABELS DE TÉLÉMÉTRIE --- */
 QLabel#lbl_val_rssi, QLabel#lbl_val_snr, QLabel#lbl_val_temp, QLabel#lbl_val_alt, QLabel#lbl_val_pression {
-    color: #ffffff; /* Données en blanc pur pour ressortir */
+    color: #ffffff;
     font-weight: bold;
 }
 
 /* --- TABLEAU (LOGS) --- */
 QTableWidget {
     background-color: #0d1117;
-    alternate-background-color: #161b22; /* Lignes alternées pour la lecture */
+    alternate-background-color: #161b22;
     gridline-color: #21262d;
     color: #c9d1d9;
     border: 1px solid #30363d;
@@ -113,7 +112,6 @@ QPushButton:pressed {
     color: #0a0e14;
 }
 
-/* Bouton spécial "Compiler Vidéo" */
 QPushButton#btn_generer_video {
     background-color: #3e1a1a;
     color: #ff6666;
@@ -139,11 +137,11 @@ QComboBox::drop-down {
 }
    </string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_main">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_requetes">
       <attribute name="title">
@@ -184,6 +182,18 @@ QComboBox::drop-down {
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
          </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="horizontalHeaderCascadingSectionResizes">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>100</number>
+         </attribute>
+         <attribute name="horizontalHeaderHighlightSections">
+          <bool>true</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>HORODATAGE</string>
@@ -192,12 +202,6 @@ QComboBox::drop-down {
          <column>
           <property name="text">
            <string>REQUÊTE / RÉPONSE</string>
-          </property>
-          <property name="font">
-           <font>
-            <bold>false</bold>
-            <underline>false</underline>
-           </font>
           </property>
          </column>
          <column>
@@ -213,86 +217,134 @@ QComboBox::drop-down {
       <attribute name="title">
        <string>TÉLÉMÉTRIE CAPTEURS</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_valeurs">
-       <item row="0" column="1">
-        <widget class="QGroupBox" name="group_pression">
-         <property name="title">
-          <string>PRESSION ATMOSPHÉRIQUE</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QLabel" name="lbl_val_pression">
-            <property name="font">
-             <font>
-              <family>Consolas</family>
-              <pointsize>20</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>-- hPa</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QGroupBox" name="group_alt">
-         <property name="title">
-          <string>ALTITUDE RELATIVE</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QLabel" name="lbl_val_alt">
-            <property name="font">
-             <font>
-              <family>Consolas</family>
-              <pointsize>20</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>-- m</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QGroupBox" name="group_temp">
-         <property name="title">
-          <string>TEMPÉRATURE INTÉRIEURE</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QLabel" name="lbl_val_temp">
-            <property name="font">
-             <font>
-              <family>Consolas</family>
-              <pointsize>20</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>-- °C</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QGroupBox" name="group_temp_int">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>10</y>
+         <width>211</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>TEMPÉRATURE INTERNE</string>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lbl_val_temp_int">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>-- °C</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="group_pres">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>200</y>
+         <width>211</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>PRESSION ATMOSPHÉRIQUE</string>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lbl_val_pres">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>-- hPa</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="group_temp_ext">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>211</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>TEMPÉRATURE EXTERNE</string>
+       </property>
+       <layout class="QVBoxLayout" name="_2">
+        <item>
+         <widget class="QLabel" name="lbl_val_temp_ext">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>-- °C</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="group_humi">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>200</y>
+         <width>211</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>HUMIDITÉ</string>
+       </property>
+       <layout class="QVBoxLayout" name="_3">
+        <item>
+         <widget class="QLabel" name="lbl_val_hum">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>-- %</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_images">
       <attribute name="title">

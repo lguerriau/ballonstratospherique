@@ -4,6 +4,7 @@
 Ce projet consiste au développement d'un système autonome pour un ballon stratosphérique capable d'atteindre une altitude de 30 km. Il comprend une nacelle embarquée pour la capture de données scientifiques et d'images, ainsi qu'une station sol pour le suivi en temps réel et l'analyse post-vol.
 
 Le projet est réalisé dans le cadre du BTS CIEL (Cybersécurité, Informatique et réseaux, Électronique) au Lycée Touchard-Washington du Mans.
+
 🎯 Objectifs de la Mission
 
     Suivi en temps réel : Localisation précise du ballon via les liaisons radio LoRa et APRS.

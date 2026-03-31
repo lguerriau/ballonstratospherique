@@ -5,6 +5,10 @@
       <df name="include">
       </df>
       <df name="lib">
+        <df name="gestionLoRa">
+          <in>GestionLoRa.cpp</in>
+          <in>GestionLoRa.h</in>
+        </df>
         <df name="Message">
           <in>Message.cpp</in>
           <in>Message.h</in>

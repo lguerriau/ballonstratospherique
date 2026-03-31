@@ -2,6 +2,12 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
+      <df name="lib">
+        <df name="gestionLoRa">
+          <in>GestionLoRa.cpp</in>
+          <in>GestionLoRa.h</in>
+        </df>
+      </df>
       <in>platformio.ini</in>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -540,6 +546,10 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
+      <item path="lib/gestionLoRa/GestionLoRa.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="lib/gestionLoRa/GestionLoRa.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="platformio.ini" ex="false" tool="3" flavor2="0">
       </item>
     </conf>

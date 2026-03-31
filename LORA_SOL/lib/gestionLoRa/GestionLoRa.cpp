@@ -1,6 +1,11 @@
 #include "GestionLoRa.h"
 
 // Constructeur : Initialisation des variables par défaut
+//"F4KMN-9" (Callsign) : C'est l'identifiant de ta station (ton indicatif radio). Le -9 est souvent utilisé pour désigner une station mobile (comme ton ballon).
+//"APLT00" (Destination) : C'est un code standard APRS. Ici, il indique que les données sont envoyées via un système LoRa.
+//"WIDE1-1" (Path) : C'est le "chemin" de répétition. Cela dit aux autres stations relais : "Si vous recevez ce message, répétez-le une fois".
+//"F4KMN    " (Recipient) : C'est le destinataire par défaut. Note les espaces : la classe Message attend souvent un nom de 9 caractères. C'est la station au sol (ton PC/Qt) qui va filtrer ces messages.
+//"Hello" (Comment) : C'est le texte par défaut qui sera envoyé si tu ne le modifies pas avec setComment().
 GestionLoRa::GestionLoRa() 
     : mes("F4KMN-9", "APLT00", "WIDE1-1", "F4KMN    ", "Hello"),
       waitForAck(false), 
@@ -23,11 +28,27 @@ void GestionLoRa::begin() {
         while (true);
     }
 
-    LoRa.setSpreadingFactor(12);
-    LoRa.setSignalBandwidth(125000);
-    LoRa.setCodingRate4(5);
-    LoRa.enableCrc();
-    LoRa.setTxPower(20);
+// --- Configuration avancée de la modulation LoRa ---
+
+// Facteur d'étalement (SF) : 12 est le maximum. 
+// Plus il est élevé, plus la portée est grande et le signal robuste, mais le débit est plus lent.
+LoRa.setSpreadingFactor(12);
+
+// Largeur de bande (BW) : 125 kHz (standard). 
+// Une bande étroite augmente la sensibilité de réception au détriment de la vitesse.
+LoRa.setSignalBandwidth(125000);
+
+// Taux de codage (CR) : 4/5. 
+// Ajoute des bits de correction d'erreurs (1 bit pour 4 bits de données) pour lutter contre les interférences.
+LoRa.setCodingRate4(5);
+
+// Activation du contrôle d'intégrité (CRC). 
+// Permet de rejeter automatiquement les paquets de données corrompus pendant le vol.
+LoRa.enableCrc();
+
+// Puissance d'émission : 20 dBm (soit 100 mW). 
+// C'est la puissance maximale autorisée pour ce module pour garantir une portée maximale vers le sol.
+LoRa.setTxPower(20);
 }
 
 void GestionLoRa::process() {

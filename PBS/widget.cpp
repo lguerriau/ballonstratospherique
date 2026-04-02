@@ -7,7 +7,17 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    // 1. On s'assure que la table a bien 3 colonnes
+    ui->table_requetes->setColumnCount(3);
 
+    // 2. On configure la colonne du milieu (index 1) pour qu'elle s'étire
+    ui->table_requetes->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    ui->table_requetes->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->table_requetes->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Interactive);
+
+    // 3. (Optionnel) On donne une taille fixe aux deux autres
+    ui->table_requetes->setColumnWidth(0, 150);
+    ui->table_requetes->setColumnWidth(2, 150);
     // 1. Instanciation de notre nouvelle classe métier
     lora = new CommunicationLora(this);
 

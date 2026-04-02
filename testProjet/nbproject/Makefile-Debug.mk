@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/cam.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main2.o
 
 
 # C Compiler Flags
@@ -68,10 +68,10 @@ ${OBJECTDIR}/cam.o: cam.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/cam.o cam.cpp
 
-${OBJECTDIR}/main.o: main.cpp
+${OBJECTDIR}/main2.o: main2.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main2.o main2.cpp
 
 # Subprojects
 .build-subprojects:

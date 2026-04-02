@@ -14,7 +14,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>cam.cpp</itemPath>
-      <itemPath>main.cpp</itemPath>
+      <itemPath>main2.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -42,7 +42,7 @@
       </item>
       <item path="cam.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="main2.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -69,7 +69,7 @@
       </item>
       <item path="cam.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="main2.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

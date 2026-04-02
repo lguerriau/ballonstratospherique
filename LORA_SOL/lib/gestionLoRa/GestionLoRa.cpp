@@ -16,7 +16,8 @@ GestionLoRa::GestionLoRa()
 void GestionLoRa::begin() {
     pinMode(pinLED, OUTPUT);
     digitalWrite(pinLED, LOW);
-
+    Serial.begin(115200); 
+    delay(100); // Petit temps de stabilisation
     Serial.println(F("\n--- Gateway LoRa APRS Prête ---"));
 
     // Initialisation SPI et LoRa

@@ -25,9 +25,10 @@ private slots:
     // Slot qui sera connecté au signal "messageRecu" de ta classe CommunicationLora
     void lireDonneesSerie(const QString &message);
 
+
 private:
     Ui::Widget *ui;
-
+    void updateFlightStatus(const QString &status); // Méthode pour changer l'UI
     // Pointeur vers ton gestionnaire de communication LoRa
     CommunicationLora *lora;
 

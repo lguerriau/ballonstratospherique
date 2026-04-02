@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string>
-    /* --- STYLE GLOBAL --- */
+/* --- STYLE GLOBAL --- */
 QWidget {
     background-color: #0a0e14;
     color: #d1d1d1;
@@ -23,121 +23,62 @@ QWidget {
     font-size: 10pt;
 }
 
-/* --- ONGLETS (TABS) --- */
-QTabWidget::pane {
-    border: 2px solid #1a2533;
-    top: -1px;
-    background-color: #0f141d;
-}
-
-QTabBar::tab {
-    background: #161b22;
-    color: #58a6ff;
-    padding: 10px 30px;
-    border: 1px solid #1a2533;
-    border-bottom: none;
-    margin-right: 2px;
-}
-
-QTabBar::tab:selected {
-    background: #0f141d;
-    color: #00ffcc;
-    border: 2px solid #00ffcc;
-    border-bottom: 2px solid #0f141d;
+/* --- BANDEAU D'ÉTAT DYNAMIQUE --- */
+QLabel#lbl_status_vol {
+    padding: 10px;
     font-weight: bold;
+    font-size: 14pt;
+    color: white;
+    background-color: #1a2533; 
+    border-radius: 5px;
+    qproperty-alignment: 'AlignCenter';
 }
+QLabel#lbl_status_vol[status="ASCENSION"] { background-color: #007bff; }
+QLabel#lbl_status_vol[status="BURST"] { background-color: #ff0000; border: 2px solid white; }
+QLabel#lbl_status_vol[status="LANDING"] { background-color: #28a745; }
+
+/* --- ONGLETS (TABS) --- */
+QTabWidget::pane { border: 2px solid #1a2533; top: -1px; background-color: #0f141d; }
+QTabBar::tab { background: #161b22; color: #58a6ff; padding: 10px 30px; border: 1px solid #1a2533; border-bottom: none; margin-right: 2px; }
+QTabBar::tab:selected { background: #0f141d; color: #00ffcc; border: 2px solid #00ffcc; border-bottom: 2px solid #0f141d; font-weight: bold; }
 
 /* --- CADRES DE DONNÉES (GROUPBOX) --- */
-QGroupBox {
-    border: 1px solid #1a2533;
-    border-top: 3px solid #00ffcc;
-    border-radius: 5px;
-    margin-top: 20px;
-    background-color: #121922;
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 10px;
-    color: #00ffcc;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
+QGroupBox { border: 1px solid #1a2533; border-top: 3px solid #00ffcc; border-radius: 5px; margin-top: 20px; background-color: #121922; }
+QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 10px; color: #00ffcc; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
 
 /* --- LABELS DE TÉLÉMÉTRIE --- */
-QLabel#lbl_val_rssi, QLabel#lbl_val_snr, QLabel#lbl_val_temp, QLabel#lbl_val_alt, QLabel#lbl_val_pression {
-    color: #ffffff;
-    font-weight: bold;
-}
+QLabel#lbl_val_rssi, QLabel#lbl_val_snr, QLabel#lbl_val_temp_int, QLabel#lbl_val_temp_ext, QLabel#lbl_val_pres, QLabel#lbl_val_hum { color: #ffffff; font-weight: bold; }
 
 /* --- TABLEAU (LOGS) --- */
-QTableWidget {
-    background-color: #0d1117;
-    alternate-background-color: #161b22;
-    gridline-color: #21262d;
-    color: #c9d1d9;
-    border: 1px solid #30363d;
-    selection-background-color: #00ffcc;
-    selection-color: #0a0e14;
-}
-
-QHeaderView::section {
-    background-color: #161b22;
-    color: #58a6ff;
-    padding: 6px;
-    border: 1px solid #30363d;
-    font-weight: bold;
-}
+QTableWidget { background-color: #0d1117; alternate-background-color: #161b22; gridline-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; selection-background-color: #00ffcc; selection-color: #0a0e14; }
+QHeaderView::section { background-color: #161b22; color: #58a6ff; padding: 6px; border: 1px solid #30363d; font-weight: bold; }
 
 /* --- BOUTONS --- */
-QPushButton {
-    background-color: #21262d;
-    color: #c9d1d9;
-    border: 1px solid #363b42;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-weight: bold;
-}
-
-QPushButton:hover {
-    background-color: #30363d;
-    border: 1px solid #00ffcc;
-    color: #00ffcc;
-}
-
-QPushButton:pressed {
-    background-color: #00ffcc;
-    color: #0a0e14;
-}
-
-QPushButton#btn_generer_video {
-    background-color: #3e1a1a;
-    color: #ff6666;
-    border: 1px solid #662222;
-}
-
-QPushButton#btn_generer_video:hover {
-    background-color: #662222;
-    color: white;
-}
+QPushButton { background-color: #21262d; color: #c9d1d9; border: 1px solid #363b42; border-radius: 4px; padding: 8px 16px; font-weight: bold; }
+QPushButton:hover { background-color: #30363d; border: 1px solid #00ffcc; color: #00ffcc; }
+QPushButton:pressed { background-color: #00ffcc; color: #0a0e14; }
+QPushButton#btn_generer_video { background-color: #3e1a1a; color: #ff6666; border: 1px solid #662222; }
+QPushButton#btn_generer_video:hover { background-color: #662222; color: white; }
 
 /* --- MENU DÉROULANT (COMBOBOX) --- */
-QComboBox {
-    background-color: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 4px;
-    padding: 5px;
-    color: #c9d1d9;
-}
-
-QComboBox::drop-down {
-    border: none;
-}
+QComboBox { background-color: #161b22; border: 1px solid #30363d; border-radius: 4px; padding: 5px; color: #c9d1d9; }
+QComboBox::drop-down { border: none; }
    </string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QLabel" name="lbl_status_vol">
+     <property name="text">
+      <string>CHARGEMENT DU SYSTÈME...</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="status" stdset="0">
+      <string>ASCENSION</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -177,19 +118,16 @@ QComboBox::drop-down {
        <item>
         <widget class="QTableWidget" name="table_requetes">
          <property name="editTriggers">
-          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          <set>QAbstractItemView::NoEditTriggers</set>
          </property>
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
-         <attribute name="horizontalHeaderVisible">
-          <bool>true</bool>
-         </attribute>
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
          </attribute>
          <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>100</number>
+          <number>150</number>
          </attribute>
          <attribute name="horizontalHeaderHighlightSections">
           <bool>true</bool>
@@ -234,7 +172,6 @@ QComboBox::drop-down {
          <widget class="QLabel" name="lbl_val_temp_int">
           <property name="font">
            <font>
-            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -243,7 +180,7 @@ QComboBox::drop-down {
            <string>-- °C</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -266,7 +203,6 @@ QComboBox::drop-down {
          <widget class="QLabel" name="lbl_val_pres">
           <property name="font">
            <font>
-            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -275,7 +211,7 @@ QComboBox::drop-down {
            <string>-- hPa</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -293,12 +229,11 @@ QComboBox::drop-down {
        <property name="title">
         <string>TEMPÉRATURE EXTERNE</string>
        </property>
-       <layout class="QVBoxLayout" name="_2">
+       <layout class="QVBoxLayout">
         <item>
          <widget class="QLabel" name="lbl_val_temp_ext">
           <property name="font">
            <font>
-            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -307,7 +242,7 @@ QComboBox::drop-down {
            <string>-- °C</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -325,12 +260,11 @@ QComboBox::drop-down {
        <property name="title">
         <string>HUMIDITÉ</string>
        </property>
-       <layout class="QVBoxLayout" name="_3">
+       <layout class="QVBoxLayout">
         <item>
          <widget class="QLabel" name="lbl_val_hum">
           <property name="font">
            <font>
-            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -339,7 +273,7 @@ QComboBox::drop-down {
            <string>-- %</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -366,13 +300,13 @@ QComboBox::drop-down {
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="text">
              <string>[ AUCUN SIGNAL VIDÉO DÉTECTÉ ]</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -394,39 +328,39 @@ QComboBox::drop-down {
           <item>
            <widget class="QLabel" name="lbl_img_prev1">
             <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-1</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="lbl_img_prev2">
             <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-2</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="lbl_img_prev3">
             <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-3</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>

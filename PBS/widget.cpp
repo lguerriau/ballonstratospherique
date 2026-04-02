@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include <QDebug>
+#include <QMessageBox>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -85,5 +86,27 @@ void Widget::lireDonneesSerie(const QString &message)
 
         ui->table_requetes->setItem(lastRow, 1, new QTableWidgetItem("RES: " + affichageTableau));
         ui->table_requetes->setItem(lastRow, 2, new QTableWidgetItem(QString::number(ms)));
+    }
+}
+
+void Widget::updateFlightStatus(const QString &status)
+{
+    // 1. On change la propriété dynamique (utilisée par le QSS)
+    ui->lbl_status_vol->setProperty("status", status);
+
+    // 2. On force le rafraîchissement du style (Astuce indispensable)
+    ui->lbl_status_vol->style()->unpolish(ui->lbl_status_vol);
+    ui->lbl_status_vol->style()->polish(ui->lbl_status_vol);
+
+    // 3. On change uniquement le texte et les alertes bloquantes
+    if (status == "BURST") {
+        ui->lbl_status_vol->setText("⚠️ ÉCLATEMENT BALLON - CHUTE EN COURS ⚠️");
+        QMessageBox::critical(this, "ALERTE", "Le capteur a détecté un BURST !");
+    }
+    else if (status == "LANDING") {
+        ui->lbl_status_vol->setText("✅ NACELLE AU SOL");
+    }
+    else if (status == "ASCENSION") {
+        ui->lbl_status_vol->setText("🚀 ASCENSION EN COURS");
     }
 }

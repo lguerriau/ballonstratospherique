@@ -141,7 +141,7 @@ QComboBox::drop-down {
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_requetes">
       <attribute name="title">

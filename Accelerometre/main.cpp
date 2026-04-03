@@ -1,5 +1,5 @@
 /* * File:   main.cpp
- * Projet: Nacelle Alpha - Transmission UART vers ESP32 LoRa
+ * Projet: Nacelle Alpha - Transmission UART optimisée LoRa
  */
 
 #include <cstdlib>
@@ -8,7 +8,7 @@
 #include <chrono>
 #include <string>
 #include <wiringPi.h>
-#include <wiringSerial.h> // Indispensable pour la communication UART
+#include <wiringSerial.h>
 #include "MPU6050.h"
 
 using namespace std;
@@ -18,9 +18,6 @@ volatile bool flag_BURST = false;
 volatile bool flag_LANDING = false;
 bool simulationMode = false;
 
-// Variables pour ne pas spammer le port série avec le même statut
-string dernierStatutEnvoye = "";
-
 void callback_ZM(void);
 void callback_FF(void);
 
@@ -28,15 +25,13 @@ int main(int argc, char** argv) {
     int fd_serial;
 
     try {
-        cout << "--- Nacelle Alpha : Démarrage ---" << endl;
+        cout << "--- Nacelle Alpha : Démarrage (Mode Optimisé) ---" << endl;
 
         // --- INITIALISATION DU PORT SÉRIE (UART) ---
-        // /dev/serial0 est le port série par défaut sur Raspberry Pi
-        // 115200 est la vitesse (Baudrate), elle doit être identique sur ton ESP32 !
         if ((fd_serial = serialOpen("/dev/serial0", 115200)) < 0) {
             throw std::runtime_error("Impossible d'ouvrir le port série UART.");
         }
-        cout << "Port série UART ouvert avec succès (115200 bauds)." << endl;
+        cout << "Port série UART ouvert (115200 bauds)." << endl;
 
         // --- INITIALISATION DU CAPTEUR ---
         try {
@@ -46,50 +41,42 @@ int main(int argc, char** argv) {
             mpu.onFreeFall(callback_FF);      //
             mpu.onZeroMotion(callback_ZM);    //
             mpu.enableFreeFall(0x80, 1);      //
-            mpu.enableZeroMotion(0x05, 0xFF); 
-        } catch (const runtime_error &e) {    //
+            mpu.enableZeroMotion(0x05, 0xFF); //
+        } catch (const runtime_error &e) {
             cout << "Capteur absent, passage en mode SIMULATION." << endl;
             simulationMode = true;
         }
 
         // --- BOUCLE PRINCIPALE ---
         while (1) {
-            float az, temp;
+            float az;
 
-            // 1. Acquisition
+            // 1. Acquisition (uniquement l'axe Z)
             if (simulationMode) {
                 az = 1.0; 
-                temp = 18.5;
             } else {
-                az = mpu.getAccelZ();        //
-                temp = mpu.getTemperature(); //
+                az = mpu.getAccelZ(); //
             }
 
             // 2. Détermination du statut actuel
-            string statutActuel = "ASCENSION";
+            string statutActuel = "en vol";
             if (flag_LANDING) statutActuel = "LANDING";
             else if (flag_BURST) statutActuel = "BURST";
 
-            // 3. Envoi des Télémétries par UART vers l'ESP32
-            // L'ESP32 lira ces lignes avec Serial.readStringUntil('\n')
-            serialPrintf(fd_serial, "TEMP:%.2f\n", temp);
-            serialPrintf(fd_serial, "ACCELZ:%.2f\n", az);
+            // 3. Envoi des Télémétries brutes par UART vers l'ESP32
+            // Format ultra-court pour faciliter la création de la trame LoRa
+            serialPrintf(fd_serial, "Z:%.2f\n", az);
+            serialPrintf(fd_serial, "ST:%s\n", statutActuel.c_str());
 
-            // 4. Envoi du Flag de vol (Uniquement s'il change pour économiser la bande passante LoRa)
-            if (statutActuel != dernierStatutEnvoye) {
-                serialPrintf(fd_serial, "STATUS:%s\n", statutActuel.c_str());
-                cout << ">>> NOUVEAU STATUT TRANSMIS : " << statutActuel << " <<<" << endl;
-                dernierStatutEnvoye = statutActuel;
-            }
+            // Affichage console épuré pour le débogage local
+            cout << "Z:" << az << " | ST:" << statutActuel << endl;
 
-            cout << "Données envoyées à l'ESP32 -> Temp: " << temp << "°C | AccelZ: " << az << "g | Statut: " << statutActuel << endl;
-
-            // Pause de 1 seconde entre chaque trame (Standard APRS/LoRa)
+            // Pause de 1 seconde entre chaque cycle
             sleep(1); //
         }
 
     } catch (const exception &e) {
-        cout << "Erreur FATALE : " << e.what() << endl;
+        cout << "Erreur FATALE : " << e.what() << endl; //
     }
     
     serialClose(fd_serial);
@@ -97,5 +84,5 @@ int main(int argc, char** argv) {
 }
 
 // --- INTERRUPTIONS DU CAPTEUR ---
-void callback_ZM(void) { flag_LANDING = true; flag_BURST = false; }
-void callback_FF(void) { if (!flag_LANDING) flag_BURST = true; }
+void callback_ZM(void) { flag_LANDING = true; flag_BURST = false; } //
+void callback_FF(void) { if (!flag_LANDING) flag_BURST = true; } //

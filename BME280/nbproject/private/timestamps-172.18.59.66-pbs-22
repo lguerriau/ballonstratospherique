@@ -1,4 +1,4 @@
-#Fri Apr 03 11:11:46 CEST 2026
+#Fri Apr 03 12:28:14 CEST 2026
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/GestionLoRa.h=c1775133013068
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/Makefile=c1775142020169
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/HEAD=c1775137744350
@@ -18,7 +18,7 @@
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/hooks/push-to-checkout.sample=c1775137731158
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/hooks/sendemail-validate.sample=c1775137731162
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/hooks/update.sample=c1775137731178
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/index=c1775137745586
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/index=c1775210512068
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/info/exclude=c1775137731194
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/logs/HEAD=c1775137744358
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/logs/refs/heads/master=c1775137744358
@@ -423,9 +423,9 @@
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/gatewayLoRa.cpp=c1775133022932
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/i2c.cpp=c1775142016473
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/i2c.h=c1775142018605
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/main.cpp=c1775207135417
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-Debug.mk=c1775205125118
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-Release.mk=c1775205125142
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/main.cpp=c1775210595111
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-Debug.mk=c1775210512332
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-Release.mk=c1775210512356
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-impl.mk=c1774518469134
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Makefile-variables.mk=c1774518469198
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Package-Debug.bash=c1774518469162

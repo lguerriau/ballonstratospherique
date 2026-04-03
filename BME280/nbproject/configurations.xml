@@ -4,7 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>RadioLib/src/hal/RPi/PiHal.h</itemPath>
       <itemPath>bme280.h</itemPath>
       <itemPath>i2c.h</itemPath>
     </logicalFolder>
@@ -15,12 +14,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>RadioLib/src/Hal.cpp</itemPath>
-      <itemPath>RadioLib/src/Module.cpp</itemPath>
-      <itemPath>RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp</itemPath>
-      <itemPath>RadioLib/src/modules/SX127x/SX1278.cpp</itemPath>
-      <itemPath>RadioLib/src/modules/SX127x/SX127x.cpp</itemPath>
-      <itemPath>RadioLib/src/utils/Utils.cpp</itemPath>
       <itemPath>bme280.cpp</itemPath>
       <itemPath>i2c.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -65,29 +58,6 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RadioLib/src/Module.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RadioLib/src/hal/RPi/PiHal.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RadioLib/src/modules/SX127x/SX1278.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/modules/SX127x/SX127x.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/utils/Utils.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="bme280.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="bme280.h" ex="false" tool="3" flavor2="0">
@@ -119,29 +89,6 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RadioLib/src/Module.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RadioLib/src/hal/RPi/PiHal.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RadioLib/src/modules/SX127x/SX1278.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/modules/SX127x/SX127x.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="RadioLib/src/utils/Utils.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="bme280.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="bme280.h" ex="false" tool="3" flavor2="0">

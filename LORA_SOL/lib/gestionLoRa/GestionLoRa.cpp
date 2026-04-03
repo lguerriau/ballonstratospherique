@@ -53,35 +53,41 @@ LoRa.setTxPower(20);
 }
 
 void GestionLoRa::process() {
-    receiveLoRa(); // Écoute constante
-
-    // Gestion du Timeout d'ACK
-    if (waitForAck && (millis() - lastSentTime > ACK_TIMEOUT)) {
-        Serial.println(">>> [TIMEOUT] Pas d'ACK reçu pour l'ID " + lastSentMsgId);
-        waitForAck = false;
-        digitalWrite(pinLED, LOW);
-    }
-
-    // Gestion des commandes série (Qt)
+    // 1. On écoute en permanence s'il y a des données qui arrivent de la Raspberry Pi (via RX/TX)
     if (Serial.available() > 0) {
-        char input = Serial.read();
-        while(Serial.available() > 0) Serial.read(); 
+        
+        // On lit la ligne jusqu'au retour à la ligne envoyé par le serialPrintf de la Pi
+        String inputFromPi = Serial.readStringUntil('\n');
+        inputFromPi.trim(); // Nettoie les espaces ou caractères invisibles
 
-        if (input == 'm' || input == 't') {
+        // Si on a bien reçu quelque chose (ex: "Z:1.02" ou "ST:BURST")
+        if (inputFromPi.length() > 0) {
             digitalWrite(pinLED, HIGH);
-            if (input == 'm') mes.setComment(VALID_COMMAND);
-            else mes.setComment("Test message");
 
-            char* pdu = mes.getPduMes(true); 
-            lastSentMsgId = String(mes.getMessageId());
+            // 2. On injecte la donnée de la Pi dans le message APRS
+            mes.setComment(inputFromPi);
 
-            Serial.println("Envoi LoRa : " + String(pdu));
+            // 3. On génère la trame finale (PDU)
+            // On met 'false' pour l'ACK : en vol, la nacelle n'attend pas de confirmation 
+            // pour la télémétrie continue, elle "crache" ses données en aveugle.
+            char* pdu = mes.getPduMes(false); 
+
+            // (Optionnel) On renvoie l'info sur le port série pour le débogage
+            // Attention : La Pi va recevoir cette ligne, assure-toi qu'elle ne la traite pas comme une erreur.
+            // Serial.println("-> Transmission LoRa : " + String(pdu));
+
+            // 4. Émission radio
             sendLoRa(pdu, mes.getPduLength());
 
-            lastSentTime = millis();
-            waitForAck = true;
+            digitalWrite(pinLED, LOW);
         }
     }
+
+    // On garde l'écoute LoRa au cas où le sol veuille envoyer une commande (ex: forcer une action)
+    receiveLoRa(); 
+    
+    // Note : J'ai retiré la gestion du "waitForAck" ici pour la télémétrie courante, 
+    // car on ne veut pas bloquer l'ESP32 s'il n'entend pas le sol.
 }
 
 void GestionLoRa::sendLoRa(char* msg, int length) {
@@ -112,25 +118,24 @@ void GestionLoRa::receiveLoRa() {
         incoming += (char)LoRa.read();
     }
 
+    // Nettoyage de l'entête éventuelle
     if (incoming.length() >= 3 && incoming.startsWith("<")) {
         incoming = incoming.substring(3);
     }
 
-    // CAS 1 : ACK reçu
+    // --- CAS 1 : ACK (Accusé de réception) ---
+    // Si la nacelle nous confirme qu'elle a bien reçu un ordre du sol
     if (incoming.startsWith("ACK")) {
         int openBrace = incoming.indexOf('{');
         if (openBrace != -1) {
             String ackId = incoming.substring(openBrace + 1);
             if (waitForAck && ackId == lastSentMsgId) {
-                if (incoming.startsWith("ACK{")) {
-                    Serial.print("RSSI:");
-                    Serial.print(LoRa.packetRssi());
-                    Serial.print("|SNR:");
-                    Serial.println(LoRa.packetSnr());
-                } else {
-                    Serial.print(F(">>> [ERREUR DISTANTE] : "));
-                    Serial.println(incoming.substring(0, openBrace));
-                }
+                // On transmet les infos radio à Qt pour l'onglet "Transmissions"
+                Serial.print("RSSI:");
+                Serial.print(LoRa.packetRssi());
+                Serial.print("|SNR:");
+                Serial.println(LoRa.packetSnr());
+                
                 waitForAck = false;
                 digitalWrite(pinLED, LOW);
             }
@@ -138,26 +143,36 @@ void GestionLoRa::receiveLoRa() {
         return;
     }
 
-    // CAS 2 : Requête entrante
+    // --- CAS 2 : Télémétrie entrante (Depuis la Nacelle) ---
     int arrowIndex = incoming.indexOf('>');
-    int idIndex = incoming.lastIndexOf('{');
-    int colonIndex = incoming.lastIndexOf(':');
+    int idIndex = incoming.lastIndexOf('{');     // Trouve la fin du message (avant l'ID)
+    int colonIndex = incoming.lastIndexOf(':');  // Trouve le début du message utile
 
-    if (arrowIndex != -1 && idIndex != -1) {
+    // Si on a bien une trame APRS structurée
+    if (arrowIndex != -1 && colonIndex != -1) {
         String sender = incoming.substring(0, arrowIndex);
-        String command = incoming.substring(colonIndex + 1, idIndex);
-        command.trim();
-        String msgId = incoming.substring(idIndex + 1);
-
-        if (!sender.startsWith(AUTHORIZED_CALLSIGN)) {
-            sendAck(msgId, "ACK_CALL");
-            return;
-        }
-
-        if (command == VALID_COMMAND) {
-            sendAck(msgId, "ACK");
+        String command;
+        
+        // Extraction du message ("Z:1.02" ou "ST:BURST")
+        if (idIndex != -1 && idIndex > colonIndex) {
+            command = incoming.substring(colonIndex + 1, idIndex);
         } else {
-            sendAck(msgId, "ACK_CMD");
+            command = incoming.substring(colonIndex + 1);
+        }
+        command.trim();
+
+        // Vérification de sécurité : est-ce bien NOTRE nacelle ?
+        if (sender.startsWith(AUTHORIZED_CALLSIGN)) {
+            
+            // ---> LA LIGNE MAGIQUE POUR QT <---
+            // On envoie le texte pur ("Z:1.02") dans le câble USB
+            // La fonction lireDonneesSerie() de Qt va l'attraper instantanément !
+            Serial.println(command);
+            
+            // Si c'est une commande spécifique qui exige une réponse, on envoie un ACK
+            if (command == VALID_COMMAND) {
+                sendAck(incoming.substring(idIndex + 1), "ACK");
+            }
         }
     }
 }

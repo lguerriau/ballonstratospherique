@@ -1,14 +1,15 @@
 /* * File:   main.cpp
- * Projet: Nacelle Alpha - Transmission UART optimisée LoRa
+ * Projet: Nacelle Alpha - MPU6050 (Exportation par Fichiers)
  */
 
-#include <cstdlib>
 #include <iostream>
-#include <iomanip>
-#include <chrono>
+#include <fstream>
 #include <string>
-#include <wiringPi.h>
-#include <wiringSerial.h>
+#include <thread>
+#include <chrono>
+#include <iomanip>
+
+// Inclusion de ton fichier d'en-tête intact
 #include "MPU6050.h"
 
 using namespace std;
@@ -18,71 +19,66 @@ volatile bool flag_BURST = false;
 volatile bool flag_LANDING = false;
 bool simulationMode = false;
 
-void callback_ZM(void);
-void callback_FF(void);
+// Callbacks déclenchés par les interruptions matérielles du MPU6050
+void callback_ZM() { flag_LANDING = true; flag_BURST = false; }
+void callback_FF() { if (!flag_LANDING) flag_BURST = true; }
 
 int main(int argc, char** argv) {
-    int fd_serial;
+    cout << "--- Nacelle Alpha : Service Capteur MPU6050 ---" << endl;
 
+    // 1. Initialisation de ton capteur MPU6050
     try {
-        cout << "--- Nacelle Alpha : Démarrage (Mode Optimisé) ---" << endl;
-
-        // --- INITIALISATION DU PORT SÉRIE (UART) ---
-        if ((fd_serial = serialOpen("/dev/serial0", 115200)) < 0) {
-            throw std::runtime_error("Impossible d'ouvrir le port série UART.");
-        }
-        cout << "Port série UART ouvert (115200 bauds)." << endl;
-
-        // --- INITIALISATION DU CAPTEUR ---
-        try {
-            mpu.begin(0x69); //
-            simulationMode = false;
-            mpu.setDLPFMode(MPU6050::DLPF_5); //
-            mpu.onFreeFall(callback_FF);      //
-            mpu.onZeroMotion(callback_ZM);    //
-            mpu.enableFreeFall(0x80, 1);      //
-            mpu.enableZeroMotion(0x05, 0xFF); //
-        } catch (const runtime_error &e) {
-            cout << "Capteur absent, passage en mode SIMULATION." << endl;
-            simulationMode = true;
-        }
-
-        // --- BOUCLE PRINCIPALE ---
-        while (1) {
-            float az;
-
-            // 1. Acquisition (uniquement l'axe Z)
-            if (simulationMode) {
-                az = 1.0; 
-            } else {
-                az = mpu.getAccelZ(); //
-            }
-
-            // 2. Détermination du statut actuel
-            string statutActuel = "en vol";
-            if (flag_LANDING) statutActuel = "LANDING";
-            else if (flag_BURST) statutActuel = "BURST";
-
-            // 3. Envoi des Télémétries brutes par UART vers l'ESP32
-            // Format ultra-court pour faciliter la création de la trame LoRa
-            serialPrintf(fd_serial, "Z:%.2f\n", az);
-            serialPrintf(fd_serial, "ST:%s\n", statutActuel.c_str());
-
-            // Affichage console épuré pour le débogage local
-            cout << "Z:" << az << " | ST:" << statutActuel << endl;
-
-            // Pause de 1 seconde entre chaque cycle
-            sleep(1); //
-        }
-
-    } catch (const exception &e) {
-        cout << "Erreur FATALE : " << e.what() << endl; //
+        mpu.begin(0x69); // Appel à ta fonction begin
+        simulationMode = false;
+        
+        // Configuration du filtre et des interruptions avec tes méthodes existantes
+        mpu.setDLPFMode(MPU6050::DLPF_5);
+        mpu.onFreeFall(callback_FF);
+        mpu.onZeroMotion(callback_ZM);
+        mpu.enableFreeFall(0x80, 1);
+        mpu.enableZeroMotion(0x05, 0xFF);
+        
+        cout << "MPU6050 armé (0x69). Écriture des données dans /tmp/..." << endl;
+    } catch (const runtime_error &e) {
+        cout << "Capteur absent, passage en mode SIMULATION." << endl;
+        simulationMode = true;
     }
-    
-    serialClose(fd_serial);
+
+    // 2. Boucle principale de lecture et d'exportation
+    while (true) {
+        // A. Détermination du statut de vol d'après tes drapeaux
+        string statut = "en vol";
+        if (flag_LANDING) statut = "LANDING";
+        else if (flag_BURST) statut = "BURST";
+
+        // B. Lecture de l'accélération (ou valeur fixe si simulation)
+        float az = simulationMode ? 1.02 : mpu.getAccelZ();
+
+        // --- EXPORTATION DES DONNÉES DANS DES FICHIERS ---
+        // Le programme LoRa de ton camarade pourra lire ces fichiers à tout moment
+
+        // Écriture du statut de vol
+        std::ofstream fichierStatus("/tmp/mpu6050_status.txt", std::ios::trunc);
+        if (fichierStatus.is_open()) {
+            fichierStatus << statut;
+            fichierStatus.close();
+        } else {
+            cerr << "Erreur : Impossible d'écrire le fichier status." << endl;
+        }
+
+        // Écriture de l'accélération Z
+        std::ofstream fichierAccel("/tmp/mpu6050_accel_z.txt", std::ios::trunc);
+        if (fichierAccel.is_open()) {
+            fichierAccel << fixed << setprecision(2) << az;
+            fichierAccel.close();
+        }
+
+        // --- AFFICHAGE CONSOLE (Pour le débugging) ---
+        cout << "[MPU6050] Z: " << fixed << setprecision(2) << az << " g | Statut: " << statut << endl;
+
+        // Rafraîchissement des données toutes les 1 seconde
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+
     return 0;
 }
-
-// --- INTERRUPTIONS DU CAPTEUR ---
-void callback_ZM(void) { flag_LANDING = true; flag_BURST = false; } //
-void callback_FF(void) { if (!flag_LANDING) flag_BURST = true; } //

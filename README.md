@@ -80,7 +80,7 @@ Le dossier PBS/ contient l'application de la station sol développée avec Qt :
 
     PAIN Iako : Développement du module de télémesure et sauvegarde CSV.
 
-    BRANDS Noé : Interface utilisateur, communication LoRa et détection de chute/atterrissage.
+    BRANDS Noé : Interface utilisateur permettant l'envoi et la réception de requête, communication LoRa/Requêtes et détection de chute/atterrissage.
 
     KALO Harold : Transmission d'images SSTV, serveur Web et traitement vidéo.
 

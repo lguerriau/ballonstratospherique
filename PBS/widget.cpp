@@ -25,14 +25,24 @@ Widget::Widget(QWidget *parent)
     // 2. Connexion du signal (quand la classe LoRa reçoit un texte) vers notre slot (pour l'afficher)
     connect(lora, &CommunicationLora::messageRecu, this, &Widget::lireDonneesSerie);
 
-    // 3. Ouverture du port série
-    if (lora->ouvrirPort("/dev/ttyACM0")) {
-        qDebug() << "Port ouvert avec succès.";
-        ui->lbl_image_principale->setText("[ SYSTÈME CONNECTÉ ]");
-    } else {
-        qDebug() << "Échec de l'ouverture du port.";
-        ui->lbl_image_principale->setText("[ ERREUR DE CONNEXION AU PORT ]");
-    }
+
+    // --- OUVERTURE DU PORT (RETOUR AU ACM0) ---
+        if (lora->ouvrirPort("/dev/ttyACM0")) {
+            qDebug() << "✅ Port /dev/ttyACM0 ouvert !";
+
+            // On débloque le bandeau de chargement immédiatement
+            ui->lbl_status_vol->setProperty("status", "LANDING"); // Devient Vert
+            ui->lbl_status_vol->setText("SYSTÈME CONNECTÉ - PRÊT");
+        } else {
+            qDebug() << "❌ ÉCHEC : /dev/ttyACM0 introuvable ou verrouillé.";
+
+            ui->lbl_status_vol->setProperty("status", "BURST"); // Devient Rouge
+            ui->lbl_status_vol->setText("ERREUR PORT : /dev/ttyACM0");
+        }
+
+        // Rafraîchissement du style pour que la couleur change bien
+        ui->lbl_status_vol->style()->unpolish(ui->lbl_status_vol);
+        ui->lbl_status_vol->style()->polish(ui->lbl_status_vol);
 }
 
 Widget::~Widget()
@@ -73,7 +83,30 @@ void Widget::on_btn_envoyer_clicked()
 void Widget::lireDonneesSerie(const QString &message)
 {
     // Ce slot est appelé AUTOMATIQUEMENT quand la classe CommunicationLora émet "messageRecu"
+    // Nettoyage de la chaîne reçue (enlève les espaces et retours à la ligne)
+    QString msg = message.trimmed();
 
+    // 1. DÉTECTION DES FLAGS DE VOL (Déjà fait)
+    if (msg.startsWith("ST:")) {
+        QString flag = msg.split(":").last();
+        updateFlightStatus(flag);
+
+        // Log dans le tableau
+        int row = ui->table_requetes->rowCount();
+        ui->table_requetes->insertRow(row);
+        ui->table_requetes->setItem(row, 0, new QTableWidgetItem(QDateTime::currentDateTime().toString("HH:mm:ss")));
+        ui->table_requetes->setItem(row, 1, new QTableWidgetItem("ALERTE : " + flag));
+        return;
+    }
+
+    // 2. DÉTECTION DE L'ACCÉLÉRATION
+    if (msg.startsWith("Z:")) {
+        QString accel = msg.split(":").last();
+        // Note: Tu n'as pas de label "lbl_val_accel" dans ton .ui pour le moment.
+        // Tu peux soit l'ajouter sur Qt Designer, soit l'afficher dans les logs :
+        qDebug() << "Accélération Z reçue :" << accel << "g";
+        return;
+    }
     // 1. Mise à jour du tableau avec la réponse
     int lastRow = ui->table_requetes->rowCount() - 1;
     if (lastRow >= 0) {
@@ -106,7 +139,7 @@ void Widget::updateFlightStatus(const QString &status)
     else if (status == "LANDING") {
         ui->lbl_status_vol->setText("✅ NACELLE AU SOL");
     }
-    else if (status == "ASCENSION") {
+    else if (status == "en vol") {
         ui->lbl_status_vol->setText("🚀 ASCENSION EN COURS");
     }
 }

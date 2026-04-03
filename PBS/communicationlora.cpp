@@ -38,36 +38,35 @@ bool CommunicationLora::ouvrirPort(const QString &nomPort)
 void CommunicationLora::demandeRssiSnr()
 {
     if (portComLora.isOpen()) {
-        portComLora.write("m"); // 'm' est la lettre attendue par ta Gateway
+        portComLora.write("m"); // Envoie le caractère attendu
+        portComLora.flush();    // Force l'envoi immédiat sur le câble USB
         qDebug() << ">>> Commande 'm' envoyée au module LoRa.";
     } else {
-        qDebug() << ">>> ERREUR : Impossible d'envoyer, le port est fermé.";
+        qDebug() << ">>> ERREUR : Port fermé, impossible d'envoyer 'm'.";
     }
 }
 
 // --- Réception et Traitement des données ---
 void CommunicationLora::onReadyRead()
 {
+    // On extrait les données brutes
+    QByteArray rawData = portComLora.readAll();
+
+    // ---> LE MOUCHARD : Affiche TOUT ce qui arrive, lettre par lettre
+    qDebug() << "[USB BRUT] :" << rawData;
+
     // 1. On ajoute les nouveaux octets au bout du tampon
-    m_buffer.append(portComLora.readAll());
+    m_buffer.append(rawData);
 
     // 2. Tant qu'il y a un retour à la ligne (\n) dans le tampon
     while (m_buffer.contains('\n')) {
-        // On trouve la position du premier \n
         int pos = m_buffer.indexOf('\n');
-
-        // On extrait la ligne jusqu'à cette position
         QByteArray lineData = m_buffer.left(pos).trimmed();
-
-        // On supprime la ligne extraite du tampon (pour ne pas la traiter 2 fois)
         m_buffer.remove(0, pos + 1);
-
-        // On transforme en QString
         QString message = QString::fromUtf8(lineData);
 
         if (!message.isEmpty()) {
-            qDebug() << "<<< Message complet reçu :" << message;
-            // On envoie enfin la ligne ENTIÈRE au Widget
+            qDebug() << "<<< LIGNE COMPLÈTE :" << message;
             emit messageRecu(message);
         }
     }

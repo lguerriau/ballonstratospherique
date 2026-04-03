@@ -33,9 +33,9 @@ QLabel#lbl_status_vol {
     border-radius: 5px;
     qproperty-alignment: 'AlignCenter';
 }
-QLabel#lbl_status_vol[status="ASCENSION"] { background-color: #007bff; }
-QLabel#lbl_status_vol[status="BURST"] { background-color: #ff0000; border: 2px solid white; }
-QLabel#lbl_status_vol[status="LANDING"] { background-color: #28a745; }
+QLabel#lbl_status_vol[status=&quot;ASCENSION&quot;] { background-color: #007bff; }
+QLabel#lbl_status_vol[status=&quot;BURST&quot;] { background-color: #ff0000; border: 2px solid white; }
+QLabel#lbl_status_vol[status=&quot;LANDING&quot;] { background-color: #28a745; }
 
 /* --- ONGLETS (TABS) --- */
 QTabWidget::pane { border: 2px solid #1a2533; top: -1px; background-color: #0f141d; }
@@ -72,7 +72,7 @@ QComboBox::drop-down { border: none; }
       <string>CHARGEMENT DU SYSTÈME...</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
      <property name="status" stdset="0">
       <string>ASCENSION</string>
@@ -82,7 +82,7 @@ QComboBox::drop-down { border: none; }
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_requetes">
       <attribute name="title">
@@ -118,10 +118,10 @@ QComboBox::drop-down { border: none; }
        <item>
         <widget class="QTableWidget" name="table_requetes">
          <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
          </property>
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
          </property>
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
@@ -172,6 +172,7 @@ QComboBox::drop-down { border: none; }
          <widget class="QLabel" name="lbl_val_temp_int">
           <property name="font">
            <font>
+            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -180,7 +181,7 @@ QComboBox::drop-down { border: none; }
            <string>-- °C</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -203,6 +204,7 @@ QComboBox::drop-down { border: none; }
          <widget class="QLabel" name="lbl_val_pres">
           <property name="font">
            <font>
+            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -211,7 +213,7 @@ QComboBox::drop-down { border: none; }
            <string>-- hPa</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -234,6 +236,7 @@ QComboBox::drop-down { border: none; }
          <widget class="QLabel" name="lbl_val_temp_ext">
           <property name="font">
            <font>
+            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -242,7 +245,7 @@ QComboBox::drop-down { border: none; }
            <string>-- °C</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -265,6 +268,7 @@ QComboBox::drop-down { border: none; }
          <widget class="QLabel" name="lbl_val_hum">
           <property name="font">
            <font>
+            <family>Segoe UI</family>
             <pointsize>10</pointsize>
             <bold>true</bold>
            </font>
@@ -273,7 +277,7 @@ QComboBox::drop-down { border: none; }
            <string>-- %</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -300,13 +304,13 @@ QComboBox::drop-down { border: none; }
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::Shape::Box</enum>
             </property>
             <property name="text">
              <string>[ AUCUN SIGNAL VIDÉO DÉTECTÉ ]</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -328,39 +332,39 @@ QComboBox::drop-down { border: none; }
           <item>
            <widget class="QLabel" name="lbl_img_prev1">
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::Shape::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-1</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="lbl_img_prev2">
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::Shape::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-2</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="lbl_img_prev3">
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::Shape::Box</enum>
             </property>
             <property name="text">
              <string>IMG T-3</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>

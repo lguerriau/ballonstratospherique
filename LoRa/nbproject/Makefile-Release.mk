@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/7a03ee3f/bme280.o \
 	${OBJECTDIR}/_ext/7a03ee3f/i2c.o \
+	${OBJECTDIR}/_ext/d297970e/LM75.o \
 	${OBJECTDIR}/RadioLib/src/Hal.o \
 	${OBJECTDIR}/RadioLib/src/Module.o \
 	${OBJECTDIR}/RadioLib/src/modules/SX127x/SX1278.o \
@@ -79,6 +80,11 @@ ${OBJECTDIR}/_ext/7a03ee3f/i2c.o: ../BME280/i2c.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a03ee3f
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a03ee3f/i2c.o ../BME280/i2c.cpp
+
+${OBJECTDIR}/_ext/d297970e/LM75.o: ../LM75/LM75.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/d297970e
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d297970e/LM75.o ../LM75/LM75.cpp
 
 ${OBJECTDIR}/RadioLib/src/Hal.o: RadioLib/src/Hal.cpp
 	${MKDIR} -p ${OBJECTDIR}/RadioLib/src

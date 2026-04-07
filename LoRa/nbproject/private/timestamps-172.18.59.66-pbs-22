@@ -1,4 +1,4 @@
-#Fri Apr 03 12:26:15 CEST 2026
+#Fri Apr 03 15:54:15 CEST 2026
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/GestionLoRa.h=c1775133013068
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/Makefile=c1775142020169
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/RadioLib/.git/HEAD=c1775137744350
@@ -432,6 +432,7 @@
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/Package-Release.bash=c1774518469186
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/private/Makefile-variables.mk=c1774518469210
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/nbproject/project.xml=c1775139652390
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LM75/LM75.cpp=c1774519213138
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/Makefile=c1775142020169
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/.git/HEAD=c1775137744350
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/.git/config=c1775137744370
@@ -525,13 +526,15 @@
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/Hal.h=c1775142022937
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/Module.cpp=c1775142018069
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/Module.h=c1775142016777
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/RadioLib.h=c1775142023041
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/RadioLib.h=c1775224406503
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/TypeDef.h=c1775142016661
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/hal/Arduino/ArduinoHal.cpp=c1775142015017
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/hal/Arduino/ArduinoHal.h=c1775142015633
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/hal/RPi/PiHal.h=c1775142019457
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/hal/RPiPico/PicoHal.cpp=c1775142022981
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/hal/RPiPico/PicoHal.h=c1775142016449
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/modules/CC1101/CC1101.cpp=c1775142015749
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/modules/CC1101/CC1101.h=c1775142019069
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/modules/SX127x/SX1272.cpp=c1775142016953
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/modules/SX127x/SX1272.h=c1775142017797
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/modules/SX127x/SX1273.cpp=c1775142023061
@@ -557,9 +560,9 @@
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/utils/Utils.cpp=c1775142023669
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/src/utils/Utils.h=c1775142014885
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/RadioLib/uncrustify.cfg=c1775137745582
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/main.cpp=c1775211528999
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-Debug.mk=c1775211859883
-/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-Release.mk=c1775211125643
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/main.cpp=c1775224101175
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-Debug.mk=c1775222336499
+/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-Release.mk=c1775222336519
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-impl.mk=c1775209955780
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Makefile-variables.mk=c1775209955864
 /home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/LoRa/nbproject/Package-Debug.bash=c1775209955824

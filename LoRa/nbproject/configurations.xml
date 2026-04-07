@@ -14,6 +14,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>RadioLib/src/Hal.cpp</itemPath>
+      <itemPath>../LM75/LM75.cpp</itemPath>
       <itemPath>RadioLib/src/Module.cpp</itemPath>
       <itemPath>RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp</itemPath>
       <itemPath>RadioLib/src/modules/SX127x/SX1278.cpp</itemPath>
@@ -49,9 +50,10 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>../BME280/RadioLib/src</pElem>
-            <pElem>../BME280</pElem>
+            <pElem>RadioLib/src</pElem>
             <pElem>.</pElem>
+            <pElem>../BME280</pElem>
+            <pElem>../LM75</pElem>
           </incDir>
           <preprocessorList>
             <Elem>RADIOLIB_PLATFORM_PIHAL</Elem>
@@ -68,6 +70,8 @@
       <item path="../BME280/bme280.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../BME280/i2c.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../LM75/LM75.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -118,6 +122,8 @@
       <item path="../BME280/bme280.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../BME280/i2c.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../LM75/LM75.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
       </item>

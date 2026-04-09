@@ -27,7 +27,7 @@ PiHal* hal = new PiHal(0);
 // --- CONFIGURATION DES PINS (Numérotation BCM) ---
 // Utilisation des pins BCM pour éviter le conflit "Busy" sur la Pin 7 :
 // NSS: 8, DIO0: 4 (Correspond à la Pin physique 7), RST: 17, DIO1: 18
-SX1278 lora = new Module(hal, 8, 4, 17, 18);
+SX1278 lora = new Module(hal, RADIOLIB_NC, 4, 17, 18);
 
 // Fonction pour l'horodatage APRS (Format: MMDDhhmm en UTC)
 string getAPRSTimestamp() {

@@ -6,6 +6,8 @@
 //"WIDE1-1" (Path) : C'est le "chemin" de répétition. Cela dit aux autres stations relais : "Si vous recevez ce message, répétez-le une fois".
 //"F4KMN    " (Recipient) : C'est le destinataire par défaut. Note les espaces : la classe Message attend souvent un nom de 9 caractères. C'est la station au sol (ton PC/Qt) qui va filtrer ces messages.
 //"Hello" (Comment) : C'est le texte par défaut qui sera envoyé si tu ne le modifies pas avec setComment().
+
+// Constructeur : Initialisation des variables par défaut
 GestionLoRa::GestionLoRa() 
     : mes("F4KMN-9", "APLT00", "WIDE1-1", "F4KMN    ", "Hello"),
       waitForAck(false), 
@@ -17,7 +19,7 @@ void GestionLoRa::begin() {
     pinMode(pinLED, OUTPUT);
     digitalWrite(pinLED, LOW);
     Serial.begin(115200); 
-    delay(100); // Petit temps de stabilisation
+    delay(100);
     Serial.println(F("\n--- Gateway LoRa APRS Prête ---"));
 
     // Initialisation SPI et LoRa
@@ -29,65 +31,53 @@ void GestionLoRa::begin() {
         while (true);
     }
 
-// --- Configuration avancée de la modulation LoRa ---
-
-// Facteur d'étalement (SF) : 12 est le maximum. 
-// Plus il est élevé, plus la portée est grande et le signal robuste, mais le débit est plus lent.
-LoRa.setSpreadingFactor(12);
-
-// Largeur de bande (BW) : 125 kHz (standard). 
-// Une bande étroite augmente la sensibilité de réception au détriment de la vitesse.
-LoRa.setSignalBandwidth(125000);
-
-// Taux de codage (CR) : 4/5. 
-// Ajoute des bits de correction d'erreurs (1 bit pour 4 bits de données) pour lutter contre les interférences.
-LoRa.setCodingRate4(5);
-
-// Activation du contrôle d'intégrité (CRC). 
-// Permet de rejeter automatiquement les paquets de données corrompus pendant le vol.
-LoRa.enableCrc();
-
-// Puissance d'émission : 20 dBm (soit 100 mW). 
-// C'est la puissance maximale autorisée pour ce module pour garantir une portée maximale vers le sol.
-LoRa.setTxPower(20);
+    // --- Configuration avancée de la modulation LoRa ---
+    LoRa.setSpreadingFactor(12);
+    LoRa.setSignalBandwidth(125000);
+    LoRa.setCodingRate4(5);
+    LoRa.enableCrc();
+    LoRa.setTxPower(20);
 }
 
 void GestionLoRa::process() {
-    // 1. On écoute en permanence s'il y a des données qui arrivent de la Raspberry Pi (via RX/TX)
+    receiveLoRa(); // Écoute constante de la radio
+
+    // --- GESTION DES REQUÊTES DEPUIS L'INTERFACE QT ---
     if (Serial.available() > 0) {
+        char input = Serial.read();
         
-        // On lit la ligne jusqu'au retour à la ligne envoyé par le serialPrintf de la Pi
-        String inputFromPi = Serial.readStringUntil('\n');
-        inputFromPi.trim(); // Nettoie les espaces ou caractères invisibles
+        // On vide le surplus pour éviter les bugs de lecture
+        while(Serial.available() > 0) Serial.read(); 
 
-        // Si on a bien reçu quelque chose (ex: "Z:1.02" ou "ST:BURST")
-        if (inputFromPi.length() > 0) {
-            digitalWrite(pinLED, HIGH);
+        // A. COMMANDES RÉELLES (Envoi LoRa vers la Nacelle)
+        if (input == 'm' || input == 't') {
+            digitalWrite(pinLED, HIGH); 
+            
+            if (input == 'm') mes.setComment(VALID_COMMAND); 
+            else mes.setComment("Test message"); 
 
-            // 2. On injecte la donnée de la Pi dans le message APRS
-            mes.setComment(inputFromPi);
+            char* pdu = mes.getPduMes(true); 
+            lastSentMsgId = String(mes.getMessageId()); 
 
-            // 3. On génère la trame finale (PDU)
-            // On met 'false' pour l'ACK : en vol, la nacelle n'attend pas de confirmation 
-            // pour la télémétrie continue, elle "crache" ses données en aveugle.
-            char* pdu = mes.getPduMes(false); 
+            Serial.println("LOG:Envoi de requête : " + String(pdu)); 
+            sendLoRa(pdu, mes.getPduLength()); 
 
-            // (Optionnel) On renvoie l'info sur le port série pour le débogage
-            // Attention : La Pi va recevoir cette ligne, assure-toi qu'elle ne la traite pas comme une erreur.
-            // Serial.println("-> Transmission LoRa : " + String(pdu));
-
-            // 4. Émission radio
-            sendLoRa(pdu, mes.getPduLength());
-
-            digitalWrite(pinLED, LOW);
+            lastSentTime = millis(); 
+            waitForAck = true; 
         }
+        
+        // B. COMMANDES DE SIMULATION (Pour tester Qt sans faire voler le ballon)
+        else if (input == 'e') { Serial.println("ST:en vol"); } 
+        else if (input == 'b') { Serial.println("ST:BURST"); } 
+        else if (input == 'l') { Serial.println("ST:LANDING"); }
     }
 
-    // On garde l'écoute LoRa au cas où le sol veuille envoyer une commande (ex: forcer une action)
-    receiveLoRa(); 
-    
-    // Note : J'ai retiré la gestion du "waitForAck" ici pour la télémétrie courante, 
-    // car on ne veut pas bloquer l'ESP32 s'il n'entend pas le sol.
+    // Gestion du Timeout
+    if (waitForAck && (millis() - lastSentTime > ACK_TIMEOUT)) { 
+        Serial.println("LOG:[TIMEOUT] Pas de réponse de la nacelle."); 
+        waitForAck = false; 
+        digitalWrite(pinLED, LOW); 
+    }
 }
 
 void GestionLoRa::sendLoRa(char* msg, int length) {
@@ -104,9 +94,6 @@ void GestionLoRa::sendAck(String msgId, String status) {
     char pduAck[ackMsg.length() + 1];
     ackMsg.toCharArray(pduAck, sizeof(pduAck));
     sendLoRa(pduAck, strlen(pduAck));
-    
-    Serial.print(F(">>> Réponse envoyée : "));
-    Serial.println(ackMsg);
 }
 
 void GestionLoRa::receiveLoRa() {
@@ -118,24 +105,19 @@ void GestionLoRa::receiveLoRa() {
         incoming += (char)LoRa.read();
     }
 
-    // Nettoyage de l'entête éventuelle
     if (incoming.length() >= 3 && incoming.startsWith("<")) {
         incoming = incoming.substring(3);
     }
 
-    // --- CAS 1 : ACK (Accusé de réception) ---
-    // Si la nacelle nous confirme qu'elle a bien reçu un ordre du sol
+    // --- CAS 1 : RÉCEPTION D'UN ACK ---
     if (incoming.startsWith("ACK")) {
         int openBrace = incoming.indexOf('{');
         if (openBrace != -1) {
             String ackId = incoming.substring(openBrace + 1);
             if (waitForAck && ackId == lastSentMsgId) {
-                // On transmet les infos radio à Qt pour l'onglet "Transmissions"
-                Serial.print("RSSI:");
-                Serial.print(LoRa.packetRssi());
-                Serial.print("|SNR:");
-                Serial.println(LoRa.packetSnr());
-                
+                // Envoi du RSSI/SNR à Qt
+                String reponse = "RSSI:" + String(LoRa.packetRssi()) + "|SNR:" + String(LoRa.packetSnr());
+                Serial.println(reponse);
                 waitForAck = false;
                 digitalWrite(pinLED, LOW);
             }
@@ -143,34 +125,56 @@ void GestionLoRa::receiveLoRa() {
         return;
     }
 
-    // --- CAS 2 : Télémétrie entrante (Depuis la Nacelle) ---
+    // --- CAS 2 : RÉCEPTION DE TÉLÉMÉTRIE (Nacelle -> Sol) ---
     int arrowIndex = incoming.indexOf('>');
-    int idIndex = incoming.lastIndexOf('{');     // Trouve la fin du message (avant l'ID)
-    int colonIndex = incoming.lastIndexOf(':');  // Trouve le début du message utile
-
-    // Si on a bien une trame APRS structurée
-    if (arrowIndex != -1 && colonIndex != -1) {
+    
+    if (arrowIndex != -1) {
         String sender = incoming.substring(0, arrowIndex);
-        String command;
         
-        // Extraction du message ("Z:1.02" ou "ST:BURST")
-        if (idIndex != -1 && idIndex > colonIndex) {
-            command = incoming.substring(colonIndex + 1, idIndex);
-        } else {
-            command = incoming.substring(colonIndex + 1);
-        }
-        command.trim();
-
-        // Vérification de sécurité : est-ce bien NOTRE nacelle ?
+        // Sécurité : Est-ce bien notre nacelle ?
         if (sender.startsWith(AUTHORIZED_CALLSIGN)) {
             
-            // ---> LA LIGNE MAGIQUE POUR QT <---
-            // On envoie le texte pur ("Z:1.02") dans le câble USB
-            // La fonction lireDonneesSerie() de Qt va l'attraper instantanément !
-            Serial.println(command);
-            
-            // Si c'est une commande spécifique qui exige une réponse, on envoie un ACK
-            if (command == VALID_COMMAND) {
+            // 1. EXTRACTION DU FLAG DE VOL MPU6050
+            // On cherche la balise ":ST:" qu'on a ajoutée dans le code de la nacelle
+            int stIndex = incoming.indexOf(":ST:");
+            if (stIndex != -1) {
+                String statut = incoming.substring(stIndex + 4);
+                int braceIndex = statut.indexOf('{'); // Retire l'ID de message s'il y en a un
+                if (braceIndex != -1) statut = statut.substring(0, braceIndex);
+                statut.trim();
+                
+                // Envoie à Qt sous le format "ST:BURST"
+                Serial.println("ST:" + statut);
+            }
+
+            // 2. EXTRACTION DE LA MÉTÉO BME280 (Format APRS)
+            // L'APRS météo commence par '_'
+            int weatherStart = incoming.indexOf('_');
+            if (weatherStart != -1) {
+                int tIndex = incoming.indexOf('t', weatherStart);
+                int hIndex = incoming.indexOf('h', weatherStart);
+                int bIndex = incoming.indexOf('b', weatherStart);
+                
+                if (tIndex != -1 && hIndex != -1 && bIndex != -1) {
+                    String tempF = incoming.substring(tIndex + 1, tIndex + 4);
+                    String hum   = incoming.substring(hIndex + 1, hIndex + 3);
+                    String press = incoming.substring(bIndex + 1, bIndex + 6);
+                    
+                    // Conversion Fahrenheit -> Celsius
+                    float tempC = (tempF.toFloat() - 32.0) * 5.0 / 9.0;
+                    // Conversion de la pression (ex: 10130 -> 1013.0 hPa)
+                    float pressHpa = press.toFloat() / 10.0;
+
+                    // Envoi à Qt
+                    Serial.println("TEMP_EXT:" + String(tempC, 1));
+                    Serial.println("HUM:" + hum);
+                    Serial.println("PRES:" + String(pressHpa, 1));
+                }
+            }
+
+            // 3. RÉPONSE AUTOMATIQUE (ACK) SI REQUÊTE
+            int idIndex = incoming.lastIndexOf('{');
+            if (incoming.indexOf(VALID_COMMAND) != -1 && idIndex != -1) {
                 sendAck(incoming.substring(idIndex + 1), "ACK");
             }
         }

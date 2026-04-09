@@ -9,6 +9,7 @@
         <group>
             <file>file:/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/main.cpp</file>
             <file>file:/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/bme280.cpp</file>
+            <file>file:/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/BME280/i2c.h</file>
         </group>
     </open-files>
 </project-private>

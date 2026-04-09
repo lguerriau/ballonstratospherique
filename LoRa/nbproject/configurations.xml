@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>RadioLib/src/hal/RPi/PiHal.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>RadioLib/src/Hal.cpp</itemPath>
+      <itemPath>../LM75/LM75.cpp</itemPath>
+      <itemPath>RadioLib/src/Module.cpp</itemPath>
+      <itemPath>RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp</itemPath>
+      <itemPath>RadioLib/src/modules/SX127x/SX1278.cpp</itemPath>
+      <itemPath>RadioLib/src/modules/SX127x/SX127x.cpp</itemPath>
+      <itemPath>RadioLib/src/utils/Utils.cpp</itemPath>
+      <itemPath>../BME280/bme280.cpp</itemPath>
+      <itemPath>../BME280/i2c.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>RadioLib</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>RadioLib/src</pElem>
+            <pElem>.</pElem>
+            <pElem>../BME280</pElem>
+            <pElem>../LM75</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>RADIOLIB_PLATFORM_PIHAL</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lpthread</linkerOptionItem>
+            <linkerOptionItem>-lgpiod</linkerOptionItem>
+            <linkerOptionItem>-llgpio</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../BME280/bme280.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../BME280/i2c.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../LM75/LM75.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/Module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/hal/RPi/PiHal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RadioLib/src/modules/SX127x/SX1278.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/modules/SX127x/SX127x.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/utils/Utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../BME280/bme280.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../BME280/i2c.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../LM75/LM75.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/Hal.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/Module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RadioLib/src/hal/RPi/PiHal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RadioLib/src/modules/SX127x/SX1278.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/modules/SX127x/SX127x.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="RadioLib/src/utils/Utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

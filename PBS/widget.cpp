@@ -82,11 +82,10 @@ void Widget::on_btn_envoyer_clicked()
 
 void Widget::lireDonneesSerie(const QString &message)
 {
-    // Ce slot est appelé AUTOMATIQUEMENT quand la classe CommunicationLora émet "messageRecu"
-    // Nettoyage de la chaîne reçue (enlève les espaces et retours à la ligne)
+    // Nettoyage de la chaîne reçue
     QString msg = message.trimmed();
 
-    // 1. DÉTECTION DES FLAGS DE VOL (Déjà fait)
+    // 1. DÉTECTION DES FLAGS DE VOL (MPU6050 - TA PARTIE)
     if (msg.startsWith("ST:")) {
         QString flag = msg.split(":").last();
         updateFlightStatus(flag);
@@ -99,21 +98,24 @@ void Widget::lireDonneesSerie(const QString &message)
         return;
     }
 
-    // 2. DÉTECTION DE L'ACCÉLÉRATION
+    // 2. DÉTECTION DE L'ACCÉLÉRATION Z (MPU6050 - TA PARTIE)
     if (msg.startsWith("Z:")) {
         QString accel = msg.split(":").last();
-        // Note: Tu n'as pas de label "lbl_val_accel" dans ton .ui pour le moment.
-        // Tu peux soit l'ajouter sur Qt Designer, soit l'afficher dans les logs :
         qDebug() << "Accélération Z reçue :" << accel << "g";
         return;
     }
-    // 1. Mise à jour du tableau avec la réponse
+
+    // Si c'est de la météo (TEMP, HUM, PRES) envoyée par la Gateway, on l'ignore silencieusement.
+    if (msg.startsWith("TEMP_EXT:") || msg.startsWith("HUM:") || msg.startsWith("PRES:")) {
+        return;
+    }
+
+    // 3. RÉPONSES AUX REQUÊTES LORA (RSSI / SNR)
+    // Si on arrive ici, c'est la réponse à notre bouton d'émission
     int lastRow = ui->table_requetes->rowCount() - 1;
     if (lastRow >= 0) {
-        // On calcule le temps écoulé depuis le clic
         qint64 ms = timerLatence.elapsed();
 
-        // Remplacement des '|' par des espaces pour un affichage plus joli dans le tableau
         QString affichageTableau = message;
         affichageTableau.replace("|", " | ");
 

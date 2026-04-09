@@ -410,7 +410,7 @@ void MPU6050::calibrateA() {
         setAccelOffset(ox, oy, oz);
 
         meansensorsA(100, ax, ay, az);
-        cout << "i  " << i << " => " << ax << " , " << ay << " , " << az << endl;
+        cout <<"\r"<< "i  " << i << " => " << ax << " , " << ay << " , " << az << endl;
 
         if (ax > 8 || ax < -8)
             ox = ox - ax / 8;

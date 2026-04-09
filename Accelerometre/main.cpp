@@ -1,6 +1,4 @@
-/* * File:   main.cpp
- * Projet: Nacelle Alpha - MPU6050 (Exportation par Fichiers)
- */
+/* * File:   main.cpp - MPU6050 v5 (Logique 100% logicielle sur Axe Z) */
 
 #include <iostream>
 #include <fstream>
@@ -8,77 +6,82 @@
 #include <thread>
 #include <chrono>
 #include <iomanip>
-
-// Inclusion de ton fichier d'en-tête intact
+#include <cmath> // Pour la valeur absolue abs()
 #include "MPU6050.h"
 
 using namespace std;
 
-// --- FLAGS DE VOL ---
-volatile bool flag_BURST = false;
-volatile bool flag_LANDING = false;
+// --- LES 4 ÉTATS DU VOL ---
+enum EtatVol { AU_SOL, ASCENSION, BURST, LANDING };
+EtatVol etatActuel = AU_SOL; 
 bool simulationMode = false;
 
-// Callbacks déclenchés par les interruptions matérielles du MPU6050
-void callback_ZM() { flag_LANDING = true; flag_BURST = false; }
-void callback_FF() { if (!flag_LANDING) flag_BURST = true; }
-
 int main(int argc, char** argv) {
-    cout << "--- Nacelle Alpha : Service Capteur MPU6050 ---" << endl;
+    cout << "--- Nacelle Alpha : Service MPU6050 (Logique Axe Z) ---" << endl;
 
-    // 1. Initialisation de ton capteur MPU6050
     try {
-        mpu.begin(0x69); // Appel à ta fonction begin
+        mpu.begin(0x69);
         simulationMode = false;
         
-        // Configuration du filtre et des interruptions avec tes méthodes existantes
-        mpu.setDLPFMode(MPU6050::DLPF_5);
-        mpu.onFreeFall(callback_FF);
-        mpu.onZeroMotion(callback_ZM);
-        mpu.enableFreeFall(0x80, 1);
-        mpu.enableZeroMotion(0x05, 0xFF);
+        cout << "Calibration en cours... NE PAS BOUGER LA NACELLE" << endl;
+        mpu.calibrateA(); // Remet le capteur parfaitement à 1.00g au repos
         
-        cout << "MPU6050 armé (0x69). Écriture des données dans /tmp/..." << endl;
+        mpu.setDLPFMode(MPU6050::DLPF_5); // On garde juste le filtre anti-vibrations
+        
+        // ATTENTION : On a supprimé toutes les interruptions (callbacks, enableMotion, etc.)
+        // C'est maintenant la boucle principale qui fait tout le travail !
+        
+        cout << "Capteur prêt. Analyse logicielle de l'axe Z activée." << endl;
     } catch (const runtime_error &e) {
-        cout << "Capteur absent, passage en mode SIMULATION." << endl;
+        cout << "Capteur absent, mode SIMULATION." << endl;
         simulationMode = true;
     }
 
-    // 2. Boucle principale de lecture et d'exportation
     while (true) {
-        // A. Détermination du statut de vol d'après tes drapeaux
-        string statut = "en vol";
-        if (flag_LANDING) statut = "LANDING";
-        else if (flag_BURST) statut = "BURST";
+        // 1. LECTURE DE L'AXE Z
+        float az = simulationMode ? 1.00 : mpu.getAccelZ();
 
-        // B. Lecture de l'accélération (ou valeur fixe si simulation)
-        float az = simulationMode ? 1.02 : mpu.getAccelZ();
-
-        // --- EXPORTATION DES DONNÉES DANS DES FICHIERS ---
-        // Le programme LoRa de ton camarade pourra lire ces fichiers à tout moment
-
-        // Écriture du statut de vol
-        std::ofstream fichierStatus("/tmp/mpu6050_status.txt", std::ios::trunc);
-        if (fichierStatus.is_open()) {
-            fichierStatus << statut;
-            fichierStatus.close();
-        } else {
-            cerr << "Erreur : Impossible d'écrire le fichier status." << endl;
+        // 2. MACHINE À ÉTATS LOGICIELLE (L'intelligence de la nacelle)
+        if (etatActuel == AU_SOL) {
+            // Si on s'écarte de plus de 0.2g de la gravité normale (1.00g), ça bouge !
+            if (az > 1.20 || az < 0.80) {
+                etatActuel = ASCENSION;
+            }
+        } 
+        else if (etatActuel == ASCENSION) {
+            // Si on approche de 0g (chute libre / apesanteur)
+            if (az < 0.40) {
+                etatActuel = BURST;
+            }
+        } 
+        else if (etatActuel == BURST) {
+            // Si la gravité revient à la normale (entre 0.8 et 1.2g) après la chute
+            if (az > 0.80 && az < 1.20) {
+                etatActuel = LANDING;
+            }
         }
 
-        // Écriture de l'accélération Z
-        std::ofstream fichierAccel("/tmp/mpu6050_accel_z.txt", std::ios::trunc);
-        if (fichierAccel.is_open()) {
-            fichierAccel << fixed << setprecision(2) << az;
-            fichierAccel.close();
+        // 3. PRÉPARATION DE L'EXPORTATION
+        string statutStr;
+        switch(etatActuel) {
+            case AU_SOL:    statutStr = "AU SOL";  break;
+            case ASCENSION: statutStr = "en vol";  break;
+            case BURST:     statutStr = "BURST";   break;
+            case LANDING:   statutStr = "LANDING"; break;
         }
 
-        // --- AFFICHAGE CONSOLE (Pour le débugging) ---
-        cout << "[MPU6050] Z: " << fixed << setprecision(2) << az << " g | Statut: " << statut << endl;
+        // 4. ÉCRITURE DANS LES FICHIERS POUR LORA
+        ofstream fStat("/tmp/mpu6050_status.txt", ios::trunc);
+        if (fStat.is_open()) { fStat << statutStr; fStat.close(); }
 
-        // Rafraîchissement des données toutes les 1 seconde
-        this_thread::sleep_for(chrono::seconds(1));
+        ofstream fAccel("/tmp/mpu6050_accel_z.txt", ios::trunc);
+        if (fAccel.is_open()) { fAccel << fixed << setprecision(2) << az; fAccel.close(); }
+
+        // 5. AFFICHAGE CONSOLE
+        cout <<"\r"<< "[LOG] Statut: " << setw(8) << statutStr << " | Accel Z: " << fixed << setprecision(2) << az << " g" << endl;
+
+        // Boucle plus rapide (500ms) pour ne pas rater une chute rapide de ta main
+        this_thread::sleep_for(chrono::milliseconds(500));
     }
-
     return 0;
 }

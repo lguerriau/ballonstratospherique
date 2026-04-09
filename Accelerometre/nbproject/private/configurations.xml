@@ -4,7 +4,7 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <developmentServer>pbs@172.18.59.66:22</developmentServer>
+        <developmentServer>pbs@172.18.58.86:22</developmentServer>
         <platform>2</platform>
       </toolsSet>
       <dbx_gdbdebugger version="1">
@@ -29,7 +29,8 @@
         <runcommand>"${OUTPUT_PATH}"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
-        <terminal-type>0</terminal-type>
+        <console-type>1</console-type>
+        <terminal-type>1</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
         <environment>
         </environment>

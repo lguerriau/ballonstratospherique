@@ -4,7 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>bdd.h</itemPath>
       <itemPath>cam.h</itemPath>
+      <itemPath>config.ini</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -13,6 +15,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>bdd.cpp</itemPath>
       <itemPath>cam.cpp</itemPath>
       <itemPath>main2.cpp</itemPath>
     </logicalFolder>
@@ -26,6 +29,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>config.ini</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -37,10 +41,21 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lmariadb</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
+      <item path="bdd.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="bdd.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="cam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="cam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="config.ini" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main2.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -65,9 +80,15 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="bdd.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="bdd.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="cam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="cam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="config.ini" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main2.cpp" ex="false" tool="1" flavor2="0">
       </item>

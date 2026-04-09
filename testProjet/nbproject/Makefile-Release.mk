@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/bdd.o \
 	${OBJECTDIR}/cam.o \
 	${OBJECTDIR}/main2.o
 
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/testprojet: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/testprojet ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/bdd.o: bdd.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bdd.o bdd.cpp
 
 ${OBJECTDIR}/cam.o: cam.cpp
 	${MKDIR} -p ${OBJECTDIR}

@@ -308,8 +308,37 @@ void aprsfi::socketDisconnected() {
 }
 
 void aprsfi::broadcastUpdate() {
-    QString updateMessage = "{\"status\": \"new_data_available\"}";
-    for (QWebSocket *client : std::as_const(clients)) {
-        client->sendTextMessage(updateMessage);
+    // On interroge la table POSITION pour avoir les dernieres coordonnees
+    QSqlQuery query(db);
+    if (!query.exec("SELECT name, lat, lng FROM POSITION")) {
+        logToUI("Erreur SQL lors de la lecture des positions : " + query.lastError().text());
+        return;
+    }
+
+    // On parcourt chaque vehicule/ballon trouve dans la table
+    while (query.next()) {
+        QString nom = query.value("name").toString();
+
+        // Attention : On convertit bien en double (nombres) pour le JavaScript
+        double latitude = query.value("lat").toDouble();
+        double longitude = query.value("lng").toDouble();
+
+        // On fabrique le paquet JSON attendu par ton fichier script.js
+        QJsonObject objetJson;
+        objetJson["type"] = "position_update";
+        objetJson["name"] = nom;
+        objetJson["lat"] = latitude;
+        objetJson["lng"] = longitude;
+
+        QJsonDocument document(objetJson);
+        QString messageAEnvoyer = document.toJson(QJsonDocument::Compact);
+
+        // On envoie ces coordonnees a tous les navigateurs web connectes
+        for (QWebSocket *client : std::as_const(clients)) {
+            client->sendTextMessage(messageAEnvoyer);
+        }
+
+        // Petit log optionnel pour verifier dans ton UI que l'envoi se fait bien
+        logToUI("Envoye au web : " + nom + " (" + QString::number(latitude) + ", " + QString::number(longitude) + ")");
     }
 }

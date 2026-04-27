@@ -6,31 +6,24 @@
 #include <iomanip>   
 #include <cmath>
 
-// On inclut l'en-tête du capteur
 #include "../BME280/bme280.h"
 #include "../LM75/LM75.h"
-
-// Bibliothèque RadioLib pour la partie LoRa
 #include "RadioLib.h"
 #include "RadioLib/src/hal/RPi/PiHal.h"
 
 using namespace std;
 
-// --- CONFIGURATION RADIO ---
 const string INDICATIF = "F4KMN-9"; 
-const float FREQUENCE  = 433.775; // Fréquence APRS LoRa
+const float FREQUENCE  = 433.775; 
 const int SF = 12;                
 const float BW = 125.0;           
 
-// Initialisation du matériel (Bus SPI 0)
 PiHal* hal = new PiHal(0); 
+SX1278 lora = new Module(hal, 8, 4, 17, 18);
 
-// --- CONFIGURATION DES PINS (Numérotation BCM) ---
-// Utilisation des pins BCM pour éviter le conflit "Busy" sur la Pin 7 :
-// NSS: 8, DIO0: 4 (Correspond à la Pin physique 7), RST: 17, DIO1: 18
-SX1278 lora = new Module(hal, RADIOLIB_NC, 4, 17, 18);
-
-// Fonction pour l'horodatage APRS (Format: MMDDhhmm en UTC)
+// =========================================================
+// Fonction 1 : Horodatage
+// =========================================================
 string getAPRSTimestamp() {
     auto now = chrono::system_clock::now();
     time_t t = chrono::system_clock::to_time_t(now);
@@ -43,64 +36,151 @@ string getAPRSTimestamp() {
     return ss.str();
 }
 
-int main() {
-    cout << "[SYSTEME] Lancement du module LoRa indépendant..." << endl;
-
-    // 1. Initialisation de la radio SX1278
-    int state = lora.begin(FREQUENCE, BW, SF);
-    if (state != RADIOLIB_ERR_NONE) {
-        cout << "Erreur critique LoRa : " << state << endl;
-        return -1;
-    }
+// =========================================================
+// Fonction 2 : Validation des limites (Sécurité capteurs)
+// =========================================================
+bool validerDonneesCapteurs(float tempF, float hum, float press) {
+    // Limites arbitraires à ajuster selon ton besoin (Ex: Température entre -50F et 150F)
+    if (tempF < -50.0 || tempF > 150.0) return false;
+    if (hum < 0.0 || hum > 100.0) return false;
+    if (press < 800.0 || press > 1100.0) return false; // Pression terrestre normale
     
-    try {
-        // Initialisation des capteurs (BME280 pour humidité/pression, LM75 pour température)
-        BME280 capteurBME(0x77); 
-        LM75   capteurLM(0x48);   // Utilisation de la classe du projet LM75 à l'adresse 0x48
+    return true;
+}
 
-        cout << "[SYSTEME] Capteurs BME280 et LM75 connectés." << endl;
+// =========================================================
+// Fonction 3 : Construction de la trame
+// =========================================================
+string buildAPRSTrame(float tempF, float hum, float press) {
+    // Vérification des limites avant construction
+    if (!validerDonneesCapteurs(tempF, hum, press)) {
+        return "ERREUR : Valeur(s) capteur(s) hors limites !";
+    }
 
-        while (true) {
-            // Lecture des données du BME280
-            float hum   = capteurBME.obtenirHumidite();
-            float press = capteurBME.obtenirPression();
+    stringstream aprs;
+    aprs << INDICATIF << ">APRS,WIDE1-1:_" << getAPRSTimestamp();
+    aprs << "c...s...g..."; 
+    aprs << "t" << setfill('0') << setw(3) << (int)round(tempF);
+    
+    int h_int = (int)round(hum);
+    aprs << "h" << setfill('0') << setw(2) << (h_int >= 100 ? 0 : h_int);
+    aprs << "b" << setfill('0') << setw(5) << (int)round(press * 10.0);
+    
+    return aprs.str();
+}
 
-            // Utilisation de la méthode getTemperature() issue de ton projet LM75
-            float tempC_LM = capteurLM.getTemperature();
-            float tempF_LM = (tempC_LM * 1.8) + 32; // Conversion Celsius vers Fahrenheit pour le format APRS
+// =========================================================
+// PROGRAMME PRINCIPAL
+// =========================================================
+int main() {
+    // Initialisation Radio
+    int state = lora.begin(FREQUENCE, BW, SF, 5, 0x12);
+    if (state != RADIOLIB_ERR_NONE) {
+        cout << "Erreur init LoRa : " << state << endl;
+        // return -1; // Commenté temporairement si tu testes sur un PC sans le module branché
+    } else {
+        lora.setSyncWord(0x12);
+        lora.setCRC(true);
+    }
 
-            // --- CONSTRUCTION DE LA TRAME APRS ---
-            stringstream aprs;
-            aprs << INDICATIF << ">APRS,WIDE1-1:_" << getAPRSTimestamp();
-            aprs << "c...s...g..."; // Champs vent non utilisés
-            
-            // Température du LM75 en Fahrenheit (format 3 chiffres)
-            aprs << "t" << setfill('0') << setw(3) << (int)round(tempF_LM);
-            
-            // Humidité (format 2 chiffres)
-            int h_int = (int)round(hum);
-            aprs << "h" << setfill('0') << setw(2) << (h_int >= 100 ? 0 : h_int);
-            
-            // Pression (format 5 chiffres, dixièmes de hPa)
-            aprs << "b" << setfill('0') << setw(5) << (int)round(press * 10.0);
+    int choix = 0;
 
-            string trame = aprs.str();
-            cout << "Transmission (Temp LM75: " << fixed << setprecision(2) << tempC_LM << "°C) : " << trame << endl;
+    while (true) {
+        cout << "\n=========================================" << endl;
+        cout << "         MENU STATION APRS" << endl;
+        cout << "=========================================" << endl;
+        cout << "1. Mode Production (Capteurs et Envoi continus)" << endl;
+        cout << "2. Mode Test Unitaire (Génération de Trame)" << endl;
+        cout << "3. Mode Test Unitaire (Envoi d'une trame de test via LoRa)" << endl;
+        cout << "4. Quitter" << endl;
+        cout << "Votre choix : ";
+        
+        if (!(cin >> choix)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
 
-            // --- ENVOI RADIO VIA RADIOLIB ---
-            state = lora.transmit(trame.c_str());
+        if (choix == 1) {
+            // ---------------------------------------------------------
+            // MODE PRODUCTION (CAPTEURS RÉELS)
+            // ---------------------------------------------------------
+            cout << "\n[SYSTEME] Mode Production activé. (CTRL+C pour arrêter)" << endl;
+            try {
+                BME280 capteurBME(0x77); 
+                LM75   capteurLM(0x48);   
 
-            if (state == RADIOLIB_ERR_NONE) {
-                cout << "-> Envoi réussi !" << endl;
-            } else {
-                cout << "-> Erreur d'envoi (Code : " << state << ")" << endl;
+                while (true) {
+                    float hum   = capteurBME.obtenirHumidite();
+                    float press = capteurBME.obtenirPression();
+                    float tempC_LM = capteurLM.getTemperature();
+                    float tempF_LM = (tempC_LM * 1.8) + 32; 
+
+                    string trame = buildAPRSTrame(tempF_LM, hum, press);
+                    
+                    if (trame.find("ERREUR") != string::npos) {
+                        cout << "Anomalie Capteur ignorée : " << trame << endl;
+                    } else {
+                        cout << "Transmission : " << trame << " ... ";
+                        state = lora.transmit(trame.c_str());
+                        if (state == RADIOLIB_ERR_NONE) cout << "OK" << endl;
+                        else cout << "Erreur " << state << endl;
+                    }
+
+                    this_thread::sleep_for(chrono::seconds(30));
+                }
+            } catch (const exception &e) {
+                cerr << "Erreur Matérielle : " << e.what() << endl;
             }
 
-            // Pause de 30 secondes entre chaque envoi
-            this_thread::sleep_for(chrono::seconds(30));
+        } else if (choix == 2) {
+            // ---------------------------------------------------------
+            // MODE TEST UNITAIRE (INTERACTIF)
+            // ---------------------------------------------------------
+            cout << "\n--- TEST FORMATAGE APRS ---" << endl;
+            float testTempF, testHum, testPress;
+
+            cout << "Entrez une temperature (en F, ex: 72.0) : ";
+            cin >> testTempF;
+            cout << "Entrez une humidite (en %, ex: 45.0) : ";
+            cin >> testHum;
+            cout << "Entrez une pression (en hPa, ex: 1013.2) : ";
+            cin >> testPress;
+
+            string trameTest = buildAPRSTrame(testTempF, testHum, testPress);
+            
+            cout << "\n>> Trame générée : " << trameTest << endl;
+
+            if (trameTest.find("ERREUR") != string::npos) {
+                cout << "-> RESULTAT : ÉCHEC (Les valeurs sont hors limites, la sécurité a fonctionné !)" << endl;
+            } else if (trameTest.find(INDICATIF) != string::npos) {
+                cout << "-> RESULTAT : SUCCÈS (La trame est formatée)" << endl;
+            } else {
+                cout << "-> RESULTAT : ÉCHEC (Problème de formatage inconnu)" << endl;
+            }
+
+        } else if (choix == 3) {
+            // ---------------------------------------------------------
+            // MODE TEST UNITAIRE (ENVOI RADIO PHYSIQUE)
+            // ---------------------------------------------------------
+            cout << "\n--- TEST TRANSMISSION LORA ---" << endl;
+            string messageTest = "TEST_RADIO_PI_F4KMN";
+            
+            cout << "Tentative d'envoi de la trame test : [" << messageTest << "] ... ";
+            
+            // Envoi matériel via la classe LoRa
+            int state = lora.transmit(messageTest.c_str());
+
+            if (state == RADIOLIB_ERR_NONE) {
+                cout << "-> RESULTAT : SUCCÈS (Le module a bien émis sur l'antenne)" << endl;
+            } else {
+                cout << "-> RESULTAT : ÉCHEC (Code d'erreur matériel LoRa : " << state << ")" << endl;
+            }
+
+        } else if (choix == 4) {
+            cout << "Arrêt du système." << endl;
+            break;
         }
-    } catch (const exception &e) {
-        cerr << "Erreur critique : " << e.what() << endl;
     }
 
     return 0;

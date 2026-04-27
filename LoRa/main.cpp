@@ -163,10 +163,38 @@ int main() {
             // ---------------------------------------------------------
             // MODE TEST UNITAIRE (ENVOI RADIO PHYSIQUE)
             // ---------------------------------------------------------
-            cout << "\n--- TEST TRANSMISSION LORA ---" << endl;
-            string messageTest = "TEST_RADIO_PI_F4KMN";
+            cout << "\n--- SOUS-MENU : TEST TRANSMISSION LORA ---" << endl;
+            cout << "1. Envoyer une trame valide (Generee par le programme)" << endl;
+            cout << "2. Envoyer une trame incomplete (Champs manquants)" << endl;
+            cout << "3. Envoyer une trame invalide (Caracteres speciaux hors protocole)" << endl;
+            cout << "4. Envoyer une trame vide" << endl;
+            cout << "Votre choix : ";
             
-            cout << "Tentative d'envoi de la trame test : [" << messageTest << "] ... ";
+            int sousChoix = 0;
+            if (!(cin >> sousChoix)) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Saisie incorrecte, retour au menu principal." << endl;
+                continue;
+            }
+
+            string messageTest = "";
+
+            if (sousChoix == 1) {
+                // On utilise ta fonction buildAPRSTrame pour avoir une vraie trame valide
+                messageTest = buildAPRSTrame(72.0, 45.0, 1013.2); 
+            } else if (sousChoix == 2) {
+                messageTest = "F4KMN-9>APRS,WIDE1-1:_t072"; // Manque l'humidité et la pression
+            } else if (sousChoix == 3) {
+                messageTest = "@@@TRAME_#INVALIDE_!!!***"; // Format qui fera planter la réception
+            } else if (sousChoix == 4) {
+                messageTest = ""; // Rien du tout
+            } else {
+                cout << "Choix inexistant, annulation." << endl;
+                continue;
+            }
+            
+            cout << "\nTentative d'envoi de la trame : [" << messageTest << "] (" << messageTest.length() << " octets) ... ";
             
             // Envoi matériel via la classe LoRa
             int state = lora.transmit(messageTest.c_str());

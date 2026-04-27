@@ -1,4 +1,4 @@
-QT += core gui testlib sql
+QT += core gui widgets testlib sql
 
 INCLUDEPATH += /home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/APSRfi_recupV3
 

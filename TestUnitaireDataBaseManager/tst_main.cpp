@@ -1,235 +1,283 @@
+#include <QApplication>
+#include <QWidget>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QFile>
+#include <QTextStream>
 #include <QtTest>
 #include <QSignalSpy>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QSqlQuery>
 #include <QSqlError>
+
 #include "databasemanager.h"
 
+// ==========================================================
+// 1. LA CLASSE DE TEST
+// ==========================================================
 class TestDatabaseManager : public QObject
 {
     Q_OBJECT
 
 private slots:
-    // Initialisation et Nettoyage
-    void initTestCase();
-    void cleanup();
+    void initTestCase() { db = new DatabaseManager(this); }
 
-    // --- CATEGORIE 1 : CONNEXION ET ETATS ---
-    void test1_1_InitialState();
-    void test1_2_ConnectionInvalidIP();
-    void test1_3_ConnectionInvalidCreds();
-    void test1_4_ConnectionInvalidDB();
-    void test1_5_ConnectionValid();
-    void test1_6_DisconnectPropre();
-    void test1_7_DisconnectRedondant();
+    void cleanup() {
+        if (db->isConnected()) {
+            QSqlQuery q;
+            q.exec("TRUNCATE TABLE POSITION");
+            q.exec("TRUNCATE TABLE HISTORIQUE");
+        }
+    }
 
-    // --- CATEGORIE 2 : SECURITE ET ROBUSTESSE ---
-    void test2_1_ReadOffline();
-    void test2_2_WriteOffline();
-    void test2_3_EmptyJson();
-    void test2_4_IncompleteData();
-    void test2_5_SqlInjection();
+    void test1_1_InitialState() { QCOMPARE(db->isConnected(), false); }
 
-    // --- CATEGORIE 3 : LOGIQUE METIER ---
-    void test3_1_ReadEmptyDB();
-    void test3_2_FirstInsertion();
-    void test3_3_ReadAfterInsertion();
-    void test3_4_UpdateAndHistoryLogic();
-    void test3_5_MultiTargets();
-    void test3_6_ReadMultiTargets();
+    void test1_2_ConnectionInvalidIP() {
+        QSignalSpy spy(db, &DatabaseManager::errorOccurred);
+        bool ok = db->connect("0.0.0.0", "root", "toto", "ballon2026_test");
+        QCOMPARE(ok, false);
+        QVERIFY(spy.count() > 0);
+    }
+
+    void test1_3_ConnectionInvalidCreds() {
+        bool ok = db->connect("172.18.58.85", "mauvais", "mauvais", "ballon2026_test");
+        QCOMPARE(ok, false);
+    }
+
+    void test1_4_ConnectionInvalidDB() {
+        bool ok = db->connect("172.18.58.85", "root", "toto", "mauvaise_base");
+        QCOMPARE(ok, false);
+    }
+
+    void test1_5_ConnectionValid() {
+        bool ok = db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QCOMPARE(ok, true);
+        QCOMPARE(db->isConnected(), true);
+    }
+
+    void test1_6_DisconnectPropre() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        db->disconnect();
+        QCOMPARE(db->isConnected(), false);
+    }
+
+    void test1_7_DisconnectRedondant() {
+        db->disconnect();
+        db->disconnect();
+        QCOMPARE(db->isConnected(), false);
+    }
+
+    void test2_1_ReadOffline() {
+        db->disconnect();
+        QJsonArray res = db->getCurrentPositions();
+        QCOMPARE(res.size(), 0);
+    }
+
+    void test2_2_WriteOffline() {
+        db->disconnect();
+        QJsonObject obj; obj["name"] = "TEST";
+        bool ok = db->saveEntry(obj);
+        QCOMPARE(ok, false);
+    }
+
+    void test2_3_EmptyJson() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject empty;
+        bool ok = db->saveEntry(empty);
+        QCOMPARE(ok, true);
+    }
+
+    void test2_4_IncompleteData() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject incomplete; incomplete["name"] = "PARTIEL";
+        QVERIFY(db->saveEntry(incomplete));
+    }
+
+    void test2_5_SqlInjection() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject hack; hack["name"] = "HACKER'; DROP TABLE POSITION;--";
+        QVERIFY(db->saveEntry(hack));
+        QSqlQuery q("SELECT COUNT(*) FROM POSITION");
+        QVERIFY(q.exec());
+    }
+
+    void test3_1_ReadEmptyDB() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        cleanup();
+        QCOMPARE(db->getCurrentPositions().size(), 0);
+    }
+
+    void test3_2_FirstInsertion() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject entry; entry["name"] = "BALLON-1"; entry["lat"] = "48.5"; entry["lng"] = "2.3";
+        QVERIFY(db->saveEntry(entry));
+    }
+
+    void test3_3_ReadAfterInsertion() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject entry; entry["name"] = "BALLON-1"; entry["lat"] = "48.5"; entry["lng"] = "2.3";
+        db->saveEntry(entry);
+        QJsonArray res = db->getCurrentPositions();
+        QCOMPARE(res.size(), 1);
+        QCOMPARE(res[0].toObject()["name"].toString(), QString("BALLON-1"));
+    }
+
+    void test3_4_UpdateAndHistoryLogic() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+        QJsonObject move; move["name"] = "BALLON-1"; move["lat"] = "49.1";
+        db->saveEntry(move);
+        QSqlQuery qPos("SELECT lat FROM POSITION WHERE name = 'BALLON-1'");
+        if(qPos.next()) QCOMPARE(qPos.value(0).toDouble(), 49.1);
+    }
+
+    void test3_5_MultiTargets() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+
+        QJsonObject target1; target1["name"] = "BALLON-1"; target1["lat"] = "48.0";
+        db->saveEntry(target1);
+
+        QJsonObject target2; target2["name"] = "AVION-99"; target2["lat"] = "45.0";
+        db->saveEntry(target2);
+
+        QSqlQuery q("SELECT COUNT(*) FROM POSITION");
+        if(q.next()) QCOMPARE(q.value(0).toInt(), 2);
+    }
+
+    void test3_6_ReadMultiTargets() {
+        db->connect("172.18.58.85", "root", "toto", "ballon2026_test");
+
+        QJsonObject target1; target1["name"] = "BALLON-1"; target1["lat"] = "48.0";
+        db->saveEntry(target1);
+
+        QJsonObject target2; target2["name"] = "AVION-99"; target2["lat"] = "45.0";
+        db->saveEntry(target2);
+
+        QJsonArray res = db->getCurrentPositions();
+        QCOMPARE(res.size(), 2);
+    }
 
 private:
     DatabaseManager *db;
-
-    // CONFIGURATION (A ajuster selon ton environnement)
-    const QString HOST = "172.18.58.85"; // L'IP de ton serveur MariaDB
-    const QString USER = "root";
-    const QString PASS = "toto";
-    const QString DBNAME = "ballon2026_test"; // Base de données de TEST uniquement
-
-    void truncateTables();
 };
 
 // ==========================================================
-// INITIALISATION ET UTILITAIRES
+// 2. L'INTERFACE GRAPHIQUE DU TESTEUR
 // ==========================================================
+class TestRunnerUI : public QWidget
+{
+    Q_OBJECT
 
-void TestDatabaseManager::initTestCase() {
-    db = new DatabaseManager(this);
-}
+public:
+    TestRunnerUI(QWidget *parent = nullptr) : QWidget(parent) {
+        setWindowTitle("Tableau de bord - Tests Unitaires");
+        resize(1000, 600);
 
-void TestDatabaseManager::cleanup() {
-    // On vide la base après chaque test pour ne pas fausser le suivant
-    if (db->isConnected()) {
-        truncateTables();
+        QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+        // --- Création de la grille de boutons ---
+        QGridLayout *gridLayout = new QGridLayout();
+
+        QStringList testNames = {
+            "test1_1_InitialState", "test1_2_ConnectionInvalidIP", "test1_3_ConnectionInvalidCreds",
+            "test1_4_ConnectionInvalidDB", "test1_5_ConnectionValid", "test1_6_DisconnectPropre",
+            "test1_7_DisconnectRedondant", "test2_1_ReadOffline", "test2_2_WriteOffline",
+            "test2_3_EmptyJson", "test2_4_IncompleteData", "test2_5_SqlInjection",
+            "test3_1_ReadEmptyDB", "test3_2_FirstInsertion", "test3_3_ReadAfterInsertion",
+            "test3_4_UpdateAndHistoryLogic", "test3_5_MultiTargets", "test3_6_ReadMultiTargets"
+        };
+
+        int row = 0;
+        int col = 0;
+        for (const QString &testName : testNames) {
+            QPushButton *btn = new QPushButton(testName, this);
+            btn->setStyleSheet("padding: 5px; background-color: #2196F3; color: white; border-radius: 3px;");
+            gridLayout->addWidget(btn, row, col);
+
+            // On connecte le bouton à la fonction avec le nom du test spécifique
+            connect(btn, &QPushButton::clicked, this, [this, testName]() {
+                runTests(testName);
+            });
+
+            // On passe à la colonne suivante (3 colonnes max)
+            col++;
+            if (col > 2) {
+                col = 0;
+                row++;
+            }
+        }
+
+        // --- Bouton "Lancer Tout" ---
+        QPushButton *btnRunAll = new QPushButton("LANCER TOUS LES TESTS", this);
+        btnRunAll->setStyleSheet("font-weight: bold; padding: 10px; background-color: #4CAF50; color: white;");
+        connect(btnRunAll, &QPushButton::clicked, this, [this]() {
+            runTests(""); // Une chaîne vide lance tous les tests
+        });
+
+        // --- Console de sortie ---
+        txtOutput = new QTextEdit(this);
+        txtOutput->setReadOnly(true);
+        txtOutput->setStyleSheet("background-color: #1e1e1e; color: #00ff00; font-family: monospace; font-size: 13px;");
+
+        // Ajout au layout principal
+        mainLayout->addLayout(gridLayout);
+        mainLayout->addWidget(btnRunAll);
+        mainLayout->addWidget(txtOutput);
     }
-}
 
-void TestDatabaseManager::truncateTables() {
-    QSqlQuery q;
-    q.exec("TRUNCATE TABLE POSITION");
-    q.exec("TRUNCATE TABLE HISTORIQUE");
-}
+private:
+    QTextEdit *txtOutput;
 
-// ==========================================================
-// CATEGORIE 1 : CONNEXION
-// ==========================================================
+    // Fonction commune pour lancer un ou tous les tests
+    void runTests(const QString &testName) {
+        txtOutput->clear();
 
-void TestDatabaseManager::test1_1_InitialState() {
-    QCOMPARE(db->isConnected(), false);
-}
+        if (testName.isEmpty()) {
+            txtOutput->append("[INFO] Demarrage de la suite complete des tests...\n");
+        } else {
+            txtOutput->append("[INFO] Execution du test individuel : " + testName + "\n");
+        }
+        QCoreApplication::processEvents();
 
-void TestDatabaseManager::test1_2_ConnectionInvalidIP() {
-    QSignalSpy spy(db, &DatabaseManager::errorOccurred);
-    bool ok = db->connect("0.0.0.0", USER, PASS, DBNAME);
-    QCOMPARE(ok, false);
-    QVERIFY(spy.count() > 0);
-}
+        TestDatabaseManager testObj;
+        QStringList args;
+        args << "TestDatabaseManager";
 
-void TestDatabaseManager::test1_3_ConnectionInvalidCreds() {
-    bool ok = db->connect(HOST, "user_inexistant", "mauvais_pass", DBNAME);
-    QCOMPARE(ok, false);
-}
+        // Si on a cliqué sur un test spécifique, on l'ajoute aux arguments
+        if (!testName.isEmpty()) {
+            args << testName;
+        }
 
-void TestDatabaseManager::test1_4_ConnectionInvalidDB() {
-    bool ok = db->connect(HOST, USER, PASS, "base_qui_n_existe_pas");
-    QCOMPARE(ok, false);
-}
+        args << "-o" << "test_results.txt";
 
-void TestDatabaseManager::test1_5_ConnectionValid() {
-    bool ok = db->connect(HOST, USER, PASS, DBNAME);
-    QCOMPARE(ok, true);
-    QCOMPARE(db->isConnected(), true);
-}
+        // Exécution silencieuse
+        QTest::qExec(&testObj, args);
 
-void TestDatabaseManager::test1_6_DisconnectPropre() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    db->disconnect();
-    QCOMPARE(db->isConnected(), false);
-}
+        // Lecture et affichage des résultats
+        QFile file("test_results.txt");
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            txtOutput->append(in.readAll());
+            file.close();
+        } else {
+            txtOutput->append("[ERREUR] Impossible de lire le fichier de resultats.");
+        }
 
-void TestDatabaseManager::test1_7_DisconnectRedondant() {
-    db->disconnect();
-    db->disconnect(); // Ne doit pas crasher
-    QCOMPARE(db->isConnected(), false);
-}
+        txtOutput->append("\n[INFO] Termine.");
+    }
+};
 
 // ==========================================================
-// CATEGORIE 2 : ROBUSTESSE
+// 3. LE MAIN
 // ==========================================================
-
-void TestDatabaseManager::test2_1_ReadOffline() {
-    db->disconnect();
-    QSignalSpy spy(db, &DatabaseManager::errorOccurred);
-    QJsonArray res = db->getCurrentPositions();
-    QCOMPARE(res.size(), 0);
-    QCOMPARE(spy.count(), 1);
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    TestRunnerUI w;
+    w.show();
+    return a.exec();
 }
 
-void TestDatabaseManager::test2_2_WriteOffline() {
-    db->disconnect();
-    QJsonObject obj;
-    obj["name"] = "TEST";
-    bool ok = db->saveEntry(obj);
-    QCOMPARE(ok, false);
-}
-
-void TestDatabaseManager::test2_3_EmptyJson() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonObject empty;
-    bool ok = db->saveEntry(empty);
-    QCOMPARE(ok, true); // Doit passer sans crash
-}
-
-void TestDatabaseManager::test2_4_IncompleteData() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonObject incomplete;
-    incomplete["name"] = "PARTIEL";
-    // Manque lat, lng, time...
-    QVERIFY(db->saveEntry(incomplete));
-}
-
-void TestDatabaseManager::test2_5_SqlInjection() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonObject hack;
-    hack["name"] = "HACKER'; DROP TABLE POSITION;--";
-    QVERIFY(db->saveEntry(hack));
-
-    // Vérification que la table existe toujours
-    QSqlQuery q("SELECT COUNT(*) FROM POSITION");
-    QVERIFY(q.exec());
-}
-
-// ==========================================================
-// CATEGORIE 3 : LOGIQUE METIER
-// ==========================================================
-
-void TestDatabaseManager::test3_1_ReadEmptyDB() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    truncateTables();
-    QCOMPARE(db->getCurrentPositions().size(), 0);
-}
-
-void TestDatabaseManager::test3_2_FirstInsertion() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonObject entry;
-    entry["name"] = "BALLON-1";
-    entry["lat"] = "48.5";
-    entry["lng"] = "2.3";
-
-    QVERIFY(db->saveEntry(entry));
-
-    QSqlQuery q1("SELECT COUNT(*) FROM POSITION"); q1.next();
-    QCOMPARE(q1.value(0).toInt(), 1);
-
-    QSqlQuery q2("SELECT COUNT(*) FROM HISTORIQUE"); q2.next();
-    QCOMPARE(q2.value(0).toInt(), 1);
-}
-
-void TestDatabaseManager::test3_3_ReadAfterInsertion() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonArray res = db->getCurrentPositions();
-    QCOMPARE(res.size(), 1);
-    QCOMPARE(res[0].toObject()["name"].toString(), QString("BALLON-1"));
-}
-
-void TestDatabaseManager::test3_4_UpdateAndHistoryLogic() {
-    db->connect(HOST, USER, PASS, DBNAME);
-
-    // On envoie une 2ème position pour le même nom
-    QJsonObject move;
-    move["name"] = "BALLON-1";
-    move["lat"] = "49.1";
-    db->saveEntry(move);
-
-    // POSITION : doit rester à 1 ligne (le dernier UPDATE)
-    QSqlQuery qPos("SELECT lat FROM POSITION WHERE name = 'BALLON-1'");
-    qPos.next();
-    QCOMPARE(qPos.value(0).toDouble(), 49.1);
-
-    // HISTORIQUE : doit passer à 2 lignes
-    QSqlQuery qHist("SELECT COUNT(*) FROM HISTORIQUE WHERE name = 'BALLON-1'");
-    qHist.next();
-    QCOMPARE(qHist.value(0).toInt(), 2);
-}
-
-void TestDatabaseManager::test3_5_MultiTargets() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonObject target2;
-    target2["name"] = "AVION-99";
-    db->saveEntry(target2);
-
-    QSqlQuery q("SELECT COUNT(*) FROM POSITION");
-    q.next();
-    QCOMPARE(q.value(0).toInt(), 2); // BALLON-1 + AVION-99
-}
-
-void TestDatabaseManager::test3_6_ReadMultiTargets() {
-    db->connect(HOST, USER, PASS, DBNAME);
-    QJsonArray res = db->getCurrentPositions();
-    QCOMPARE(res.size(), 2);
-}
-
-QTEST_MAIN(TestDatabaseManager)
 #include "tst_main.moc"

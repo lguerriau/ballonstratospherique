@@ -4,12 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
- * File:   Message.cpp
- * Author: ale
- * 
- * Created on 5 décembre 2022, 18:18
- */
+
 
 #include "Message.h"
 

@@ -14,26 +14,26 @@
 #define CAM_H
 
 #include <iostream>
-#include <iomanip>
-#include <unistd.h>
-#include <sstream>
 #include <string>
 
-class Camera {
+
+class Camera
+{
+private:
+    unsigned long frequence;
+    const std::string indicatif;
+    int nbPhotos;;
+
 public:
-    
+
     Camera(const unsigned long _frequence, const std::string _indicatif);
     Camera(const Camera& orig);
     virtual ~Camera();
-    
+
     void envoyerPhoto();
     void envoyerMire();
     void enregistrerPhoto();
 
-private:
-    unsigned long frequence;
-    const std::string indicatif;
-    int i;
 
 };
 

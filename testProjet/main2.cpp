@@ -12,6 +12,7 @@
 
 #include "cam.h"
 #include <iostream>
+#include <unistd.h>
 
 int main() {
     std::cout << "=== LANCEMENT NACELLE RASPBERRY ===" << std::endl;

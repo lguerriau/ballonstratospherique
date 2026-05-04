@@ -75,6 +75,9 @@ void Camera::enregistrerPhoto() {
 
         std::cout << "Succès : Photo sauvegardée sur SD." << std::endl;
         nbPhotos++; // On prépare l'index pour la suivante
+        
+        std::cout << "Déclenchement automatique de l'émission..." << std::endl;
+        envoyerPhoto();
     }
 }
 

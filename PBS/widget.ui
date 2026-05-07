@@ -68,6 +68,17 @@ QComboBox::drop-down { border: none; }
   <layout class="QVBoxLayout" name="mainLayout">
    <item>
     <widget class="QLabel" name="lbl_status_vol">
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>14</pointsize>
+       <italic>false</italic>
+       <bold>true</bold>
+       <underline>false</underline>
+       <strikeout>false</strikeout>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="text">
       <string>CHARGEMENT DU SYSTÈME...</string>
      </property>
@@ -80,14 +91,15 @@ QComboBox::drop-down { border: none; }
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>1</number>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>10</pointsize>
+       <bold>false</bold>
+      </font>
      </property>
-     <widget class="QWidget" name="tab_requetes">
-      <attribute name="title">
-       <string>TRANSMISSIONS</string>
-      </attribute>
+     <widget class="QWidget" name="stackedWidgetPage1" native="true">
       <layout class="QVBoxLayout" name="verticalLayout_req">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_send">
@@ -151,10 +163,7 @@ QComboBox::drop-down { border: none; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_valeurs">
-      <attribute name="title">
-       <string>TÉLÉMÉTRIE CAPTEURS</string>
-      </attribute>
+     <widget class="QWidget" name="stackedWidgetPage2" native="true">
       <widget class="QGroupBox" name="group_temp_int">
        <property name="geometry">
         <rect>
@@ -284,10 +293,7 @@ QComboBox::drop-down { border: none; }
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" name="tab_images">
-      <attribute name="title">
-       <string>FLUX OPTIQUE</string>
-      </attribute>
+     <widget class="QWidget" name="stackedWidgetPage3" native="true">
       <layout class="QVBoxLayout" name="verticalLayout_img">
        <item>
         <widget class="QGroupBox" name="group_last_img">

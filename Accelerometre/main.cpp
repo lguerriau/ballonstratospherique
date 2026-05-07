@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
         cout <<"\r"<< "[LOG] Statut: " << setw(8) << statutStr << " | Accel Z: " << fixed << setprecision(2) << az << " g" << endl;
 
         // Boucle plus rapide (500ms) pour ne pas rater une chute rapide de ta main
-        this_thread::sleep_for(chrono::milliseconds(500));
+        this_thread::sleep_for(chrono::milliseconds(1000));
     }
     return 0;
 }

@@ -1,0 +1,15 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 5 mai 2026, 14:15:20
+    Author     : hkalo
+*/
+
+body { font-family: Arial, sans-serif; background: #1a1a1a; color: white; text-align: center; }
+.galerie { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+.photo-card { margin: 10px; background: #333; padding: 10px; border-radius: 8px; }
+.photo-card img { width: 320px; height: auto; border: 1px solid #555; }
+.btn { display: inline-block; padding: 15px 25px; background: #e74c3c; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-bottom: 20px; }
+.btn:hover { background: #c0392b; }

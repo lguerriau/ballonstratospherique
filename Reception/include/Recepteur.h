@@ -2,27 +2,31 @@
 #define RECEPTEUR_H
 
 #include <Arduino.h>
-#include <RadioLib.h>
+#include <SPI.h>
+#include <LoRa.h>
 #include "Modele.h"
 #include "Log.h"
 
 class Recepteur {
 private:
-    SX1278* radio; // On utilise un pointeur vers la radio globale
     Modele* laBdd;
     Log* erreurLog;
 
+    const int pinSCK  = 5;
+    const int pinMISO = 19;
+    const int pinMOSI = 27;
+    const int pinCS   = 18;
+    const int pinRST  = 14;
+    const int pinIRQ  = 26;
+
     bool verifierValiditeTrame(const String& trame);
-    bool verifierPresenceDonnee(const String& trame);
+    // Nouvelle fonction de décodage interne
+    void decoderTrameWeather(const String& trame); 
 
 public:
-    // Le constructeur prend désormais la radio en paramètre
-    Recepteur(SX1278* r, Modele* bdd, Log* log);
-    
-    // Retourne un entier (le code d'erreur) au lieu d'un booléen
-    int initialiser(float freq, float bw, int sf);
-    
-    void ecouterEtTraiter();
+    Recepteur(Modele* bdd, Log* log);
+    bool initialiser();
+    void ecouterEtRepondre();
 };
 
 #endif

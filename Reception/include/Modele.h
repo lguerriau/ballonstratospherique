@@ -1,3 +1,4 @@
+// --- include/Modele.h ---
 #ifndef MODELE_H
 #define MODELE_H
 #include <Arduino.h>

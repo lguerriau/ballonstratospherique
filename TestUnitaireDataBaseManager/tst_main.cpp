@@ -37,7 +37,7 @@ private slots:
 
     void test1_2_ConnectionInvalidIP() {
         QSignalSpy spy(db, &DatabaseManager::errorOccurred);
-        bool ok = db->connect("0.0.0.0", "root", "toto", "ballon2026_test");
+        bool ok = db->connect("172.18.58.80", "root", "toto", "ballon2026_test");
         QCOMPARE(ok, false);
         QVERIFY(spy.count() > 0);
     }

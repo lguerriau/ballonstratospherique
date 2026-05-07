@@ -1,21 +1,16 @@
 #include "databasemanager.h"
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QJsonArray>
 #include <QVariant>
 
-DatabaseManager::DatabaseManager(QObject *parent)
-    : QObject(parent) {
-}
+DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent) {}
 
 DatabaseManager::~DatabaseManager() {
     disconnect();
 }
 
-bool DatabaseManager::connect(const QString &host, const QString &user,
-                               const QString &password, const QString &dbName) {
-
-    // CORRECTION : Vérifie si la connexion existe déjà pour éviter le bug Qt
+bool DatabaseManager::connect(const QString &host, const QString &user, const QString &password, const QString &dbName) {
+    // CORRECTION DU BUG : QSqlDatabasePrivate::addDatabase: duplicate connection name
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         db = QSqlDatabase::database(QSqlDatabase::defaultConnection);
     } else {
@@ -28,7 +23,7 @@ bool DatabaseManager::connect(const QString &host, const QString &user,
     db.setDatabaseName(dbName);
 
     if (db.open()) {
-        emit logMessage("Connexion reussie a la base de donnees : " + dbName);
+        emit logMessage("Connexion reussie a la BDD : " + dbName + " sur " + host);
         return true;
     } else {
         emit errorOccurred("Erreur de connexion BDD : " + db.lastError().text());
@@ -48,17 +43,13 @@ bool DatabaseManager::isConnected() const {
 }
 
 bool DatabaseManager::saveEntry(const QJsonObject &entry) {
-    if (!isConnected()) {
-        emit errorOccurred("Impossible de sauvegarder : BDD non connectee");
-        return false;
-    }
+    if (!isConnected()) return false;
 
     bool historyOk = insertIntoHistory(entry);
     bool positionOk = updatePosition(entry);
 
     if (historyOk && positionOk) {
-        QString name = entry.value("name").toString();
-        emit logMessage("Sauvegarde : " + name);
+        emit logMessage("Sauvegarde BDD OK pour : " + entry.value("name").toString());
         return true;
     }
     return false;
@@ -66,12 +57,8 @@ bool DatabaseManager::saveEntry(const QJsonObject &entry) {
 
 bool DatabaseManager::insertIntoHistory(const QJsonObject &entry) {
     QSqlQuery query(db);
-    query.prepare(
-        "INSERT INTO HISTORIQUE "
-        "(name, type, time, lasttime, lat, lng, symbol, srccall, dstcall, phg, comment, path) "
-        "VALUES "
-        "(:name, :type, :time, :lasttime, :lat, :lng, :symbol, :srccall, :dstcall, :phg, :comment, :path)"
-    );
+    query.prepare("INSERT INTO HISTORIQUE (name, type, time, lasttime, lat, lng, symbol, srccall, dstcall, phg, comment, path) "
+                  "VALUES (:name, :type, :time, :lasttime, :lat, :lng, :symbol, :srccall, :dstcall, :phg, :comment, :path)");
 
     query.bindValue(":name", entry.value("name").toString());
     query.bindValue(":type", entry.value("type").toString());
@@ -95,29 +82,19 @@ bool DatabaseManager::insertIntoHistory(const QJsonObject &entry) {
 
 bool DatabaseManager::updatePosition(const QJsonObject &entry) {
     QString name = entry.value("name").toString();
-
     QSqlQuery checkQuery(db);
     checkQuery.prepare("SELECT COUNT(*) FROM POSITION WHERE name = :name");
     checkQuery.bindValue(":name", name);
 
-    if (!checkQuery.exec() || !checkQuery.next()) {
-        emit errorOccurred("Erreur verification POSITION : " + checkQuery.lastError().text());
-        return false;
-    }
+    if (!checkQuery.exec() || !checkQuery.next()) return false;
 
     int exists = checkQuery.value(0).toInt();
     QSqlQuery posQuery(db);
 
     if (exists > 0) {
-        posQuery.prepare(
-            "UPDATE POSITION SET lat = :lat, lng = :lng, lasttime = :lasttime "
-            "WHERE name = :name"
-        );
+        posQuery.prepare("UPDATE POSITION SET lat = :lat, lng = :lng, lasttime = :lasttime WHERE name = :name");
     } else {
-        posQuery.prepare(
-            "INSERT INTO POSITION (name, lat, lng, lasttime) "
-            "VALUES (:name, :lat, :lng, :lasttime)"
-        );
+        posQuery.prepare("INSERT INTO POSITION (name, lat, lng, lasttime) VALUES (:name, :lat, :lng, :lasttime)");
     }
 
     posQuery.bindValue(":name", name);
@@ -126,7 +103,7 @@ bool DatabaseManager::updatePosition(const QJsonObject &entry) {
     posQuery.bindValue(":lasttime", entry.value("lasttime").toString());
 
     if (!posQuery.exec()) {
-        emit errorOccurred("Erreur mise a jour POSITION : " + posQuery.lastError().text());
+        emit errorOccurred("Erreur update POSITION : " + posQuery.lastError().text());
         return false;
     }
     return true;
@@ -134,24 +111,17 @@ bool DatabaseManager::updatePosition(const QJsonObject &entry) {
 
 QJsonArray DatabaseManager::getCurrentPositions() {
     QJsonArray positions;
-
-    if (!isConnected()) {
-        emit errorOccurred("Impossible de lire les positions : BDD non connectee");
-        return positions;
-    }
+    if (!isConnected()) return positions;
 
     QSqlQuery query(db);
-    if (!query.exec("SELECT name, lat, lng, lasttime FROM POSITION")) {
-        emit errorOccurred("Erreur lecture POSITION : " + query.lastError().text());
-        return positions;
-    }
+    if (!query.exec("SELECT name, lat, lng FROM POSITION")) return positions;
 
     while (query.next()) {
         QJsonObject pos;
         pos["name"] = query.value("name").toString();
+        // Convertis en Double directement pour préparer le WebSocket
         pos["lat"] = query.value("lat").toDouble();
         pos["lng"] = query.value("lng").toDouble();
-        pos["lasttime"] = query.value("lasttime").toString();
         positions.append(pos);
     }
     return positions;

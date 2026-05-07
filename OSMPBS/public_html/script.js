@@ -6,9 +6,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// 2. Initialisation des marqueurs (ils sont à 0,0 au lancement)
-let markerBallon = L.marker([0, 0]).addTo(map).bindPopup("Ballon Stratosphérique");
-let markerVehicule = L.marker([0, 0]).addTo(map).bindPopup("Véhicule Suiveur");
+// 2. Dictionnaire pour stocker les marqueurs dynamiquement
+// Clé = Nom (callsign), Valeur = Objet Marqueur Leaflet
+const markers = {};
 
 // 3. Connexion WebSocket vers le serveur Qt
 const ws = new WebSocket('ws://localhost:12345');
@@ -26,12 +26,18 @@ ws.onmessage = (event) => {
 
         // On vérifie que c'est bien une mise à jour de position en direct
         if (data.type === 'position_update') {
-            
-            // On trie selon le nom (champ 'name' de ta table) et on utilise 'lat' et 'lng'
-            if (data.name === 'F4GOH-10') {
-                markerBallon.setLatLng([data.lat, data.lng]);
-            } else if (data.name === 'F4IKQ-9') {
-                markerVehicule.setLatLng([data.lat, data.lng]);
+            const callsign = data.name;
+            const lat = data.lat;
+            const lng = data.lng;
+
+            // Si le marqueur n'existe pas encore pour ce véhicule, on le crée
+            if (!markers[callsign]) {
+                markers[callsign] = L.marker([lat, lng])
+                                     .addTo(map)
+                                     .bindPopup("Véhicule : " + callsign);
+            } else {
+                // S'il existe déjà, on le déplace simplement vers ses nouvelles coordonnées
+                markers[callsign].setLatLng([lat, lng]);
             }
         }
     } catch (error) {

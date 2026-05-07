@@ -2,6 +2,7 @@
 #include "ui_aprsfi.h"
 #include <QDateTime>
 #include <QApplication>
+#include <QFile>
 
 aprsfi::aprsfi(QWidget *parent) : QWidget(parent), ui(new Ui::aprsfi) {
     ui->setupUi(this);
@@ -26,20 +27,35 @@ aprsfi::aprsfi(QWidget *parent) : QWidget(parent), ui(new Ui::aprsfi) {
 aprsfi::~aprsfi() { delete ui; }
 
 void aprsfi::loadSettings() {
-    QSettings settings("/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/APRSfi_recup/config.ini", QSettings::IniFormat);
+    // Chemin absolu basé sur votre capture d'écran
+    QString configPath = "/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/APSRFi_recupV3/config.ini";
+
+    QSettings settings(configPath, QSettings::IniFormat);
 
     config.callsign = settings.value("API/name", "OH7RDA").toString();
     config.apiKey = settings.value("API/apikey").toString();
     config.interval = settings.value("API/interval", 60000).toInt();
-    config.dbHost = settings.value("Database/host").toString();
-    config.dbName = settings.value("Database/database").toString();
+
+    // Récupération des infos de base de données (127.0.0.1 évite le bug du localhost)
+    config.dbHost = settings.value("Database/host", "127.0.0.1").toString();
+    config.dbUser = settings.value("Database/username", "root").toString();
+    config.dbPass = settings.value("Database/password", "").toString();
+    config.dbName = settings.value("Database/database", "votre_base").toString();
+
     config.wsPort = settings.value("WebSocket/port", 12345).toInt();
 
-    logToUI("Configuration chargee.");
+    // Vérification dans les logs de l'interface
+    if (QFile::exists(configPath)) {
+        logToUI("Configuration chargee depuis : " + configPath);
+        logToUI("Utilisateur BDD lu : " + config.dbUser);
+    } else {
+        logToUI("ATTENTION : Le fichier config.ini est introuvable !", true);
+    }
 }
 
 void aprsfi::on_LancerServeur_clicked() {
-    if (!database->connect(config.dbHost, "root", "toto", config.dbName)) return;
+    // UTILISATION DES VARIABLES DU FICHIER INI ICI (et plus "root", "toto")
+    if (!database->connect(config.dbHost, config.dbUser, config.dbPass, config.dbName)) return;
 
     apiClient->configure(config.callsign, "loc", config.apiKey, config.interval);
     apiClient->startPolling();
@@ -68,7 +84,7 @@ void aprsfi::onApiRawResponse(const QString &json) {
 
 void aprsfi::logToUI(const QString &message, bool isError) {
     QString time = QDateTime::currentDateTime().toString("hh:mm:ss");
-    QString prefix = isError ? "[ERREUR]" : "[INFO]"; // Utilisation du paramètre
+    QString prefix = isError ? "[ERREUR]" : "[INFO]";
     ui->LogsProgramme->append(QString("[%1] %2 %3").arg(time, prefix, message));
 }
 

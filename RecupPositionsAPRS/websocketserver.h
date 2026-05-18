@@ -7,6 +7,13 @@
 #include <QList>
 #include <QJsonArray>
 
+// Codes de retour explicites
+enum WsStatus {
+    WS_SUCCESS = 0,
+    WS_ERROR_ALREADY_RUNNING = 1,
+    WS_ERROR_START_FAILED = 2
+};
+
 class WebSocketServer : public QObject {
     Q_OBJECT
 
@@ -14,7 +21,7 @@ public:
     explicit WebSocketServer(QObject *parent = nullptr);
     ~WebSocketServer();
 
-    bool start(int port);
+    WsStatus start(int port);
     void stop();
     void broadcastPositions(const QJsonArray &positions);
 

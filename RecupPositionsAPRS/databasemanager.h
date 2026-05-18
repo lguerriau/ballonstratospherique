@@ -6,6 +6,15 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+// Codes de retour explicites au lieu de bool
+enum DbStatus {
+    DB_SUCCESS = 0,
+    DB_ERROR_CONNECTION = 1,
+    DB_ERROR_INSERT = 2,
+    DB_ERROR_UPDATE = 3,
+    DB_ERROR_NOT_CONNECTED = 4
+};
+
 class DatabaseManager : public QObject {
     Q_OBJECT
 
@@ -13,10 +22,11 @@ public:
     explicit DatabaseManager(QObject *parent = nullptr);
     ~DatabaseManager();
 
-    bool connect(const QString &host, const QString &user, const QString &password, const QString &dbName);
+    DbStatus connectToDatabase(const QString &host, const QString &user, const QString &password, const QString &dbName);
     void disconnect();
-    bool isConnected() const;
-    bool saveEntry(const QJsonObject &entry);
+    // SUPPRIMÉ: isConnected() - redondant avec db.isOpen()
+    DbStatus saveEntry(const QJsonObject &entry);
+    DbStatus saveTelemetry(const QJsonObject &entry);
     QJsonArray getCurrentPositions();
 
 signals:
@@ -25,8 +35,8 @@ signals:
 
 private:
     QSqlDatabase db;
-    bool insertIntoHistory(const QJsonObject &entry);
-    bool updatePosition(const QJsonObject &entry);
+    DbStatus insertIntoHistory(const QJsonObject &entry);
+    DbStatus updatePosition(const QJsonObject &entry);
 };
 
 #endif // DATABASEMANAGER_H

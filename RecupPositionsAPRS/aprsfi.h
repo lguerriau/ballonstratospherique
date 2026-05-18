@@ -25,7 +25,9 @@ private slots:
     void on_Quitter_clicked();
 
     void onApiDataReceived(const QJsonArray &entries);
+    void onApiDataReceivedWx(const QJsonArray &entries);
     void onApiRawResponse(const QString &json);
+    void onApiRawResponseWx(const QString &json);
     void onLogMessage(const QString &message);
     void onErrorMessage(const QString &error);
 
@@ -34,20 +36,25 @@ private:
 
     DatabaseManager *database;
     ApiClient *apiClient;
+    ApiClient *apiClientWx;
     WebSocketServer *wsServer;
 
-    bool isRunning = false;
+    bool isRunning;
 
-    // --- NOUVELLES VARIABLES DE CONFIGURATION ---
     QSettings *settings;
-    QString apiName, apiWhat, apiKey, apiFormat;
+    QString apiName;
+    QString apiWhat;
+    QString apiWhatWx;
+    QString apiKey;
+    QString apiFormat;
     int apiInterval;
-    QString dbHost, dbUser, dbPass, dbName;
+    QString dbHost;
+    QString dbUser;
+    QString dbPass;
+    QString dbName;
     int wsPort;
 
     void loadSettings();
-    // --------------------------------------------
-
     void logToUI(const QString &message, bool isError = false);
     void updateButtons();
 };

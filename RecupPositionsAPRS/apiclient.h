@@ -17,7 +17,7 @@ public:
     void configure(const QString &callsign, const QString &what, const QString &apiKey, int intervalMs);
     void startPolling();
     void stopPolling();
-    void fetchNow();
+    void sendRequest(); // Public pour permettre les appels manuels
 
 signals:
     void dataReceived(const QJsonArray &entries);
@@ -31,10 +31,10 @@ private slots:
 private:
     QNetworkAccessManager *networkManager;
     QTimer *pollTimer;
-    QString callsign, what, apiKey;
+    QString callsign;
+    QString what;
+    QString apiKey;
     int intervalMs;
-
-    void sendRequest();
 };
 
 #endif // APICLIENT_H

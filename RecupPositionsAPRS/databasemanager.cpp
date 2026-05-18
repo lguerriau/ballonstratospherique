@@ -172,13 +172,23 @@ QJsonArray DatabaseManager::getCurrentPositions() {
 
     if (db.isOpen()) {
         QSqlQuery query(db);
+        // Jointure pour coupler la position actuelle avec la dernière télémétrie enregistrée
+        QString sql = "SELECT p.name, p.lat, p.lng, t.temp, t.pressure, t.humidity, t.wind_direction, t.wind_speed "
+                      "FROM POSITION p "
+                      "LEFT JOIN TELEMETRIE t ON p.name = t.name "
+                      "AND t.time = (SELECT MAX(time) FROM TELEMETRIE WHERE name = p.name)";
 
-        if (query.exec("SELECT name, lat, lng FROM POSITION")) {
+        if (query.exec(sql)) {
             while (query.next()) {
                 QJsonObject pos;
-                pos["name"] = query.value("name").toString();
-                pos["lat"] = query.value("lat").toDouble();
-                pos["lng"] = query.value("lng").toDouble();
+                pos["name"] = query.value(0).toString();
+                pos["lat"] = query.value(1).toDouble();
+                pos["lng"] = query.value(2).toDouble();
+                pos["temp"] = query.value(3).toString();
+                pos["pressure"] = query.value(4).toString();
+                pos["humidity"] = query.value(5).toString();
+                pos["wind_direction"] = query.value(6).toString();
+                pos["wind_speed"] = query.value(7).toString();
                 positions.append(pos);
             }
         }

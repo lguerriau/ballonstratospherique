@@ -146,6 +146,8 @@ void aprsfi::onApiDataReceivedWx(const QJsonArray &entries) {
     for (const QJsonValue &val : entries) {
         database->saveTelemetry(val.toObject());
     }
+    // NOUVELLE LIGNE : On pousse la mise à jour globale vers le site web
+    wsServer->broadcastPositions(database->getCurrentPositions());
 }
 
 void aprsfi::onApiRawResponseWx(const QString &json) {

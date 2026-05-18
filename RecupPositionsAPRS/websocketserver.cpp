@@ -50,7 +50,7 @@ void WebSocketServer::stop() {
 }
 
 void WebSocketServer::broadcastPositions(const QJsonArray &positions) {
-    // Power of 10: vérifications explicites, pas de early return
+    // Power of 10 : vérifications explicites, flux linéaire continu
     if (!clients.isEmpty() && !positions.isEmpty()) {
         for (const QJsonValue &value : positions) {
             QJsonObject entry = value.toObject();
@@ -60,6 +60,13 @@ void WebSocketServer::broadcastPositions(const QJsonArray &positions) {
             msg["name"] = entry.value("name").toString();
             msg["lat"] = entry.value("lat").toDouble();
             msg["lng"] = entry.value("lng").toDouble();
+
+            // Transfert des variables de télémétrie lues depuis la BDD
+            msg["temp"] = entry.value("temp").toString();
+            msg["pressure"] = entry.value("pressure").toString();
+            msg["humidity"] = entry.value("humidity").toString();
+            msg["wind_direction"] = entry.value("wind_direction").toString();
+            msg["wind_speed"] = entry.value("wind_speed").toString();
 
             QString json = QJsonDocument(msg).toJson(QJsonDocument::Compact);
 

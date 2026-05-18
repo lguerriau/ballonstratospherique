@@ -1,0 +1,159 @@
+body { 
+    font-family: Arial, sans-serif; 
+    background: #1a1a1a; 
+    color: white; 
+    text-align: center; 
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.timestamp {
+    color: #bbb;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+/* Grille des cartes transformées en boutons */
+.dashboard { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px;
+    padding: 10px; 
+    margin-bottom: 25px;
+}
+
+.data-card { 
+    background: #2a2a2a; 
+    padding: 20px; 
+    border-radius: 8px; 
+    min-width: 240px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.data-card:hover {
+    transform: translateY(-3px);
+    background: #333;
+}
+
+/* Styles au clic / sélection de la carte */
+.data-card.active {
+    background: #3a3a3a;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.data-card h3 { 
+    margin: 0 0 10px 0; 
+    font-size: 1.2rem;
+}
+
+.data-card .valeur {
+    font-size: 2.3rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Couleurs spécifiques par carte */
+.card-temp { border-bottom: 4px solid #ff4d4d; }
+.card-temp h3, .card-temp.active .valeur { color: #ff4d4d; }
+
+.card-humidity { border-bottom: 4px solid #3498db; }
+.card-humidity h3, .card-humidity.active .valeur { color: #3498db; }
+
+.card-pressure { border-bottom: 4px solid #2ecc71; }
+.card-pressure h3, .card-pressure.active .valeur { color: #2ecc71; }
+
+
+/* --- Structure Basse : Graphique (85%) & Historique (15%) --- */
+.analytics-section {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 20px;
+    height: 450px; /* Hauteur fixe pour aligner le graphique et la liste */
+}
+
+/* Zone Graphique prenant 85% */
+.chart-container {
+    flex: 0 0 calc(80% - 10px);
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Zone Historique prenant 15% */
+.history-container {
+    flex: 0 0 calc(20% - 10px);
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.history-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    color: #eee;
+}
+
+/* Liste textuelle défilante */
+.history-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 5px;
+}
+
+.history-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #333;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.history-item .time {
+    color: #aaa;
+}
+
+.history-item .val {
+    font-weight: bold;
+}
+
+/* Personnalisation de la barre de défilement de l'historique */
+.history-list::-webkit-scrollbar {
+    width: 6px;
+}
+.history-list::-webkit-scrollbar-track {
+    background: #222;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+/* --- Bloc Erreur --- */
+.error-card {
+    background: #c0392b;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.error-card small {
+    display: block;
+    margin-top: 10px;
+    color: #ffd2d2;
+}

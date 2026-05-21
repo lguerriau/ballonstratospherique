@@ -5,7 +5,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-
 ApiClient::ApiClient(QObject *parent)
     : QObject(parent)
     , networkManager(nullptr)
@@ -29,11 +28,10 @@ void ApiClient::configure(const QString &callsign, const QString &what, const QS
 }
 
 void ApiClient::startPolling() {
-    // Power of 10: pas de early return
     if (!pollTimer->isActive()) {
-        sendRequest(); // Premier appel immédiat
+        sendRequest();
         pollTimer->start(intervalMs);
-        emit logMessage(QString("Boucle API demarree (%1 ms).").arg(intervalMs));
+        emit logMessage(QString("Boucle API demarree (%1) : %2 ms.").arg(what).arg(intervalMs));
     }
 }
 
@@ -59,22 +57,21 @@ void ApiClient::sendRequest() {
 void ApiClient::onReplyFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 
-    // Power of 10: flux de contrôle simple, un seul chemin
     if (reply == nullptr) {
         return;
     }
 
-    // Gestion d'erreur réseau
     if (reply->error() != QNetworkReply::NoError) {
-        emit errorOccurred("Erreur API : " + reply->errorString());
+        emit errorOccurred(QString("Erreur API (%1) : %2").arg(what, reply->errorString()));
         reply->deleteLater();
         return;
     }
 
-    // Traitement de la réponse valide
     QByteArray data = reply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
-    emit rawResponse(doc.toJson(QJsonDocument::Indented));
+
+    // On envoie le type de requête avec la raw response
+    emit rawResponse(doc.toJson(QJsonDocument::Indented), what);
 
     QJsonObject obj = doc.object();
     QString result = obj["result"].toString();
@@ -84,10 +81,10 @@ void ApiClient::onReplyFinished() {
         int entryCount = entries.size();
 
         if (entryCount == 0) {
-            emit logMessage("API OK : Aucune position trouvee.");
+            emit logMessage(QString("API OK (%1) : Aucune donnee trouvee.").arg(what));
         } else {
-            emit logMessage(QString("API OK : %1 position(s) recuperee(s).").arg(entryCount));
-            emit dataReceived(entries);
+            emit logMessage(QString("API OK (%1) : %2 donnee(s) recuperee(s).").arg(what).arg(entryCount));
+            emit dataReceived(entries, what);
         }
     } else {
         emit errorOccurred("Erreur APRS.fi : " + obj["description"].toString());

@@ -15,13 +15,16 @@ public:
     ~ApiClient();
 
     void configure(const QString &callsign, const QString &what, const QString &apiKey, int intervalMs);
+
+public slots:
     void startPolling();
     void stopPolling();
-    void sendRequest(); // Public pour permettre les appels manuels
+    void sendRequest();
 
 signals:
-    void dataReceived(const QJsonArray &entries);
-    void rawResponse(const QString &json);
+    // Ajout du paramètre 'type' pour supprimer la redondance
+    void dataReceived(const QJsonArray &entries, const QString &type);
+    void rawResponse(const QString &json, const QString &type);
     void logMessage(const QString &message);
     void errorOccurred(const QString &error);
 

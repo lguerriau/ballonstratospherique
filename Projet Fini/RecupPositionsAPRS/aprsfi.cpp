@@ -15,8 +15,7 @@ aprsfi::aprsfi(QWidget *parent)
     , wsServer(nullptr)
     , isRunning(false)
     , settings(nullptr)
-    , apiInterval(0)
-    , wsPort(0) {
+    , apiInterval(0) {
 
     ui->setupUi(this);
 
@@ -28,6 +27,7 @@ aprsfi::aprsfi(QWidget *parent)
     connect(database, &DatabaseManager::logMessage, this, &aprsfi::onLogMessage);
     connect(database, &DatabaseManager::errorOccurred, this, &aprsfi::onErrorMessage);
 
+    // Même slot pour les deux clients API, le type fera la différence
     connect(apiClient, &ApiClient::logMessage, this, &aprsfi::onLogMessage);
     connect(apiClient, &ApiClient::errorOccurred, this, &aprsfi::onErrorMessage);
     connect(apiClient, &ApiClient::dataReceived, this, &aprsfi::onApiDataReceived);
@@ -35,13 +35,13 @@ aprsfi::aprsfi(QWidget *parent)
 
     connect(apiClientWx, &ApiClient::logMessage, this, &aprsfi::onLogMessage);
     connect(apiClientWx, &ApiClient::errorOccurred, this, &aprsfi::onErrorMessage);
-    connect(apiClientWx, &ApiClient::dataReceived, this, &aprsfi::onApiDataReceivedWx);
-    connect(apiClientWx, &ApiClient::rawResponse, this, &aprsfi::onApiRawResponseWx);
+    connect(apiClientWx, &ApiClient::dataReceived, this, &aprsfi::onApiDataReceived);
+    connect(apiClientWx, &ApiClient::rawResponse, this, &aprsfi::onApiRawResponse);
 
     connect(wsServer, &WebSocketServer::logMessage, this, &aprsfi::onLogMessage);
     connect(wsServer, &WebSocketServer::errorOccurred, this, &aprsfi::onErrorMessage);
 
-    QString configPath = "/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/RecupPositionsAPRS/config.ini";
+    QString configPath = "config.ini";
     settings = new QSettings(configPath, QSettings::IniFormat, this);
 
     loadSettings();
@@ -62,28 +62,24 @@ void aprsfi::loadSettings() {
     apiFormat = settings->value("API/format").toString();
     apiInterval = settings->value("API/interval").toInt();
 
-    dbHost = settings->value("Database/host").toString();
-    dbUser = settings->value("Database/username").toString();
-    dbPass = settings->value("Database/password").toString();
-    dbName = settings->value("Database/database").toString();
-
-    wsPort = settings->value("WebSocket/port").toInt();
+    // Délégation : Chacun s'occupe de sa propre configuration
+    database->loadConfig(settings);
+    wsServer->loadConfig(settings);
 }
 
 void aprsfi::on_LancerServeur_clicked() {
     if (!isRunning) {
         logToUI("Demarrage du serveur avec les parametres du config.ini...");
-        DbStatus dbStatus = database->connectToDatabase(dbHost, dbUser, dbPass, dbName);
+        DbStatus dbStatus = database->connectToDatabase();
 
         if (dbStatus == DB_SUCCESS) {
-            WsStatus wsStatus = wsServer->start(wsPort);
+            WsStatus wsStatus = wsServer->start();
 
             if (wsStatus == WS_SUCCESS) {
                 apiClient->configure(apiName, apiWhat, apiKey, apiInterval);
-                apiClient->startPolling(); // Démarre immédiatement
+                apiClient->startPolling();
 
                 apiClientWx->configure(apiName, apiWhatWx, apiKey, apiInterval);
-                // Décalage de 5 secondes (5000 ms) pour la télémétrie afin d'éviter le blocage de l'API (Rate Limit)
                 QTimer::singleShot(5000, apiClientWx, &ApiClient::startPolling);
 
                 isRunning = true;
@@ -103,24 +99,27 @@ void aprsfi::on_ForcerAPI_clicked() {
     ui->RepAPI->append("En attente de reponse...");
 
     apiClient->sendRequest();
-
-    // Décalage de 2 secondes en manuel pour ne pas heurter la limite de requêtes simultanées
     QTimer::singleShot(2000, apiClientWx, &ApiClient::sendRequest);
 }
 
-void aprsfi::on_Quitter_clicked() {
-    QApplication::quit();
-}
-
-void aprsfi::onApiDataReceived(const QJsonArray &entries) {
-    for (const QJsonValue &val : entries) {
-        database->saveEntry(val.toObject());
+void aprsfi::onApiDataReceived(const QJsonArray &entries, const QString &type) {
+    if (type == apiWhatWx) {
+        for (const QJsonValue &val : entries) {
+            database->saveTelemetry(val.toObject());
+        }
+    } else {
+        for (const QJsonValue &val : entries) {
+            database->saveEntry(val.toObject());
+        }
     }
     wsServer->broadcastPositions(database->getCurrentPositions());
 }
 
-void aprsfi::onApiRawResponse(const QString &json) {
-    ui->RepAPI->setPlainText(json);
+void aprsfi::onApiRawResponse(const QString &json, const QString &type) {
+    if (type == apiWhatWx) {
+        ui->RepAPI->append("\n================== TELEMETRIES (WX) ==================\n");
+    }
+    ui->RepAPI->append(json);
 }
 
 void aprsfi::logToUI(const QString &message, bool isError) {
@@ -140,18 +139,4 @@ void aprsfi::onErrorMessage(const QString &err) {
 void aprsfi::updateButtons() {
     ui->LancerServeur->setEnabled(!isRunning);
     ui->ForcerAPI->setEnabled(isRunning);
-}
-
-void aprsfi::onApiDataReceivedWx(const QJsonArray &entries) {
-    for (const QJsonValue &val : entries) {
-        database->saveTelemetry(val.toObject());
-    }
-    // NOUVELLE LIGNE : On pousse la mise à jour globale vers le site web
-    wsServer->broadcastPositions(database->getCurrentPositions());
-}
-
-void aprsfi::onApiRawResponseWx(const QString &json) {
-    // On ajoute un séparateur visuel clair suivi du flux JSON de la météo
-    ui->RepAPI->append("\n================== TELEMETRIE (WX) ==================\n");
-    ui->RepAPI->append(json);
 }

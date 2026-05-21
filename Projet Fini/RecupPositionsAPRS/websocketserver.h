@@ -6,8 +6,8 @@
 #include <QWebSocket>
 #include <QList>
 #include <QJsonArray>
+#include <QSettings>
 
-// Codes de retour explicites
 enum WsStatus {
     WS_SUCCESS = 0,
     WS_ERROR_ALREADY_RUNNING = 1,
@@ -21,7 +21,8 @@ public:
     explicit WebSocketServer(QObject *parent = nullptr);
     ~WebSocketServer();
 
-    WsStatus start(int port);
+    void loadConfig(QSettings *settings);
+    WsStatus start();
     void stop();
     void broadcastPositions(const QJsonArray &positions);
 
@@ -37,7 +38,7 @@ private slots:
 private:
     QWebSocketServer *server;
     QList<QWebSocket*> clients;
-    int port;
+    int m_port;
 };
 
 #endif // WEBSOCKETSERVER_H

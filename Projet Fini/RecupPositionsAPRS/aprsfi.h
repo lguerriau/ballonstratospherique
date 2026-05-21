@@ -22,12 +22,10 @@ public:
 private slots:
     void on_LancerServeur_clicked();
     void on_ForcerAPI_clicked();
-    void on_Quitter_clicked();
 
-    void onApiDataReceived(const QJsonArray &entries);
-    void onApiDataReceivedWx(const QJsonArray &entries);
-    void onApiRawResponse(const QString &json);
-    void onApiRawResponseWx(const QString &json);
+    // Une seule méthode de traitement, on utilisera le paramètre "type" pour différencier Loc et Wx
+    void onApiDataReceived(const QJsonArray &entries, const QString &type);
+    void onApiRawResponse(const QString &json, const QString &type);
     void onLogMessage(const QString &message);
     void onErrorMessage(const QString &error);
 
@@ -48,11 +46,6 @@ private:
     QString apiKey;
     QString apiFormat;
     int apiInterval;
-    QString dbHost;
-    QString dbUser;
-    QString dbPass;
-    QString dbName;
-    int wsPort;
 
     void loadSettings();
     void logToUI(const QString &message, bool isError = false);

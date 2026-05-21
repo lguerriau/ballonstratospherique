@@ -5,39 +5,39 @@
 WebSocketServer::WebSocketServer(QObject *parent)
     : QObject(parent)
     , server(nullptr)
-    , port(0) {}
+    , m_port(0) {}
 
 WebSocketServer::~WebSocketServer() {
     stop();
 }
 
-WsStatus WebSocketServer::start(int port) {
+void WebSocketServer::loadConfig(QSettings *settings) {
+    m_port = settings->value("WebSocket/port").toInt();
+}
+
+WsStatus WebSocketServer::start() {
     WsStatus status = WS_ERROR_START_FAILED;
 
-    // Power of 10: pas de early return
     if (server != nullptr && server->isListening()) {
         status = WS_ERROR_ALREADY_RUNNING;
     } else {
-        this->port = port;
         server = new QWebSocketServer("APRS WebSocket Server", QWebSocketServer::NonSecureMode, this);
 
-        if (server->listen(QHostAddress::Any, port)) {
+        if (server->listen(QHostAddress::Any, m_port)) {
             connect(server, &QWebSocketServer::newConnection, this, &WebSocketServer::onNewConnection);
-            emit logMessage("Serveur WebSocket en ecoute sur le port " + QString::number(port));
+            emit logMessage("Serveur WebSocket en ecoute sur le port " + QString::number(m_port));
             status = WS_SUCCESS;
         } else {
             emit errorOccurred("Impossible de demarrer le serveur WebSocket.");
             status = WS_ERROR_START_FAILED;
         }
     }
-
     return status;
 }
 
 void WebSocketServer::stop() {
     if (server != nullptr) {
-        // Fermeture de tous les clients
-        for (QWebSocket *client : std::as_const(clients)) {
+        for (QWebSocket *client : qAsConst(clients)) {
             client->close();
             client->deleteLater();
         }
@@ -50,7 +50,6 @@ void WebSocketServer::stop() {
 }
 
 void WebSocketServer::broadcastPositions(const QJsonArray &positions) {
-    // Power of 10 : vérifications explicites, flux linéaire continu
     if (!clients.isEmpty() && !positions.isEmpty()) {
         for (const QJsonValue &value : positions) {
             QJsonObject entry = value.toObject();
@@ -61,7 +60,6 @@ void WebSocketServer::broadcastPositions(const QJsonArray &positions) {
             msg["lat"] = entry.value("lat").toDouble();
             msg["lng"] = entry.value("lng").toDouble();
 
-            // Transfert des variables de télémétrie lues depuis la BDD
             msg["temp"] = entry.value("temp").toString();
             msg["pressure"] = entry.value("pressure").toString();
             msg["humidity"] = entry.value("humidity").toString();

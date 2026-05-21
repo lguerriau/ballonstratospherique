@@ -9,24 +9,29 @@ DatabaseManager::~DatabaseManager() {
     disconnect();
 }
 
-DbStatus DatabaseManager::connectToDatabase(const QString &host, const QString &user, const QString &password, const QString &dbName) {
+void DatabaseManager::loadConfig(QSettings *settings) {
+    m_host = settings->value("Database/host").toString();
+    m_user = settings->value("Database/username").toString();
+    m_pass = settings->value("Database/password").toString();
+    m_dbName = settings->value("Database/database").toString();
+}
+
+DbStatus DatabaseManager::connectToDatabase() {
     DbStatus status = DB_ERROR_CONNECTION;
 
-    // Gestion de la connexion existante
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         db = QSqlDatabase::database(QSqlDatabase::defaultConnection);
     } else {
         db = QSqlDatabase::addDatabase("QMYSQL");
     }
 
-    db.setHostName(host);
-    db.setUserName(user);
-    db.setPassword(password);
-    db.setDatabaseName(dbName);
+    db.setHostName(m_host);
+    db.setUserName(m_user);
+    db.setPassword(m_pass);
+    db.setDatabaseName(m_dbName);
 
-    // Power of 10: un seul point de retour, code explicite
     if (db.open()) {
-        emit logMessage("Connexion reussie a la BDD : " + dbName + " sur " + host);
+        emit logMessage("Connexion reussie a la BDD : " + m_dbName + " sur " + m_host);
         status = DB_SUCCESS;
     } else {
         emit errorOccurred("Erreur de connexion BDD : " + db.lastError().text());
@@ -46,21 +51,17 @@ void DatabaseManager::disconnect() {
 DbStatus DatabaseManager::saveEntry(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_NOT_CONNECTED;
 
-    // Power of 10: vérification explicite au lieu de early return
     if (db.isOpen()) {
         DbStatus historyStatus = insertIntoHistory(entry);
         DbStatus positionStatus = updatePosition(entry);
 
-        // Les deux opérations doivent réussir
         if (historyStatus == DB_SUCCESS && positionStatus == DB_SUCCESS) {
             emit logMessage("Sauvegarde BDD OK pour : " + entry.value("name").toString());
             status = DB_SUCCESS;
         } else {
-            // Propagation du premier code d'erreur rencontré
             status = (historyStatus != DB_SUCCESS) ? historyStatus : positionStatus;
         }
     }
-
     return status;
 }
 
@@ -90,7 +91,6 @@ DbStatus DatabaseManager::insertIntoHistory(const QJsonObject &entry) {
         emit errorOccurred("Erreur insertion HISTORIQUE : " + query.lastError().text());
         status = DB_ERROR_INSERT;
     }
-
     return status;
 }
 
@@ -98,20 +98,18 @@ DbStatus DatabaseManager::updatePosition(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_UPDATE;
     QString name = entry.value("name").toString();
 
-    // Vérifier si l'entrée existe
     QSqlQuery checkQuery(db);
-    checkQuery.prepare("SELECT COUNT(*) FROM POSITION WHERE name = :name");
+    checkQuery.prepare("SELECT COUNT(*) FROM POSITIONS WHERE name = :name");
     checkQuery.bindValue(":name", name);
 
     if (checkQuery.exec() && checkQuery.next()) {
         int exists = checkQuery.value(0).toInt();
         QSqlQuery posQuery(db);
 
-        // Préparation de la requête selon l'existence
         if (exists > 0) {
-            posQuery.prepare("UPDATE POSITION SET lat = :lat, lng = :lng, lasttime = :lasttime WHERE name = :name");
+            posQuery.prepare("UPDATE POSITIONS SET lat = :lat, lng = :lng, lasttime = :lasttime WHERE name = :name");
         } else {
-            posQuery.prepare("INSERT INTO POSITION (name, lat, lng, lasttime) VALUES (:name, :lat, :lng, :lasttime)");
+            posQuery.prepare("INSERT INTO POSITIONS (name, lat, lng, lasttime) VALUES (:name, :lat, :lng, :lasttime)");
         }
 
         posQuery.bindValue(":name", name);
@@ -122,14 +120,13 @@ DbStatus DatabaseManager::updatePosition(const QJsonObject &entry) {
         if (posQuery.exec()) {
             status = DB_SUCCESS;
         } else {
-            emit errorOccurred("Erreur update POSITION : " + posQuery.lastError().text());
+            emit errorOccurred("Erreur update POSITIONS : " + posQuery.lastError().text());
             status = DB_ERROR_UPDATE;
         }
     } else {
-        emit errorOccurred("Erreur verification POSITION : " + checkQuery.lastError().text());
+        emit errorOccurred("Erreur verification POSITIONS : " + checkQuery.lastError().text());
         status = DB_ERROR_UPDATE;
     }
-
     return status;
 }
 
@@ -138,12 +135,14 @@ DbStatus DatabaseManager::saveTelemetry(const QJsonObject &entry) {
 
     if (db.isOpen()) {
         QSqlQuery query(db);
-        // Utilisation de REPLACE INTO pour éviter les erreurs de clé primaire (doublons)
-        query.prepare("REPLACE INTO TELEMETRIE (id_telemetrie, name, time, temp, pressure, humidity, wind_direction, wind_speed) "
-                      "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity, :wind_direction, :wind_speed)");
+        // query.prepare("REPLACE INTO TELEMETRIES (id_telemetrie, name, time, temp, pressure, humidity, wind_direction, wind_speed) "
+        //               "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity, :wind_direction, :wind_speed)");
 
-        QString name = entry.value("name").toVariant().toString();
-        QString timeStr = entry.value("time").toVariant().toString();
+        query.prepare("REPLACE INTO TELEMETRIES (id_telemetrie, name, time, temp, pressure, humidity) "
+                      "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity) ; ");
+
+        QString name = entry.value("name").toString();
+        QString timeStr = entry.value("time").toString();
         QString idTelemetrie = name + "_" + timeStr;
 
         query.bindValue(":id_telemetrie", idTelemetrie);
@@ -152,18 +151,17 @@ DbStatus DatabaseManager::saveTelemetry(const QJsonObject &entry) {
         query.bindValue(":temp", entry.value("temp").toVariant().toString());
         query.bindValue(":pressure", entry.value("pressure").toVariant().toString());
         query.bindValue(":humidity", entry.value("humidity").toVariant().toString());
-        query.bindValue(":wind_direction", entry.value("wind_direction").toVariant().toString());
-        query.bindValue(":wind_speed", entry.value("wind_speed").toVariant().toString());
+      /*  query.bindValue(":wind_direction", entry.value("wind_direction").toVariant().toString());
+        query.bindValue(":wind_speed", entry.value("wind_speed").toVariant().toString());*/
 
         if (query.exec()) {
             emit logMessage("Sauvegarde Telemetrie OK pour : " + name);
             status = DB_SUCCESS;
         } else {
-            emit errorOccurred("Erreur SQL TELEMETRIE : " + query.lastError().text());
+            emit errorOccurred("Erreur SQL TELEMETRIES : " + query.lastError().text());
             status = DB_ERROR_INSERT;
         }
     }
-
     return status;
 }
 
@@ -172,11 +170,10 @@ QJsonArray DatabaseManager::getCurrentPositions() {
 
     if (db.isOpen()) {
         QSqlQuery query(db);
-        // Jointure pour coupler la position actuelle avec la dernière télémétrie enregistrée
         QString sql = "SELECT p.name, p.lat, p.lng, t.temp, t.pressure, t.humidity, t.wind_direction, t.wind_speed "
-                      "FROM POSITION p "
-                      "LEFT JOIN TELEMETRIE t ON p.name = t.name "
-                      "AND t.time = (SELECT MAX(time) FROM TELEMETRIE WHERE name = p.name)";
+                      "FROM POSITIONS p "
+                      "LEFT JOIN TELEMETRIES t ON p.name = t.name "
+                      "AND t.time = (SELECT MAX(time) FROM TELEMETRIES WHERE name = p.name)";
 
         if (query.exec(sql)) {
             while (query.next()) {
@@ -193,6 +190,5 @@ QJsonArray DatabaseManager::getCurrentPositions() {
             }
         }
     }
-
     return positions;
 }

@@ -1,0 +1,155 @@
+body { 
+    font-family: Arial, sans-serif; 
+    background: #1a1a1a; 
+    color: white; 
+    text-align: center; 
+    margin: 0;
+    padding: 20px;
+}
+h1 { margin-bottom: 5px; }
+.timestamp { color: #bbb; font-style: italic; margin-bottom: 30px; }
+.dashboard { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px; margin-bottom: 25px; }
+.data-card { background: #2a2a2a; padding: 20px; border-radius: 8px; min-width: 240px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s; }
+.data-card:hover { transform: translateY(-3px); background: #333; }
+.data-card.active { background: #3a3a3a; box-shadow: 0 0 12px rgba(255, 255, 255, 0.15); }
+.data-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+.data-card .valeur { font-size: 2.3rem; font-weight: bold; margin: 0; }
+.card-temp { border-bottom: 4px solid #ff4d4d; }
+.card-temp h3, .card-temp.active .valeur { color: #ff4d4d; }
+.card-humidity { border-bottom: 4px solid #3498db; }
+.card-humidity h3, .card-humidity.active .valeur { color: #3498db; }
+.card-pressure { border-bottom: 4px solid #2ecc71; }
+.card-pressure h3, .card-pressure.active .valeur { color: #2ecc71; }
+.analytics-section { display: flex; width: 100%; max-width: 1400px; margin: 0 auto; gap: 20px; height: 450px; }
+.chart-container { flex: 0 0 calc(80% - 10px); background: #222; padding: 15px; border-radius: 8px; box-sizing: border-box; position: relative; }
+.history-container { flex: 0 0 calc(20% - 10px); background: #222; padding: 15px; border-radius: 8px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; }
+.history-container h3 { margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid #444; padding-bottom: 5px; color: #eee; }
+.history-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+.history-item { padding: 6px 0; border-bottom: 1px solid #333; font-family: monospace; font-size: 0.9rem; }
+.history-item .time { color: #aaa; }
+.history-item .val { font-weight: bold; }
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-track { background: #222; }
+.history-list::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+.error-card { background: #c0392b; padding: 20px; display: inline-block; border-radius: 5px; margin-top: 20px; }
+.error-card small { display: block; margin-top: 10px; color: #ffd2d2; }
+
+/* Barre des onglets */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 30px auto;
+    max-width: 600px;
+    background: #222;
+    padding: 6px;
+    border-radius: 30px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    color: #888;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+/* Onglet Sélectionné - Style Argenté / Gris-Bleuté */
+.tab-btn.active {
+    background: #90a4ae; 
+    color: #1a1a1a;     
+    box-shadow: 0 4px 10px rgba(144, 164, 174, 0.4);
+}
+
+/* Affichage du contenu */
+.tab-content {
+    display: none;
+    animation: fadeEffect 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeEffect {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Actions Galerie */
+.sstv-actions {
+    margin-bottom: 25px;
+}
+.btn-video {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #7da18a; /* Vert cassé argenté (Sauge / Vert-de-gris métallique) */
+    color: #1a1a1a;      /* Texte sombre pour un contraste moderne et propre */
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(125, 161, 138, 0.25);
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-video:hover {
+    transform: translateY(-2px);
+    background: #94b5a0; /* Teinte plus claire et plus "argentée" au survol */
+    box-shadow: 0 6px 15px rgba(125, 161, 138, 0.4);
+}
+
+/* Configuration Galerie SSTV */
+.galerie-sstv {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.photo-card {
+    background: #222;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    border: 1px solid #333;
+    transition: border-color 0.2s;
+}
+
+.photo-card:hover {
+    border-color: #90a4ae;
+}
+
+.photo-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    background: #111;
+}
+
+.photo-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-family: monospace;
+}
+
+.photo-id {
+    color: #90a4ae;
+    font-weight: bold;
+}
+
+.photo-date {
+    color: #aaa;
+}

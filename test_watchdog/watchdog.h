@@ -1,5 +1,5 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef WATCHDOG_H
+#define WATCHDOG_H
 
 #include <QWidget>
 #include <QFileSystemWatcher>
@@ -9,12 +9,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
-class Widget : public QWidget {
+class Watchdog : public QWidget {
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = nullptr);
-    ~Widget();
+    Watchdog(QWidget *parent = nullptr);
+    ~Watchdog();
 
 private slots:
     void onDossierModifie(const QString &path);
@@ -26,4 +26,4 @@ private:
     QStringList imagesTraitees;
 };
 
-#endif // WIDGET_H
+#endif // WATCHDOG_H

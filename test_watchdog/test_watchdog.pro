@@ -11,14 +11,14 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     bdd.cpp \
-    widget.cpp
+    watchdog.cpp
 
 HEADERS += \
     bdd.h \
-    widget.h
+    watchdog.h
 
 FORMS += \
-    widget.ui
+    watchdog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -17,7 +17,7 @@ try {
 }
 
 // 2. Récupérer les chemins des images présentes en BDD
-$query = $db->query("SELECT chemin_image FROM IMAGE ORDER BY id_image ASC");
+$query = $db->query("SELECT chemin_image FROM IMAGES ORDER BY id_image ASC");
 $images = $query->fetchAll(PDO::FETCH_COLUMN);
 
 $nom_video = "timelapse_sstv.mp4";

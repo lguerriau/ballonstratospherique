@@ -1,10 +1,10 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "watchdog.h"
+#include "ui_watchdog.h"
 #include <QDir>
 #include <QDebug>
 #include <QTimer>
 
-Widget::Widget(QWidget *parent)
+Watchdog::Watchdog(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
@@ -31,14 +31,14 @@ Widget::Widget(QWidget *parent)
     qDebug() << "[SYSTEM] : Surveillance active sur" << chemin;
 }
 
-Widget::~Widget()
+Watchdog::~Watchdog()
 {
     delete ui;
 }
 
 
 
-void Widget::onDossierModifie(const QString &path) {
+void Watchdog::onDossierModifie(const QString &path) {
     QDir dir(path);
     QStringList filter;
     filter << "*.jpg" << "*.JPG" << "*.jpeg" << "*.JPEG"<< "*.bmp";

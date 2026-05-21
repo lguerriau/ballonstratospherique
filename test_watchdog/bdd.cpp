@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "watchdog.h"
+#include "ui_watchdog.h"
 
 Bdd::Bdd(QWidget *parent) : QWidget(parent)
 {
@@ -53,7 +53,7 @@ bool Bdd::enregistrerPhoto(QString cheminFichier, bool pourWeb) {
 
     QSqlQuery query;
     // On prépare la requête SQL
-    query.prepare("INSERT INTO IMAGE (chemin_image, horodatage_image, disponible_web) VALUES (:path, NOW(), :web)");
+    query.prepare("INSERT INTO IMAGES (chemin_image, horodatage_image, disponible_web) VALUES (:path, NOW(), :web)");
 
     // On remplace le marqueur :path par le vrai chemin
     query.bindValue(":path", cheminFichier);

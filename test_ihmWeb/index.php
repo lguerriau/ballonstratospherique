@@ -17,7 +17,7 @@ try {
 }
 
 // Récupérer les images (on utilise le chemin stocké en BDD)
-$requete = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAGE ORDER BY id_image DESC');
+$requete = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAGES ORDER BY id_image DESC');
 ?>
 
 <!DOCTYPE html>

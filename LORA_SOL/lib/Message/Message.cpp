@@ -1,75 +1,145 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 #include "Message.h"
 
-Message::   Message(String _callsign,String _destination,String _path,String _recipient,String _comment):
-callsign(_callsign),
-destination(_destination),
-path(_path),
-recipient(_recipient),
-comment (_comment)
-{
-messageId=1; 
+Message::Message() {
+    messageId = 1; 
+    ack = false;
+    pduLength = 0;
+    // Mise à zéro propre de la mémoire
+    memset(callsign, 0, MAX_CALLSIGN_LEN);
+    memset(destination, 0, MAX_DEST_LEN);
+    memset(path, 0, MAX_PATH_LEN);
+    memset(recipient, 0, MAX_RECIPIENT_LEN);
+    memset(comment, 0, MAX_COMMENT_LEN);
+    memset(pdu, 0, MAX_PDU_LEN);
 }
 
-Message::Message(const Message& orig) {
-}
+bool Message::init(const char* _callsign, const char* _dest, const char* _path, const char* _recip, const char* _comment) {
+    if (_callsign == nullptr || _dest == nullptr || _path == nullptr || _recip == nullptr) return false;
+    if (strlen(_callsign) >= MAX_CALLSIGN_LEN || strlen(_dest) >= MAX_DEST_LEN) return false;
 
-Message::~Message() {
- 
-}
-
-int Message::getPduLength() {
-    return pduLength;
-}
-
-int Message::getMessageId() {
-    return messageId;
-}
-
-
-
-void Message::setComment(String _comment) {
-    comment=_comment;
-    if (comment.length() > 67) {
-        comment = comment.substring(0, 67); //67 char max
+    strncpy(this->callsign, _callsign, MAX_CALLSIGN_LEN - 1);
+    strncpy(this->destination, _dest, MAX_DEST_LEN - 1);
+    strncpy(this->path, _path, MAX_PATH_LEN - 1);
+    strncpy(this->recipient, _recip, MAX_RECIPIENT_LEN - 1);
+    
+    if (_comment != nullptr) {
+        strncpy(this->comment, _comment, MAX_COMMENT_LEN - 1);
     }
+    return true;
 }
 
-void Message::setCallsign(String _callsign){
-  callsign=_callsign;  
+bool Message::setComment(const char* _comment) {
+    if (_comment == nullptr) return false;
+    size_t inLen = strlen(_comment);
+    if (inLen == 0) return false; 
+    
+    strncpy(comment, _comment, MAX_COMMENT_LEN - 1);
+    comment[MAX_COMMENT_LEN - 1] = '\0'; 
+    return true;
 }
 
-void Message::setRecipient(String _recipient){
-	recipient=_recipient;
-	recipient = recipient.substring(0, 9);
+bool Message::setCallsign(const char* _callsign) {
+    if (_callsign == nullptr) return false;
+    strncpy(callsign, _callsign, MAX_CALLSIGN_LEN - 1);
+    callsign[MAX_CALLSIGN_LEN - 1] = '\0';
+    return true;
 }
 
-char* Message::getPduMes(bool ack){
-    String header;
-       
-   
-    header = callsign + ">" + destination + "," + path + "::"+recipient+":"+ comment;
-    char messageArray[150];
-    header.toCharArray(messageArray, 150);
+bool Message::setRecipient(const char* _recipient) {
+    if (_recipient == nullptr) return false;
+    strncpy(recipient, _recipient, MAX_RECIPIENT_LEN - 1);
+    recipient[MAX_RECIPIENT_LEN - 1] = '\0';
+    return true;
+}
+
+bool Message::getPduMes(bool ackMode, char* outputBuffer, size_t bufferSize) {
+    if (outputBuffer == nullptr) return false;
+    if (bufferSize < MAX_PDU_LEN) return false;
 
     messageId++;
     if (messageId > MAX_MESSAGES_ID) {
-        messageId = 0;
+        messageId = 1;
     }
-	if (ack){
-    snprintf(pdu, sizeof (pdu), "%s{%d", messageArray, messageId);
-	}
-	else
-	{
-	snprintf(pdu, sizeof (pdu), "%s", messageArray);	
-	}		
+
+    if (ackMode) {
+        snprintf(pdu, sizeof(pdu), "%s>%s,%s::%s:%s{%d", 
+                 callsign, destination, path, recipient, comment, messageId);
+    } else {
+        snprintf(pdu, sizeof(pdu), "%s>%s,%s::%s:%s", 
+                 callsign, destination, path, recipient, comment);
+    }
+
     pduLength = strlen(pdu);
-    return pdu;
+    strncpy(outputBuffer, pdu, bufferSize);
+    return true;
+}
+
+int Message::getMessageId() { return messageId; }
+bool Message::isAckRequested() { return ack; }
+int Message::getPduLength() { return pduLength; }
+
+bool Message::getCallsign(char* outputBuffer, size_t size) {
+    if (outputBuffer == nullptr || size <= strlen(callsign)) return false; 
+    strncpy(outputBuffer, callsign, size);
+    return true;
+}
+
+bool Message::getRecipient(char* outputBuffer, size_t size) {
+    if (outputBuffer == nullptr || size <= strlen(recipient)) return false;
+    strncpy(outputBuffer, recipient, size);
+    return true;
+}
+
+bool Message::getComment(char* outputBuffer, size_t size) {
+    if (outputBuffer == nullptr || size <= strlen(comment)) return false;
+    strncpy(outputBuffer, comment, size);
+    return true;
+}
+
+bool Message::decode(const char* trameRecue) {
+    if (trameRecue == nullptr || strlen(trameRecue) < 5) return false;
+
+    const char* ptrSup = strchr(trameRecue, '>');
+    if (ptrSup == nullptr) return false;
+
+    const char* ptrDoublePoints = strstr(trameRecue, "::");
+    if (ptrDoublePoints == nullptr) return false;
+
+    const char* debutDest = ptrDoublePoints + 2;
+    const char* ptrSimplePoint = strchr(debutDest, ':');
+    if (ptrSimplePoint == nullptr) return false;
+
+    size_t callsignLen = ptrSup - trameRecue;
+    if (callsignLen >= MAX_CALLSIGN_LEN) callsignLen = MAX_CALLSIGN_LEN - 1;
+    strncpy(callsign, trameRecue, callsignLen);
+    callsign[callsignLen] = '\0';
+
+    size_t destLen = ptrSimplePoint - debutDest;
+    if (destLen >= MAX_RECIPIENT_LEN) destLen = MAX_RECIPIENT_LEN - 1;
+    strncpy(recipient, debutDest, destLen);
+    recipient[destLen] = '\0';
+
+    const char* debutComment = ptrSimplePoint + 1;
+    const char* ptrAccolade = strchr(debutComment, '{');
+
+    if (ptrAccolade != nullptr) {
+        ack = true;
+        size_t commentLen = ptrAccolade - debutComment;
+        if (commentLen >= MAX_COMMENT_LEN) commentLen = MAX_COMMENT_LEN - 1;
+        strncpy(comment, debutComment, commentLen);
+        comment[commentLen] = '\0';
+        
+        const char* idStr = ptrAccolade + 1;
+        if (strlen(idStr) > 0) {
+            messageId = atoi(idStr);
+        } else {
+            messageId = 0; 
+        }
+    } else {
+        ack = false;
+        strncpy(comment, debutComment, MAX_COMMENT_LEN - 1);
+        comment[MAX_COMMENT_LEN - 1] = '\0';
+    }
+
+    return true;
 }

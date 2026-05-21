@@ -2,34 +2,49 @@
 #define MESSAGE_H
 
 #include <Arduino.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstddef>
 
-#define MAX_MESSAGES_ID  99999
-
+#define MAX_CALLSIGN_LEN 10
+#define MAX_DEST_LEN 10
+#define MAX_PATH_LEN 20
+#define MAX_RECIPIENT_LEN 10
+#define MAX_COMMENT_LEN 68
+#define MAX_PDU_LEN 150
+#define MAX_MESSAGES_ID 99999
 
 class Message {
 public:
-    Message(String _callsign,String _destination,String _path,String _recipient,String _comment);
-    Message(const Message& orig);
-    virtual ~Message();
+    Message(); 
+    bool init(const char* _callsign, const char* _destination, const char* _path, const char* _recipient, const char* _comment);
     
-    char* getPduMes(bool ack);
+    bool getPduMes(bool ackMode, char* outputBuffer, size_t bufferSize);
     int getPduLength();
+    
+    bool setComment(const char* _comment);
+    bool setCallsign(const char* _callsign);
+    bool setRecipient(const char* _recipient);
+    
+    bool decode(const char* trameRecue);
+
+    bool getCallsign(char* outputBuffer, size_t size);
+    bool getRecipient(char* outputBuffer, size_t size);
+    bool getComment(char* outputBuffer, size_t size);
+    bool isAckRequested();
     int getMessageId();
-    void setComment(String _comment);
-    void setCallsign(String _callsign);
-    void setRecipient(String _recipient);    
     
 private:
-    String  callsign;
-    String  destination;
-    String  path;
-	String recipient;
-	String comment;
+    char    callsign[MAX_CALLSIGN_LEN];
+    char    destination[MAX_DEST_LEN];
+    char    path[MAX_PATH_LEN];
+    char    recipient[MAX_RECIPIENT_LEN];
+    char    comment[MAX_COMMENT_LEN];
 
-    char    pdu[150];
+    char    pdu[MAX_PDU_LEN];
     int     pduLength;
     int     messageId; 
-    
+    bool    ack;
 };
 
 #endif /* MESSAGE_H */

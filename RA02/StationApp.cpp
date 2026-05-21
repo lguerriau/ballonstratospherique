@@ -56,7 +56,7 @@ void StationApp::modeProduction() {
     while (true) {
         // Recuperation des donnees brutes
         float hum = capteurBME.obtenirHumidite();
-        float press = capteurBME.obtenirPression(); // Supprime le * 13.3322 ici
+        float press = capteurBME.obtenirPression();
 
         float tempC_LM = capteurLM.getTemperature();
         float tempF_LM = (tempC_LM * 1.8) + 32; 
@@ -77,15 +77,67 @@ void StationApp::modeProduction() {
 
 void StationApp::testFormatage() {
     cout << "\n--- TEST FORMATAGE APRS WEATHER ---" << endl;
-    // Test avec des valeurs standards (72F, 45% hum, 1013.2 hPa)
-    string trameTest = builder.buildTrame(72.0, 45.0, 1013.2); 
+    
+    float temp, hum, press;
+    
+    // Validation Température (-60.0 à 140.0 °F)
+    cout << "Entrez la temperature (-60 a 140 °F) : ";
+    while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Temperature invalide. " << endl;
+        cout << "Reessayez : ";
+    }
+    
+    // Validation Humidité (0.0 à 100.0 %)
+    cout << "Entrez l'humidité (0 a 100%) : ";
+    while (!(cin >> hum) || hum < 0.0f || hum > 100.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Humidite invalide. " << endl;
+        cout << "Reessayez : ";
+    }
+    
+    // Validation Pression (800.0 à 1100.0 hPa)
+    cout << "Entrez la pression (800 a 1100 hPa) : ";
+    while (!(cin >> press) || press < 800.0f || press > 1100.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Pression atmospherique invalide." << endl;
+        cout << "Reessayez : ";
+    }
+
+    string trameTest = builder.buildTrame(temp, hum, press); 
     cout << ">> Trame generee : " << trameTest << endl;
 }
 
 void StationApp::testTransmission() {
     cout << "\n--- TEST TRANSMISSION LORA (WEATHER) ---" << endl;
-    // On genere une vraie trame weather de test
-    string messageTest = builder.buildTrame(68.5, 50.0, 1015.0);
+    
+    float temp, hum, press;
+    
+    // Validation Température (-60.0 à 140.0 °F)
+    cout << "Entrez la temperature (-60 a 140 °F) : ";
+    while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Temperature invalide. " << endl;
+        cout << "Reessayez : ";
+    }
+    
+    // Validation Humidité (0.0 à 100.0 %)
+    cout << "Entrez l'humidite (0 a 100 %) : ";
+    while (!(cin >> hum) || hum < 0.0f || hum > 100.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Humidite invalide. " << endl;
+        cout << "Reessayez : ";
+    }
+    
+    // Validation Pression (800.0 à 1100.0 hPa)
+    cout << "Entrez la pression (800 a 1100 hPa) : ";
+    while (!(cin >> press) || press < 800.0f || press > 1100.0f) {
+        cin.clear(); cin.ignore(10000, '\n');
+        cout << "[ALERTE] Pression atmospherique invalide. " << endl;
+        cout << "Reessayez : ";
+    }
+
+    string messageTest = builder.buildTrame(temp, hum, press);
     
     cout << "Envoi de : " << messageTest << endl;
     radio.envoyer(messageTest);

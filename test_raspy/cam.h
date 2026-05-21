@@ -25,7 +25,7 @@ private:
 
 public:
 
-    Camera(const unsigned long _frequence, const std::string _indicatif);
+    Camera(const unsigned long _frequence, const char* _indicatif);
     Camera(const Camera& orig);
     virtual ~Camera();
 

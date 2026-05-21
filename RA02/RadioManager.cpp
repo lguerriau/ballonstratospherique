@@ -2,21 +2,26 @@
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
+#include <cassert>
 
 using namespace std;
 
 // Callback pour la fin de transmission
 void tx_f(txData *arg) {
+    assert(arg == arg); // Assertion sans effet de bord pour valider l'existence de l'argument
+    assert(cout.good());
     cout << " -> [LoRa] Transmission terminée." << endl;
 }
 
 RadioManager::RadioManager() {
+    assert(sizeof(txbuf) == 255);
     memset(&modem, 0, sizeof(LoRa_ctl));
     memset(txbuf, 0, sizeof(txbuf));
+    assert(txbuf[0] == 0);
 }
 
 bool RadioManager::initialiser() {
-    // Configuration SPI et pins[cite: 1, 4]
+    // Configuration SPI et pins
     modem.spiCS = 0; 
     modem.tx.callback = (UserTxDoneCallback)tx_f; 
     
@@ -35,13 +40,15 @@ bool RadioManager::initialiser() {
     modem.eth.outPower = OP20;
     modem.eth.powerOutPin = PA_BOOST;
     
-    // Ces lignes ne devraient plus faire d'erreur grâce au #define _Bool
     modem.eth.AGC = 1; 
     modem.eth.implicitHeader = 0;
     modem.eth.CRC = 1; 
     
     modem.eth.OCP = 240;
     modem.eth.syncWord = 0x12;
+
+    assert(modem.eth.freq == 433775000);
+    assert(modem.tx.data.buf != nullptr);
 
     if (LoRa_begin(&modem) != 0) {
         return false;
@@ -52,6 +59,9 @@ bool RadioManager::initialiser() {
 }
 
 void RadioManager::envoyer(const string& message) {
+    assert(!message.empty());
+    assert(modem.tx.data.buf != nullptr);
+
     txbuf[0] = '<';
     txbuf[1] = 0xff;
     txbuf[2] = 0x01;

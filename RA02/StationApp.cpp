@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <cassert>
 
 // Inclusion des classes capteurs
 #include "../BME280/bme280.h"
@@ -9,9 +10,15 @@
 
 using namespace std;
 
-StationApp::StationApp() : builder("F4KMN-9") {}
+StationApp::StationApp() : builder("F4KMN-9") {
+    assert(cin.good());
+    assert(cout.good());
+}
 
 void StationApp::demarrer() {
+    assert(cin.good());
+    assert(cout.good());
+
     cout << "Initialisation du module LoRa (SPI)..." << endl;
     if (!radio.initialiser()) {
         cout << "[ALERTE] Probleme d'initialisation LoRa. Verifie le cablage et le mode sudo." << endl;
@@ -47,6 +54,9 @@ void StationApp::demarrer() {
 }
 
 void StationApp::modeProduction() {
+    assert(cin.good());
+    assert(cout.good());
+
     cout << "\n[SYSTEME] Mode Production active. (CTRL+C pour arreter)" << endl;
     
     // Initialisation des capteurs (une seule fois au debut du mode)
@@ -76,32 +86,48 @@ void StationApp::modeProduction() {
 }
 
 void StationApp::testFormatage() {
+    assert(cin.good());
+    assert(cout.good());
+
     cout << "\n--- TEST FORMATAGE APRS WEATHER ---" << endl;
     
-    float temp, hum, press;
-    
-    // Validation Température (-60.0 à 140.0 °F)
+    float temp = 0.0f;
+    int essaisTemp = 0;
     cout << "Entrez la temperature (-60 a 140 °F) : ";
     while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+        essaisTemp++;
+        if (essaisTemp >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour la temperature." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Temperature invalide. " << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Temperature invalide. \nReessayez : ";
     }
     
-    // Validation Humidité (0.0 à 100.0 %)
+    float hum = 0.0f;
+    int essaisHum = 0;
     cout << "Entrez l'humidité (0 a 100%) : ";
     while (!(cin >> hum) || hum < 0.0f || hum > 100.0f) {
+        essaisHum++;
+        if (essaisHum >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour l'humidite." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Humidite invalide. " << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Humidite invalide. \nReessayez : ";
     }
     
-    // Validation Pression (800.0 à 1100.0 hPa)
+    float press = 0.0f;
+    int essaisPress = 0;
     cout << "Entrez la pression (800 a 1100 hPa) : ";
     while (!(cin >> press) || press < 800.0f || press > 1100.0f) {
+        essaisPress++;
+        if (essaisPress >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour la pression." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Pression atmospherique invalide." << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Pression atmospherique invalide.\nReessayez : ";
     }
 
     string trameTest = builder.buildTrame(temp, hum, press); 
@@ -109,32 +135,48 @@ void StationApp::testFormatage() {
 }
 
 void StationApp::testTransmission() {
+    assert(cin.good());
+    assert(cout.good());
+
     cout << "\n--- TEST TRANSMISSION LORA (WEATHER) ---" << endl;
     
-    float temp, hum, press;
-    
-    // Validation Température (-60.0 à 140.0 °F)
+    float temp = 0.0f;
+    int essaisTemp = 0;
     cout << "Entrez la temperature (-60 a 140 °F) : ";
     while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+        essaisTemp++;
+        if (essaisTemp >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour la temperature." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Temperature invalide. " << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Temperature invalide. \nReessayez : ";
     }
     
-    // Validation Humidité (0.0 à 100.0 %)
+    float hum = 0.0f;
+    int essaisHum = 0;
     cout << "Entrez l'humidite (0 a 100 %) : ";
     while (!(cin >> hum) || hum < 0.0f || hum > 100.0f) {
+        essaisHum++;
+        if (essaisHum >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour l'humidite." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Humidite invalide. " << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Humidite invalide. \nReessayez : ";
     }
     
-    // Validation Pression (800.0 à 1100.0 hPa)
+    float press = 0.0f;
+    int essaisPress = 0;
     cout << "Entrez la pression (800 a 1100 hPa) : ";
     while (!(cin >> press) || press < 800.0f || press > 1100.0f) {
+        essaisPress++;
+        if (essaisPress >= 5) {
+            cout << "[ERREUR] Trop d'echecs de saisie pour la pression." << endl;
+            return;
+        }
         cin.clear(); cin.ignore(10000, '\n');
-        cout << "[ALERTE] Pression atmospherique invalide. " << endl;
-        cout << "Reessayez : ";
+        cout << "[ALERTE] Pression atmospherique invalide. \nReessayez : ";
     }
 
     string messageTest = builder.buildTrame(temp, hum, press);

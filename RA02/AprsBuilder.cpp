@@ -4,15 +4,23 @@
 #include <iomanip>
 #include <chrono>
 #include <cmath>
+#include <cassert>
 
 using namespace std;
 
-AprsBuilder::AprsBuilder(const string& callsign) : indicatif(callsign) {}
+AprsBuilder::AprsBuilder(const string& callsign) : indicatif(callsign) {
+    assert(!callsign.empty());
+    assert(callsign.length() < 16);
+}
 
 string AprsBuilder::getAPRSTimestamp() const {
     auto now = chrono::system_clock::now();
     time_t t = chrono::system_clock::to_time_t(now);
+    assert(t != static_cast<time_t>(-1));
+    
     tm* gmt = gmtime(&t);
+    assert(gmt != nullptr);
+    
     stringstream ss;
     // Format MMDDHHMM pour APRS
     ss << setfill('0') << setw(2) << gmt->tm_mon + 1
@@ -23,6 +31,9 @@ string AprsBuilder::getAPRSTimestamp() const {
 }
 
 bool AprsBuilder::validerDonneesCapteurs(float tempF, float hum, float press) const {
+    assert(!std::isnan(tempF));
+    assert(!std::isnan(hum));
+    
     // Verifications de securite pour eviter d'envoyer n'importe quoi
     if (tempF < -45.0 || tempF > 185.0) return false;
     if (hum < 0.0 || hum > 100.0) return false;
@@ -31,6 +42,9 @@ bool AprsBuilder::validerDonneesCapteurs(float tempF, float hum, float press) co
 }
 
 string AprsBuilder::buildTrame(float tempF, float hum, float press) const {
+    assert(!indicatif.empty());
+    assert(!std::isnan(press));
+
     if (!validerDonneesCapteurs(tempF, hum, press)) {
         return "ERREUR : Valeur(s) capteur(s) hors limites !";
     }

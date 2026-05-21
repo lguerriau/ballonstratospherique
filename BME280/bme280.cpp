@@ -72,9 +72,12 @@ void BME280::readCalibrationData() {
 }
 
 void BME280::getRawData() {
-
-    deviceI2C->Write(0xf7);
-
+    // Règle 7 : Vérification de la valeur de retour
+    // Règle 5 : Action correctrice en cas d'échec
+    unsigned char writeReturn = deviceI2C->Write(0xf7);
+    if (writeReturn != 0) {
+        return; // Action correctrice : on stoppe la récupération si l'écriture échoue
+    }
 
     raw.pmsb = deviceI2C->Read();
     raw.plsb = deviceI2C->Read();
@@ -103,19 +106,26 @@ void BME280::getRawData() {
 }
 
 double BME280::obtenirTemperatureEnC() {
-    double var1;
-    double var2;
-    double temperature;
+    // Règle 5 : Assertions avec actions correctrices explicites
+    if (deviceI2C == nullptr) return 0.0;
+    if (deviceI2C->getError()) return 0.0;
+
     double temperature_min = -40;
     double temperature_max = 85;
 
     getRawData();
-    var1 = ((double) raw.temperature) / 16384.0 - ((double) cal.dig_T1) / 1024.0;
+    
+    // Règle 6 : Déclarations des variables à l'endroit de plus faible portée lexicale
+    double var1 = ((double) raw.temperature) / 16384.0 - ((double) cal.dig_T1) / 1024.0;
     var1 = var1 * ((double) cal.dig_T2);
-    var2 = (((double) raw.temperature) / 131072.0 - ((double) cal.dig_T1) / 8192.0);
+    
+    double var2 = (((double) raw.temperature) / 131072.0 - ((double) cal.dig_T1) / 8192.0);
     var2 = (var2 * var2) * ((double) cal.dig_T3);
+    
     cal.t_fine = (int32_t) (var1 + var2);
-    temperature = (var1 + var2) / 5120.0;
+    
+    double temperature = (var1 + var2) / 5120.0;
+    
     if (temperature < temperature_min) {
         temperature = temperature_min;
     } else if (temperature > temperature_max) {
@@ -138,22 +148,26 @@ double BME280::obtenirTemperatureEnF() {
 // 24674867 represente 24674867/256 = 96386.2 Pa ou 24674867/25600 963.862 hPa
 
 double BME280::obtenirPression() {
-    double var1;
-    double var2;
-    double var3;
-    double pressure;
+    // Règle 5 : Assertions avec actions correctrices explicites
+    if (deviceI2C == nullptr) return 0.0;
+    if (deviceI2C->getError()) return 0.0;
+
     double pressure_min = 0.0;
     double pressure_max = 110000.0;
 
     getRawData();
-    var1 = ((double) cal.t_fine / 2.0) - 64000.0;
-    var2 = var1 * var1 * ((double) cal.dig_P6) / 32768.0;
+    
+    // Règle 6 : Portée minimale
+    double var1 = ((double) cal.t_fine / 2.0) - 64000.0;
+    double var2 = var1 * var1 * ((double) cal.dig_P6) / 32768.0;
     var2 = var2 + var1 * ((double) cal.dig_P5) * 2.0;
     var2 = (var2 / 4.0) + (((double) cal.dig_P4) * 65536.0);
-    var3 = ((double) cal.dig_P3) * var1 * var1 / 524288.0;
+    
+    double var3 = ((double) cal.dig_P3) * var1 * var1 / 524288.0;
     var1 = (var3 + ((double) cal.dig_P2) * var1) / 524288.0;
     var1 = (1.0 + var1 / 32768.0) * ((double) cal.dig_P1);
 
+    double pressure;
     /* avoid exception caused by division by zero */
     if (var1) {
         pressure = 1048576.0 - (double) raw.pressure;
@@ -171,30 +185,30 @@ double BME280::obtenirPression() {
     }
 
     return pressure / 100.0;
-
 }
 
 // retourne le taux d'humidité relative en %
 
 double BME280::obtenirHumidite() {
-    double humidity;
+    // Règle 5 : Assertions avec actions correctrices explicites
+    if (deviceI2C == nullptr) return 0.0;
+    if (deviceI2C->getError()) return 0.0;
+
     double humidity_min = 0.0;
     double humidity_max = 100.0;
-    double var1;
-    double var2;
-    double var3;
-    double var4;
-    double var5;
-    double var6;
-
-    var1 = ((double) cal.t_fine) - 76800.0;
-    var2 = (((double) cal.dig_H4) * 64.0 + (((double) cal.dig_H5) / 16384.0) * var1);
-    var3 = raw.humidity - var2;
-    var4 = ((double) cal.dig_H2) / 65536.0;
-    var5 = (1.0 + (((double) cal.dig_H3) / 67108864.0) * var1);
-    var6 = 1.0 + (((double) cal.dig_H6) / 67108864.0) * var1 * var5;
+    
+    // Règle 6 : Portée minimale
+    double var1 = ((double) cal.t_fine) - 76800.0;
+    double var2 = (((double) cal.dig_H4) * 64.0 + (((double) cal.dig_H5) / 16384.0) * var1);
+    double var3 = raw.humidity - var2;
+    double var4 = ((double) cal.dig_H2) / 65536.0;
+    double var5 = (1.0 + (((double) cal.dig_H3) / 67108864.0) * var1);
+    double var6 = 1.0 + (((double) cal.dig_H6) / 67108864.0) * var1 * var5;
+    
     var6 = var3 * var4 * (var5 * var6);
-    humidity = var6 * (1.0 - ((double) cal.dig_H1) * var6 / 524288.0);
+    
+    double humidity = var6 * (1.0 - ((double) cal.dig_H1) * var6 / 524288.0);
+    
     if (humidity > humidity_max) {
         humidity = humidity_max;
     } else if (humidity < humidity_min) {
@@ -223,19 +237,23 @@ void BME280::donnerAltitude(double altitude) {
 // retourne la valeur du point de rosée
 
 double BME280::obtenirPointDeRosee() {
+    // Règle 5 : Assertions
+    if (deviceI2C == nullptr || deviceI2C->getError()) return 0.0;
+
     double ai = 7.45;
     double bi = 235.0;
-    double z1, z2, z3, es, e, tau;
-
+    
     double t = obtenirTemperatureEnC();
     double hum = obtenirHumidite();
 
-    z1 = (ai * t) / (bi + t);
-    es = 6.1 * exp(z1 * 2.3025851);
-    e = es * hum / 100;
-    z2 = e / 6.1;
-    z3 = 0.434292289 * log(z2);
-    tau = (235 * z3) / (7.45 - z3)*100;
+    // Règle 6 : Portée minimale
+    double z1 = (ai * t) / (bi + t);
+    double es = 6.1 * exp(z1 * 2.3025851);
+    double e = es * hum / 100;
+    double z2 = e / 6.1;
+    double z3 = 0.434292289 * log(z2);
+    
+    double tau = (235 * z3) / (7.45 - z3)*100;
     tau = floor(tau) / 100;
 
     return tau;

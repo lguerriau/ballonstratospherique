@@ -21,6 +21,7 @@ string getTimestamp() {
     return ss.str();
 }
 
+// main.cpp (uniquement la fonction main modifiée)
 int main() {
     cout << "[SYSTEME] Initialisation du module Capteur BME280..." << endl;
 
@@ -31,7 +32,9 @@ int main() {
 
         cout << "Capteur BME280 détecté sur 0x77. Lecture en cours..." << endl;
         
-        while (true) {
+        // Règle 2 : Toutes les boucles doivent avoir une borne supérieure fixe.
+        const int MAX_ITERATIONS = 100000;
+        for (int i = 0; i < MAX_ITERATIONS; ++i) {
             // Lecture des données du capteur
             float t_c = capteur.obtenirTemperatureEnC();
             float p   = capteur.obtenirPression();
@@ -45,13 +48,19 @@ int main() {
 
             // --- SAUVEGARDE JSON LOCALE ---
             ofstream fichier(nomFichier, ios::app);
-            if (fichier.is_open()) {
-                fichier << "{\"date\":\"" << getTimestamp() 
-                        << "\", \"t\":" << t_c 
-                        << ", \"p\":" << p 
-                        << ", \"h\":" << h << "}" << endl;
-                fichier.close();
+            
+            // Règles 5 et 7 : Vérification d'anomalie avec action correctrice
+            if (!fichier.is_open()) {
+                cerr << "[ERREUR] Impossible d'ouvrir le fichier : " << nomFichier << endl;
+                this_thread::sleep_for(chrono::seconds(10));
+                continue; // Action correctrice : on passe à l'itération suivante
             }
+            
+            fichier << "{\"date\":\"" << getTimestamp() 
+                    << "\", \"t\":" << t_c 
+                    << ", \"p\":" << p 
+                    << ", \"h\":" << h << "}" << endl;
+            fichier.close();
 
             // Attente de 10 secondes (plus rapide que le LoRa pour les tests)
             this_thread::sleep_for(chrono::seconds(10));

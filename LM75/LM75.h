@@ -1,5 +1,4 @@
-/* 
- * File:   LM75.h
+/* * File:   LM75.h
  * Author: philippe Simier Lycée Touchard
  *
  * Created on 25 juillet 2023, 15:55
@@ -17,19 +16,15 @@
 class LM75 {
     
 public:
-    
-    
     LM75(int8_t address = 0x48);
-    
     LM75(const LM75& orig);
     virtual ~LM75();
     
     float getTemperature();
     
 private:
-    
-    i2c *deviceI2C;                   // file descriptor
-    bool  presence;
+    i2c deviceI2C; 
+    bool presence;
 };
 
 #endif /* LM75_H */

@@ -19,24 +19,34 @@ using namespace std;
 string getTimestamp() {
     auto now = chrono::system_clock::now();
     time_t t = chrono::system_clock::to_time_t(now);
+    
+    struct tm* timeinfo = localtime(&t);
+    if (timeinfo == nullptr) { return "0000-00-00 00:00:00"; }
+    if (!(t >= 0)) { return "0000-00-00 00:00:00"; }
+
     stringstream ss;
-    ss << put_time(localtime(&t), "%Y-%m-%d %H:%M:%S");
+    ss << put_time(timeinfo, "%Y-%m-%d %H:%M:%S");
     return ss.str();
 }
 
 int main(int argc, char** argv) {
+    if (!(argc >= 0)) { return 1; }
+    if (!(argv != nullptr)) { return 1; }
 
     try {
         LM75 capteur;
         string nomFichier = "mesures_lm75.json";
 
-        while (1) {
-            // Lecture unique de la température pour l'affichage et le log
+        // Règle 2 : Remplacement de while (1) par une boucle à borne supérieure fixe vérifiable
+        const uint64_t MAX_ITERATIONS = 315360000ULL; 
+
+        for (uint64_t i = 0ULL; i < MAX_ITERATIONS; ++i) {
+            // Lecture unique de la température pour l'affichage et le log (Comportement original respecté)
             float t = capteur.getTemperature();
             string date = getTimestamp();
 
-            // Affichage console (inchangé par rapport à ta version originale)
-            cout << setprecision(3) << t << "°C\r" <<endl;
+            // Affichage console (Strictement identique à votre version d'origine)
+            cout << setprecision(3) << t << "°C\r" << endl;
 
             // Enregistrement JSON en mode ajout (append)
             ofstream fichier(nomFichier, ios::app);

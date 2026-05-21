@@ -4,82 +4,136 @@
  */
 
 #include "cam.h"
-#include <iomanip>
-#include <sstream>
-#include <unistd.h>
+#include <iostream>
+#include <cstdio>  
+#include <cstdlib> 
+#include <cstring> 
+#include <cassert>
 
-Camera::Camera(const unsigned long _frequence, const std::string _indicatif) :
-frequence(_frequence),
-indicatif(_indicatif) {
+Camera::Camera(const unsigned long _frequence, const char* _indicatif) :
+frequence(_frequence) {
+    
+    assert(_frequence > 0);
+    assert(_indicatif != nullptr);
+    
     this->nbPhotos = 0;
 
-    // Copie de la mire avec l'indicatif dans ramfs
-    std::ostringstream commande;
-    commande << "convert -pointsize 12 -fill white -box black -draw \"text 125,32 '" << indicatif;
-    commande << "'\" /home/pbs/sstv/mire_320_256.jpg /ramfs/mire.jpg";
-    system(commande.str().c_str());
+ // Règle 3: Copie sécurisée sans allocation dynamique
+    std::strncpy(this->indicatif, _indicatif, sizeof(this->indicatif) - 1);
+    this->indicatif[sizeof(this->indicatif) - 1] = '\0';
 
-    // Convertion en RGB 8 bits
-    system("convert -depth 8 /ramfs/mire.jpg /ramfs/mireRGB.rgb");
-}
+    char commande[256];
+    
+    // Règle 3: Construction de la chaîne avec une taille fixe garantie
+    int retour_snprintf = std::snprintf(commande, sizeof(commande),
+        "convert -pointsize 12 -fill white -box black -draw \"text 125,32 '%s'\" /home/pbs/sstv/mire_320_256.jpg /ramfs/mire.jpg",
+        this->indicatif);
+        
+    // Règle 5 (Bis): L'assertion valide le bon formatage de la commande
+    assert(retour_snprintf > 0 && retour_snprintf < (int)sizeof(commande));
 
-Camera::Camera(const Camera& orig) {
-}
+    // Règle 7: Vérification systématique de la valeur de retour
+    int res = std::system(commande);
+    if (res != 0) {
+        std::cerr << "Erreur critique d'initialisation de la mire" << std::endl;
+    }
 
-Camera::~Camera() {
-}
-
-void Camera::envoyerPhoto() {
-    // 1. Préparation d'une version basse résolution pour la radio (320x256)
-    // On prend la dernière photo HD pour l'envoyer
-    std::ostringstream convert;
-    convert << "convert /home/pbs/photos/photo_" << std::setw(3) << std::setfill('0') << (nbPhotos - 1)
-            << ".jpg -resize 320x256! -depth 8 /ramfs/radio.rgb";
-    system(convert.str().c_str());
-
-    // 2. Emission SSTV via rpitx
-    std::ostringstream commande;
-    commande << "sudo /home/pbs/rpitx/pisstv /ramfs/radio.rgb " << frequence;
-    std::cout << "Emission SSTV en cours..." << std::endl;
-    system(commande.str().c_str());
-}
-
-void Camera::envoyerMire() {
-
-    std::ostringstream commande;
-    commande << "sudo /home/pbs/rpitx/pisstv /ramfs/mireRGB.rgb " << frequence;
-    system(commande.str().c_str());
-
-}
-
-void Camera::enregistrerPhoto() {
-
-    std::ostringstream nomFinal;
-    std::ostringstream commande;
-
-    // Nom de fichier incrémenté (ex: photo_001.jpg)
-    nomFinal << "/home/pbs/photos/photo_" << std::setw(3) << std::setfill('0') << nbPhotos << ".jpg";
-
-    // 1. Prise de la photo HD
-    // On utilise -n pour éviter d'ouvrir une fenêtre sur le bureau de la Raspberry
-    commande << "sudo rpicam-still -n -t 500 -o " << nomFinal.str();
-    std::cout << "Capture HD : " << nomFinal.str() << std::endl;
-
-    if (system(commande.str().c_str()) == 0) {
-        std::ostringstream commandeAnnotation;
-
-        // On passe le pointsize à 100 pour qu'il soit énorme
-        // On règle l'interligne et la position (+0+0 pour coller au bord)
-        commandeAnnotation << "sudo convert " << nomFinal.str()
-                       << " -gravity North -pointsize 250 -fill red -undercolor white "
-                       << " -annotate +0+50 \" " << indicatif << " $(date +'%d/%m/%y %H:%M:%S') \" "
-                       << nomFinal.str();
-
-        std::cout << "Annotation appliquée pour la SSTV." << std::endl;
-        system(commandeAnnotation.str().c_str());
-
-        nbPhotos++;
-        envoyerPhoto();
+    res = std::system("convert -depth 8 /ramfs/mire.jpg /ramfs/mireRGB.rgb");
+    if (res != 0) {
+        std::cerr << "Erreur conversion mire RGB" << std::endl;
     }
 }
 
+Camera::Camera(const Camera& orig) {
+    assert(orig.frequence > 0); // Règle 5
+    this->frequence = orig.frequence;
+    this->nbPhotos = orig.nbPhotos;
+    std::strncpy(this->indicatif, orig.indicatif, sizeof(this->indicatif));
+}
+
+Camera::~Camera() {
+    // Règle 5: Assertion pour prouver l'état final sain
+    assert(this->nbPhotos >= 0);
+}
+
+void Camera::envoyerPhoto() {
+    // Règle 5: Deux assertions pour valider l'état avant émission
+    assert(this->frequence >= 29000000); 
+    assert(this->nbPhotos > 0); 
+
+    char convert[256];
+    char commande[256];
+
+    // Règle 3 & 6: Portée minimale et pas d'allocation
+    int indexPhoto = this->nbPhotos - 1;
+    assert(indexPhoto >= 0);
+
+    int ret = std::snprintf(convert, sizeof(convert),
+        "convert /home/pbs/photos/photo_%03d.jpg -resize 320x256! -depth 8 /ramfs/radio.rgb",
+        indexPhoto);
+    assert(ret > 0 && ret < (int)sizeof(convert));
+
+    if (std::system(convert) == 0) {
+        ret = std::snprintf(commande, sizeof(commande),
+            "sudo /home/pbs/rpitx/pisstv /ramfs/radio.rgb %lu",
+            this->frequence);
+        assert(ret > 0 && ret < (int)sizeof(commande));
+        
+        std::cout << "Emission SSTV en cours..." << std::endl;
+        
+        // Règle 7: On vérifie le retour de l'émetteur radio
+        if (std::system(commande) != 0) {
+            std::cerr << "Échec de l'émission radio" << std::endl;
+        }
+    }
+}
+
+void Camera::envoyerMire() {
+    assert(this->frequence > 0); // Règle 5
+    
+    char commande[256];
+    int ret = std::snprintf(commande, sizeof(commande),
+        "sudo /home/pbs/rpitx/pisstv /ramfs/mireRGB.rgb %lu",
+        this->frequence);
+    
+    assert(ret > 0 && ret < (int)sizeof(commande)); // Règle 5
+
+    if (std::system(commande) != 0) { // Règle 7
+        std::cerr << "Erreur émission Mire" << std::endl;
+    }
+}
+
+void Camera::enregistrerPhoto() {
+    // Règle 5: Garantir que le compteur n'est pas corrompu avant capture
+    assert(this->nbPhotos >= 0);
+    assert(this->nbPhotos < 1000); 
+
+    char nomFinal[128];
+    char commande[256];
+
+    int ret = std::snprintf(nomFinal, sizeof(nomFinal), "/home/pbs/photos/photo_%03d.jpg", this->nbPhotos);
+    assert(ret > 0 && ret < (int)sizeof(nomFinal));
+
+    ret = std::snprintf(commande, sizeof(commande), "sudo rpicam-still -n -t 500 -o %s", nomFinal);
+    assert(ret > 0 && ret < (int)sizeof(commande));
+
+    std::cout << "Capture HD : " << nomFinal << std::endl;
+
+    // Règle 7: Vérification impérative du succès matériel de la caméra
+    if (std::system(commande) == 0) {
+        char commandeAnnotation[512];
+        
+        ret = std::snprintf(commandeAnnotation, sizeof(commandeAnnotation),
+            "sudo convert %s -gravity North -pointsize 250 -fill red -undercolor white -annotate +0+50 \" %s $(date +'%%d/%%m/%%y %%H:%%M:%%S') \" %s",
+            nomFinal, this->indicatif, nomFinal);
+            
+        assert(ret > 0 && ret < (int)sizeof(commandeAnnotation));
+
+        std::cout << "Annotation appliquée pour la SSTV." << std::endl;
+        
+        if (std::system(commandeAnnotation) == 0) {
+            this->nbPhotos++;
+            this->envoyerPhoto();
+        }
+    }
+}

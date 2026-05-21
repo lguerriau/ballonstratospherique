@@ -13,7 +13,6 @@
 #ifndef CAM_H
 #define CAM_H
 
-#include <iostream>
 #include <string>
 
 
@@ -21,8 +20,8 @@ class Camera
 {
 private:
     unsigned long frequence;
-    const std::string indicatif;
-    int nbPhotos;;
+    char indicatif[16];
+    int nbPhotos;
 
 public:
 

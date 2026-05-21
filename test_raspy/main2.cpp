@@ -18,7 +18,7 @@ int main() {
     std::cout << "=== LANCEMENT NACELLE RASPBERRY ===" << std::endl;
 
     // Fréquence radio 29MHz
-    Camera maCam(29000000, "TEST-SSTV");
+    Camera maCam(29000000, "F4KMN");
 
     int compteurSSTV = 0;
 

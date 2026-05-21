@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=testprojet
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/testprojet
+CND_ARTIFACT_NAME_Debug=test_raspy
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/test_raspy
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=testprojet.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/testprojet.tar
+CND_PACKAGE_NAME_Debug=testraspy.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/testraspy.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
-CND_ARTIFACT_NAME_Release=testprojet
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/testprojet
+CND_ARTIFACT_NAME_Release=test_raspy
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/test_raspy
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=testprojet.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/testprojet.tar
+CND_PACKAGE_NAME_Release=testraspy.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/testraspy.tar
 #
 # include compiler specific variables
 #

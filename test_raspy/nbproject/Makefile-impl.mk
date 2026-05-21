@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=testProjet
+PROJECTNAME=test_raspy
 
 # Active Configuration
 DEFAULTCONF=Debug

@@ -66,17 +66,19 @@ void Camera::enregistrerPhoto() {
     std::cout << "Capture HD : " << nomFinal.str() << std::endl;
 
     if (system(commande.str().c_str()) == 0) {
-        // 2. Annotation (Date et Indicatif) directement sur l'image
         std::ostringstream commandeAnnotation;
-        commandeAnnotation << "convert " << nomFinal.str()
-                << " -pointsize 80 -fill red -draw \"text 10,80 '" << indicatif
-                << "  `date +\"%d/%m/%Y %T\"` '\" " << nomFinal.str();
+
+        // On passe le pointsize à 100 pour qu'il soit énorme
+        // On règle l'interligne et la position (+0+0 pour coller au bord)
+        commandeAnnotation << "sudo convert " << nomFinal.str()
+                       << " -gravity North -pointsize 250 -fill red -undercolor white "
+                       << " -annotate +0+50 \" " << indicatif << " $(date +'%d/%m/%y %H:%M:%S') \" "
+                       << nomFinal.str();
+
+        std::cout << "Annotation appliquée pour la SSTV." << std::endl;
         system(commandeAnnotation.str().c_str());
 
-        std::cout << "Succès : Photo sauvegardée sur SD." << std::endl;
-        nbPhotos++; // On prépare l'index pour la suivante
-        
-        std::cout << "Déclenchement automatique de l'émission..." << std::endl;
+        nbPhotos++;
         envoyerPhoto();
     }
 }

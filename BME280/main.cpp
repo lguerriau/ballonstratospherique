@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief Point d'entrée de la station météo - Lecture du BME280 et stockage JSON.
+ */
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -7,12 +12,14 @@
 #include <iomanip>   
 #include <cmath>
 
-// Inclusion du driver du capteur
 #include "bme280.h"
 
 using namespace std;
 
-// Fonction pour l'horodatage JSON
+/**
+ * @brief Génère un horodatage textuel précis basé sur l'heure système.
+ * @return Chaîne de caractères au format "AAAA-MM-JJ HH:MM:SS".
+ */
 string getTimestamp() {
     auto now = chrono::system_clock::now();
     time_t t = chrono::system_clock::to_time_t(now);
@@ -21,26 +28,27 @@ string getTimestamp() {
     return ss.str();
 }
 
-// main.cpp (uniquement la fonction main modifiée)
+/**
+ * @brief Boucle principale du programme.
+ * * Initialise le capteur sur le bus I2C local, effectue une lecture séquentielle
+ * toutes les 10 secondes et stocke les données formatées en JSON en vue d'une
+ * future intégration RadioLib / LoRa.
+ * * @return 0 en cas de fonctionnement normal, -1 en cas d'erreur matérielle.
+ */
 int main() {
     cout << "[SYSTEME] Initialisation du module Capteur BME280..." << endl;
 
     try {
-        // Initialisation du capteur sur l'adresse 0x77
         BME280 capteur(0x77);
         string nomFichier = "mesures.json";
 
         cout << "Capteur BME280 détecté sur 0x77. Lecture en cours..." << endl;
         
-        // Règle 2 : Toutes les boucles doivent avoir une borne supérieure fixe.
-        const int MAX_ITERATIONS = 100000;
-        for (int i = 0; i < MAX_ITERATIONS; ++i) {
-            // Lecture des données du capteur
+        while (true) {
             float t_c = capteur.obtenirTemperatureEnC();
             float p   = capteur.obtenirPression();
             float h   = capteur.obtenirHumidite();
 
-            // Affichage console pour vérification
             cout << "[" << getTimestamp() << "] "
                  << "Temp: " << fixed << setprecision(2) << t_c << "°C | "
                  << "Pression: " << p << " hPa | "
@@ -48,21 +56,15 @@ int main() {
 
             // --- SAUVEGARDE JSON LOCALE ---
             ofstream fichier(nomFichier, ios::app);
-            
-            // Règles 5 et 7 : Vérification d'anomalie avec action correctrice
-            if (!fichier.is_open()) {
-                cerr << "[ERREUR] Impossible d'ouvrir le fichier : " << nomFichier << endl;
-                this_thread::sleep_for(chrono::seconds(10));
-                continue; // Action correctrice : on passe à l'itération suivante
+            if (fichier.is_open()) {
+                fichier << "{\"date\":\"" << getTimestamp() 
+                        << "\", \"t\":" << t_c 
+                        << ", \"p\":" << p 
+                        << ", \"h\":" << h << "}" << endl;
+                fichier.close();
             }
-            
-            fichier << "{\"date\":\"" << getTimestamp() 
-                    << "\", \"t\":" << t_c 
-                    << ", \"p\":" << p 
-                    << ", \"h\":" << h << "}" << endl;
-            fichier.close();
 
-            // Attente de 10 secondes (plus rapide que le LoRa pour les tests)
+            // Intervalle temporaire avant envoi radio via RadioLib
             this_thread::sleep_for(chrono::seconds(10));
         }
     } catch (const exception &e) {

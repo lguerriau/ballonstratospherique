@@ -1,20 +1,10 @@
 /*!
     \file     bme280.h
-    \author   Philippe SIMIER (Touchard Wahington le Mans)
+    \author   Philippe SIMIER (Touchard Washington le Mans)
     \license  BSD (see license.txt)
-
-    \brief    Classe pour le composant i2c  BME280
-    \detail   Le BME280 est un capteur environnemental pour mesurer la température,
-              la pression barométrique et l'humidité relative! Ce capteur est idéal
-              pour réaliser une petite station météo. Il peut être connecté sur
-              un bus I2C ou SPI! La broche CSB doit être connecté à VDDIO pour
-              sélectionner l'interface I²C. Son adresse sur le bus est 0x77 ou 0x76
-              en fonction du niveau de tension appliquée sur la broche SDO.
-
-    \version    2.0 - Second release
+    \brief    Classe pour le composant i2c BME280
+    \version  2.2
  */
-
-
 
 #ifndef BME280_H_INCLUDED
 #define BME280_H_INCLUDED
@@ -22,13 +12,12 @@
 #include <iostream>
 #include <iomanip>
 #include "i2c.h"
-#include <stdint.h>       // pour les types uint8_t etc
+#include <stdint.h>
 #include <math.h>
 
-
 #define ADRESSE_I2C_BME280     0x77
-//Register names:
 
+// Registres de calibration
 #define DIG_T1        0x88
 #define DIG_T2        0x8A
 #define DIG_T3        0x8C
@@ -50,7 +39,7 @@
 #define CHIPID        0xD0
 #define VERSION       0xD1
 #define SOFTRESET     0xE0
-#define BME280_RESET                  0xB6
+#define BME280_RESET  0xB6
 #define CAL26         0xE1
 #define CONTROLHUMID  0xF2
 #define CONTROL       0xF4
@@ -61,9 +50,10 @@
 
 #define MEAN_SEA_LEVEL_PRESSURE         1013
 
-
-//  les registres des données pour la pression température et humidité
-
+/**
+ * @struct bme280_raw_data
+ * @brief Structure stockant les données brutes lues depuis les registres du BME280.
+ */
 typedef struct {
     uint8_t pmsb;
     uint8_t plsb;
@@ -79,12 +69,12 @@ typedef struct {
     uint32_t temperature;
     uint32_t pressure;
     uint32_t humidity;
-
 } bme280_raw_data;
 
-
-// structure pour enregistrer les constantes  de calibration
-
+/**
+ * @struct bme280_calib_data
+ * @brief Structure contenant les coefficients de calibration usine du capteur.
+ */
 typedef struct {
     uint16_t dig_T1;
     int16_t dig_T2;
@@ -107,47 +97,81 @@ typedef struct {
     int16_t dig_H5;
     int8_t dig_H6;
 
-    int32_t t_fine;
+    int32_t t_fine; /*!< Valeur intermédiaire de température fine partagée pour compenser la pression et l'humidité */
 } bme280_calib_data;
 
+/**
+ * @class BME280
+ * @brief Gestion du capteur environnemental BME280 via le bus I2C.
+ */
 class BME280 {
 public:
-    // le constructeur
+    /**
+     * @brief Constructeur de la classe BME280.
+     * @param i2cAddress Adresse I2C du capteur (0x77 par défaut ou 0x76).
+     */
     BME280(int i2cAddress = ADRESSE_I2C_BME280);
-    // le destructeur
+    
+    /**
+     * @brief Destructeur de la classe BME280.
+     */
     ~BME280();
 
-
-    // Méthode pour obtenir le Chip ID (0x60 pour le BME280)
+    /**
+     * @brief Récupère l'identifiant unique du composant (0x60 attendu pour un BME280).
+     * @return Identifiant du circuit intégré.
+     */
     unsigned int obtenirChipID();
 
-    // méthodes pour lire la température le pression et l'humidité
-
+    /**
+     * @brief Lit et convertit la température courante en degrés Celsius.
+     * @return Température compensée en °C (Plage théorique : -40.0 à 85.0°C).
+     */
     double obtenirTemperatureEnC();
+
+    /**
+     * @brief Convertit la température courante en degrés Fahrenheit.
+     * @return Température compensée en °F.
+     */
     double obtenirTemperatureEnF();
+
+    /**
+     * @brief Lit et convertit la pression atmosphérique absolue.
+     * @return Pression compensée en hectopascals (hPa).
+     */
     double obtenirPression();
+
+    /**
+     * @brief Lit et convertit l'humidité relative du milieu.
+     * @return Taux d'humidité relative en pourcentage (0.0 à 100.0%).
+     */
     double obtenirHumidite();
 
-    // méthode pour obtenir la pression au niveau de la mer
-    void donnerAltitude(double h);
+    /**
+     * @brief Calcule la pression ramenée au niveau de la mer (QNH) selon le modèle ISA.
+     * @return Pression corrigée au niveau de la mer en hPa.
+     */
     double obtenirPression0();
 
-    // méthode pour obtenir la valeur du point de rosée
-    double obtenirPointDeRosee();
-
-    // méthode pour obtenir la version
+    /**
+     * @brief Affiche la version actuelle du pilote dans la console standard.
+     */
     void version();
 
-
 private:
+    i2c *deviceI2C;             /*!< Pointeur vers l'instance de gestion du bus I2C */
+    bme280_calib_data cal;      /*!< Données de calibration lues au démarrage */
+    bme280_raw_data raw;        /*!< Dernières données physiques brutes extraites du capteur */
+    double h;                   /*!< Différence d'altitude par rapport au niveau de la mer en mètres */
 
-
-    i2c *deviceI2C; // file descriptor
-    bme280_calib_data cal; // calibration
-    bme280_raw_data raw; // les registres
-    double h; // différence d'altitude du capteur avec le niveau de la mer en m
-
+    /**
+     * @brief Extrait l'ensemble des coefficients de calibration stockés en ROM par Bosch.
+     */
     void readCalibrationData();
+
+    /**
+     * @brief Interroge le capteur pour remplir la structure interne avec les dernières mesures brutes.
+     */
     void getRawData();
 };
 

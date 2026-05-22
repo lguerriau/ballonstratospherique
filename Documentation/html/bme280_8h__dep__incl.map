@@ -1,7 +1,0 @@
-<map id="bme280.h" name="bme280.h">
-<area shape="rect" id="Node000001" title="Classe pour le composant i2c BME280." alt="" coords="66,5,145,31"/>
-<area shape="rect" id="Node000002" href="$bme280_8cpp.html" title="Classe pour le composant i2c BME280." alt="" coords="5,79,99,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,43,63,80,59,77,86,40"/>
-<area shape="rect" id="Node000003" href="$main_8cpp.html" title="Point d&#39;entrée de la station météo &#45; Lecture du BME280 et stockage JSON." alt="" coords="123,79,197,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,40,153,77,149,80,121,43"/>
-</map>

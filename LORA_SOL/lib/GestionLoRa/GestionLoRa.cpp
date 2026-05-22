@@ -1,3 +1,13 @@
+/**
+ * @file GestionLoRa.cpp
+ * @brief Implémentation de la classe GestionLoRa
+ * @version 1.0
+ * @author nbrands
+ * @date 22/05/2026
+ * @details Implémente la logique de pilotage de la puce SX1278 et l'aiguillage 
+ * des paquets APRS vers les modules appropriés (Modele, Log).
+ */
+
 #include "GestionLoRa.h"
 
 GestionLoRa::GestionLoRa(Modele* bdd, Log* logger) 

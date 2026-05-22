@@ -1,10 +1,22 @@
+/**
+ * @file Message.cpp
+ * @brief Implémentation de la classe Message
+ * @version 1.0
+ * @author nbrands
+ * @date 22/05/2026
+ * @details Contient le code métier pour l'assemblage et l'analyse syntaxique des trames APRS.
+ */
+
 #include "Message.h"
 
+/**
+ * @brief Message::Message
+ * @details À la création, l'ID est initialisé à 1 et tous les tampons statiques sont purgés par sécurité.
+ */
 Message::Message() {
     messageId = 1; 
     ack = false;
     pduLength = 0;
-    // Mise à zéro propre de la mémoire
     memset(callsign, 0, MAX_CALLSIGN_LEN);
     memset(destination, 0, MAX_DEST_LEN);
     memset(path, 0, MAX_PATH_LEN);
@@ -13,6 +25,16 @@ Message::Message() {
     memset(pdu, 0, MAX_PDU_LEN);
 }
 
+/**
+ * @brief Message::init
+ * @details Remplit de manière sécurisée (strncpy) les attributs internes après vérification de leurs limites.
+ * @param _callsign L'indicatif émetteur
+ * @param _dest La destination
+ * @param _path Le chemin
+ * @param _recip Le destinataire
+ * @param _comment Le texte du message
+ * @return true si valide, false si un paramètre est nul ou trop long
+ */
 bool Message::init(const char* _callsign, const char* _dest, const char* _path, const char* _recip, const char* _comment) {
     if (_callsign == nullptr || _dest == nullptr || _path == nullptr || _recip == nullptr) return false;
     if (strlen(_callsign) >= MAX_CALLSIGN_LEN || strlen(_dest) >= MAX_DEST_LEN) return false;
@@ -52,6 +74,15 @@ bool Message::setRecipient(const char* _recipient) {
     return true;
 }
 
+/**
+ * @brief Message::getPduMes
+ * @details Concatène les informations dans le tampon PDU selon la norme APRS. 
+ * Ajoute l'ID entre accolades si un ACK est demandé.
+ * @param ackMode Demande d'accusé de réception
+ * @param outputBuffer Tampon de destination
+ * @param bufferSize Taille maximale du tampon de destination
+ * @return true si la création a réussi
+ */
 bool Message::getPduMes(bool ackMode, char* outputBuffer, size_t bufferSize) {
     if (outputBuffer == nullptr) return false;
     if (bufferSize < MAX_PDU_LEN) return false;
@@ -96,6 +127,13 @@ bool Message::getComment(char* outputBuffer, size_t size) {
     return true;
 }
 
+/**
+ * @brief Message::decode
+ * @details Analyse une trame APRS entrante en utilisant le pointeur standard C (strchr, strstr).
+ * Extrait le destinataire, l'expéditeur et le commentaire.
+ * @param trameRecue La chaîne brute réceptionnée
+ * @return true si le format contient bien les balises '>', '::' et ':'
+ */
 bool Message::decode(const char* trameRecue) {
     if (trameRecue == nullptr || strlen(trameRecue) < 5) return false;
 

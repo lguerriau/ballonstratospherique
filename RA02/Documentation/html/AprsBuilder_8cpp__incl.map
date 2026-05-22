@@ -1,0 +1,19 @@
+<map id="AprsBuilder.cpp" name="AprsBuilder.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="294,5,407,31"/>
+<area shape="rect" id="Node000002" href="$AprsBuilder_8h.html" title="Gestionnaire de formatage des trames au standard APRS Weather." alt="" coords="5,79,104,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,33,116,78,115,73,302,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="128,79,200,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="322,33,208,76,206,71,320,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="224,79,293,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="338,33,286,72,283,68,334,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="317,79,384,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="353,31,353,65,348,65,348,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="408,79,469,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="366,29,415,68,412,72,363,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="493,79,552,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="379,28,483,71,481,76,377,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="577,79,642,104"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="393,28,564,75,563,80,392,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="27,152,82,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,104,57,138,52,138,52,104"/>
+</map>

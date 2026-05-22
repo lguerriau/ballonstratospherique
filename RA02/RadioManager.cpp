@@ -6,7 +6,10 @@
 
 using namespace std;
 
-// Callback pour la fin de transmission
+/**
+ * @brief Fonction de rappel (Callback) appelée de manière asynchrone dès que l'émission matérielle est finie.
+ * @param arg Instance txData contenant l'état de la transmission.
+ */
 void tx_f(txData *arg) {
     assert(arg == arg); // Assertion sans effet de bord pour valider l'existence de l'argument
     assert(cout.good());
@@ -32,7 +35,7 @@ bool RadioManager::initialiser() {
     modem.eth.bw = BW125;
     modem.eth.sf = SF12;
     modem.eth.ecr = CR5;
-    modem.eth.freq = 433775000;
+    modem.eth.freq = 433775000; // Fréquence APRS LoRa Europe (433.775 MHz)
     
     modem.eth.resetGpioN = 0; 
     modem.eth.dio0GpioN = 22; 
@@ -62,6 +65,7 @@ void RadioManager::envoyer(const string& message) {
     assert(!message.empty());
     assert(modem.tx.data.buf != nullptr);
 
+    // En-têtes protocolaires spécifiques requis par la passerelle bas niveau
     txbuf[0] = '<';
     txbuf[1] = 0xff;
     txbuf[2] = 0x01;

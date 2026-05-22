@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <iomanip>
 #include <cassert>
 
 // Inclusion des classes capteurs
@@ -32,9 +33,10 @@ void StationApp::demarrer() {
         cout << "         MENU STATION APRS (RPI)" << endl;
         cout << "=========================================" << endl;
         cout << "1. Mode Production (Capteurs continus)" << endl;
-        cout << "2. Mode Test Formatage (Weather)" << endl;
-        cout << "3. Mode Test Transmission (Weather)" << endl;
-        cout << "4. Quitter" << endl;
+        cout << "2. Lecture directe du capteur LM75" << endl;
+        cout << "3. Mode Test Formatage (Weather)" << endl;
+        cout << "4. Mode Test Transmission (Weather)" << endl;
+        cout << "5. Quitter" << endl;
         cout << "Votre choix : ";
         
         if (!(cin >> choix)) {
@@ -45,9 +47,10 @@ void StationApp::demarrer() {
 
         switch(choix) {
             case 1: modeProduction(); break;
-            case 2: testFormatage(); break;
-            case 3: testTransmission(); break;
-            case 4: cout << "Arret." << endl; return;
+            case 2: lireCapteurLM75(); break;
+            case 3: testFormatage(); break;
+            case 4: testTransmission(); break;
+            case 5: cout << "Arret." << endl; return;
             default: cout << "Choix invalide." << endl;
         }
     }
@@ -85,6 +88,25 @@ void StationApp::modeProduction() {
     }
 }
 
+/**
+ * @brief Réalise une lecture répétée du capteur de température LM75 seul.
+ */
+void StationApp::lireCapteurLM75() {
+    assert(cout.good());
+    cout << "\n[SYSTEME] Lecture du capteur LM75 seul. (CTRL+C pour arreter)" << endl;
+    
+    try {
+        LM75 capteurLM(0x48);
+        while (true) {
+            float tempC = capteurLM.getTemperature();
+            cout << "Temperature LM75 : " << fixed << setprecision(3) << tempC << " °C" << endl;
+            this_thread::sleep_for(chrono::seconds(1));
+        }
+    } catch (const runtime_error &e) {
+        cout << "Exception caught : " << e.what() << endl;
+    }
+}
+
 void StationApp::testFormatage() {
     assert(cin.good());
     assert(cout.good());
@@ -93,8 +115,8 @@ void StationApp::testFormatage() {
     
     float temp = 0.0f;
     int essaisTemp = 0;
-    cout << "Entrez la temperature (-60 a 140 °F) : ";
-    while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+    cout << "Entrez la temperature (-45 a 140 °F) : ";
+    while (!(cin >> temp) || temp < -45.0f || temp > 140.0f) {
         essaisTemp++;
         if (essaisTemp >= 5) {
             cout << "[ERREUR] Trop d'echecs de saisie pour la temperature." << endl;
@@ -142,8 +164,8 @@ void StationApp::testTransmission() {
     
     float temp = 0.0f;
     int essaisTemp = 0;
-    cout << "Entrez la temperature (-60 a 140 °F) : ";
-    while (!(cin >> temp) || temp < -60.0f || temp > 140.0f) {
+    cout << "Entrez la temperature (-45 a 140 °F) : ";
+    while (!(cin >> temp) || temp < -45.0f || temp > 140.0f) {
         essaisTemp++;
         if (essaisTemp >= 5) {
             cout << "[ERREUR] Trop d'echecs de saisie pour la temperature." << endl;

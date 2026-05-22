@@ -1,0 +1,656 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BME280: Référence du fichier bme280.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">BME280
+   </div>
+   <div id="projectbrief">Télémétrie Température, Humidité, Pression atmosphérique</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a>  </div>
+  <div class="headertitle"><div class="title">Référence du fichier bme280.h</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Classe pour le composant <a class="el" href="classi2c.html">i2c</a> <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a>.  
+<a href="#details">Plus de détails...</a></p>
+<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
+<code>#include &quot;<a class="el" href="i2c_8h_source.html">i2c.h</a>&quot;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graphe des dépendances par inclusion de bme280.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="bme280_8h__incl.png" border="0" usemap="#abme280_8h" alt=""/></div>
+<map name="abme280_8h" id="abme280_8h">
+<area shape="rect" title="Classe pour le composant i2c BME280." alt="" coords="227,5,306,31"/>
+<area shape="rect" title=" " alt="" coords="5,152,77,177"/>
+<area shape="poly" title=" " alt="" coords="250,33,73,147,70,142,247,29"/>
+<area shape="rect" title=" " alt="" coords="316,79,383,104"/>
+<area shape="poly" title=" " alt="" coords="282,29,327,67,324,72,278,33"/>
+<area shape="rect" href="i2c_8h.html" title=" " alt="" coords="241,79,292,104"/>
+<area shape="poly" title=" " alt="" coords="269,31,269,65,264,65,264,31"/>
+<area shape="rect" title=" " alt="" coords="102,152,167,177"/>
+<area shape="poly" title=" " alt="" coords="258,33,157,143,153,140,254,29"/>
+<area shape="rect" title=" " alt="" coords="407,79,470,104"/>
+<area shape="poly" title=" " alt="" coords="295,28,399,71,397,76,293,33"/>
+<area shape="poly" title=" " alt="" coords="242,103,91,150,90,145,240,98"/>
+<area shape="poly" title=" " alt="" coords="247,106,169,148,167,143,244,102"/>
+<area shape="rect" title=" " alt="" coords="192,152,256,177"/>
+<area shape="poly" title=" " alt="" coords="262,106,240,142,236,139,257,103"/>
+<area shape="rect" title=" " alt="" coords="280,152,341,177"/>
+<area shape="poly" title=" " alt="" coords="276,103,299,139,294,142,272,106"/>
+<area shape="rect" title=" " alt="" coords="366,152,429,177"/>
+<area shape="poly" title=" " alt="" coords="289,102,365,143,363,148,286,106"/>
+<area shape="rect" title=" " alt="" coords="453,152,518,177"/>
+<area shape="poly" title=" " alt="" coords="293,98,440,146,439,151,291,103"/>
+<area shape="rect" title=" " alt="" coords="543,152,601,177"/>
+<area shape="poly" title=" " alt="" coords="293,98,305,101,415,126,529,149,528,154,414,131,303,107,292,103"/>
+<area shape="rect" title=" " alt="" coords="625,152,708,177"/>
+<area shape="poly" title=" " alt="" coords="293,98,305,101,389,118,456,127,612,149,611,154,455,133,388,123,303,107,292,104"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+Ce graphe montre quels fichiers incluent directement ou indirectement ce fichier :</div>
+<div class="dyncontent">
+<div class="center"><img src="bme280_8h__dep__incl.png" border="0" usemap="#abme280_8hdep" alt=""/></div>
+<map name="abme280_8hdep" id="abme280_8hdep">
+<area shape="rect" title="Classe pour le composant i2c BME280." alt="" coords="66,5,145,31"/>
+<area shape="rect" href="bme280_8cpp.html" title="Classe pour le composant i2c BME280." alt="" coords="5,79,99,104"/>
+<area shape="poly" title=" " alt="" coords="91,43,63,80,59,77,86,40"/>
+<area shape="rect" href="main_8cpp.html" title="Point d&#39;entrée de la station météo &#45; Lecture du BME280 et stockage JSON." alt="" coords="123,79,197,104"/>
+<area shape="poly" title=" " alt="" coords="125,40,153,77,149,80,121,43"/>
+</map>
+</div>
+</div>
+<p><a href="bme280_8h_source.html">Aller au code source de ce fichier.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbme280__raw__data.html">bme280_raw_data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure stockant les données brutes lues depuis les registres du <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a>.  <a href="structbme280__raw__data.html#details">Plus de détails...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbme280__calib__data.html">bme280_calib_data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure contenant les coefficients de calibration usine du capteur.  <a href="structbme280__calib__data.html#details">Plus de détails...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBME280.html">BME280</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gestion du capteur environnemental <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a> via le bus I2C.  <a href="classBME280.html#details">Plus de détails...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a729d35579033cd8afd481459c3f07346" id="r_a729d35579033cd8afd481459c3f07346"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a729d35579033cd8afd481459c3f07346">ADRESSE_I2C_BME280</a>&#160;&#160;&#160;0x77</td></tr>
+<tr class="separator:a729d35579033cd8afd481459c3f07346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4abdaf6be1790bbbf0de1cd37e0f605" id="r_ad4abdaf6be1790bbbf0de1cd37e0f605"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ad4abdaf6be1790bbbf0de1cd37e0f605">DIG_T1</a>&#160;&#160;&#160;0x88</td></tr>
+<tr class="separator:ad4abdaf6be1790bbbf0de1cd37e0f605"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59597844d5edbfe5980597d42c76a3d7" id="r_a59597844d5edbfe5980597d42c76a3d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a59597844d5edbfe5980597d42c76a3d7">DIG_T2</a>&#160;&#160;&#160;0x8A</td></tr>
+<tr class="separator:a59597844d5edbfe5980597d42c76a3d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad847ce1218143c8615cc89958f92241b" id="r_ad847ce1218143c8615cc89958f92241b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ad847ce1218143c8615cc89958f92241b">DIG_T3</a>&#160;&#160;&#160;0x8C</td></tr>
+<tr class="separator:ad847ce1218143c8615cc89958f92241b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131f0f8fa58e40feff5ce1ea69669615" id="r_a131f0f8fa58e40feff5ce1ea69669615"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a131f0f8fa58e40feff5ce1ea69669615">DIG_P1</a>&#160;&#160;&#160;0x8E</td></tr>
+<tr class="separator:a131f0f8fa58e40feff5ce1ea69669615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb2aa7b53e7df41973dc7f070f38a708" id="r_aeb2aa7b53e7df41973dc7f070f38a708"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aeb2aa7b53e7df41973dc7f070f38a708">DIG_P2</a>&#160;&#160;&#160;0x90</td></tr>
+<tr class="separator:aeb2aa7b53e7df41973dc7f070f38a708"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bcb12d298114f707b6aee7757738997" id="r_a9bcb12d298114f707b6aee7757738997"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a9bcb12d298114f707b6aee7757738997">DIG_P3</a>&#160;&#160;&#160;0x92</td></tr>
+<tr class="separator:a9bcb12d298114f707b6aee7757738997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5f6cb0ad782fac25286f04ed239f0cf" id="r_aa5f6cb0ad782fac25286f04ed239f0cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aa5f6cb0ad782fac25286f04ed239f0cf">DIG_P4</a>&#160;&#160;&#160;0x94</td></tr>
+<tr class="separator:aa5f6cb0ad782fac25286f04ed239f0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae85e93920d8d5a650bff87b1de0e723b" id="r_ae85e93920d8d5a650bff87b1de0e723b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ae85e93920d8d5a650bff87b1de0e723b">DIG_P5</a>&#160;&#160;&#160;0x96</td></tr>
+<tr class="separator:ae85e93920d8d5a650bff87b1de0e723b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630998bb1fda5852f0b97d6bca7421b5" id="r_a630998bb1fda5852f0b97d6bca7421b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a630998bb1fda5852f0b97d6bca7421b5">DIG_P6</a>&#160;&#160;&#160;0x98</td></tr>
+<tr class="separator:a630998bb1fda5852f0b97d6bca7421b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b13d27dcc11d3c1e5e36cb4a216510" id="r_a29b13d27dcc11d3c1e5e36cb4a216510"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a29b13d27dcc11d3c1e5e36cb4a216510">DIG_P7</a>&#160;&#160;&#160;0x9A</td></tr>
+<tr class="separator:a29b13d27dcc11d3c1e5e36cb4a216510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b7b7ab9607f7d14ea0e39177eeec4f6" id="r_a6b7b7ab9607f7d14ea0e39177eeec4f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a6b7b7ab9607f7d14ea0e39177eeec4f6">DIG_P8</a>&#160;&#160;&#160;0x9C</td></tr>
+<tr class="separator:a6b7b7ab9607f7d14ea0e39177eeec4f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba0b797b808c93e0b7d0edc3e0b62c42" id="r_aba0b797b808c93e0b7d0edc3e0b62c42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aba0b797b808c93e0b7d0edc3e0b62c42">DIG_P9</a>&#160;&#160;&#160;0x9E</td></tr>
+<tr class="separator:aba0b797b808c93e0b7d0edc3e0b62c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac096d348fd5f47d93cd14cdf21445dcb" id="r_ac096d348fd5f47d93cd14cdf21445dcb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ac096d348fd5f47d93cd14cdf21445dcb">DIG_H1</a>&#160;&#160;&#160;0xA1</td></tr>
+<tr class="separator:ac096d348fd5f47d93cd14cdf21445dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa519b22dcabca5f63551cd1f68cc3607" id="r_aa519b22dcabca5f63551cd1f68cc3607"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aa519b22dcabca5f63551cd1f68cc3607">DIG_H2</a>&#160;&#160;&#160;0xE1</td></tr>
+<tr class="separator:aa519b22dcabca5f63551cd1f68cc3607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb51e2e5e3b1c14d3e3abfd5e428f836" id="r_acb51e2e5e3b1c14d3e3abfd5e428f836"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#acb51e2e5e3b1c14d3e3abfd5e428f836">DIG_H3</a>&#160;&#160;&#160;0xE3</td></tr>
+<tr class="separator:acb51e2e5e3b1c14d3e3abfd5e428f836"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9062191b7a26c4c0af7c724220b70c7d" id="r_a9062191b7a26c4c0af7c724220b70c7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a9062191b7a26c4c0af7c724220b70c7d">DIG_H4</a>&#160;&#160;&#160;0xE4</td></tr>
+<tr class="separator:a9062191b7a26c4c0af7c724220b70c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa478f4c5637c0430818f76cee891ff4f" id="r_aa478f4c5637c0430818f76cee891ff4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aa478f4c5637c0430818f76cee891ff4f">DIG_H5</a>&#160;&#160;&#160;0xE5</td></tr>
+<tr class="separator:aa478f4c5637c0430818f76cee891ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d0304a31c328f2ce5cea96a1bb25681" id="r_a0d0304a31c328f2ce5cea96a1bb25681"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a0d0304a31c328f2ce5cea96a1bb25681">DIG_H6</a>&#160;&#160;&#160;0xE7</td></tr>
+<tr class="separator:a0d0304a31c328f2ce5cea96a1bb25681"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad94298a355e512569f4c8e9bc7d094f" id="r_aad94298a355e512569f4c8e9bc7d094f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aad94298a355e512569f4c8e9bc7d094f">CHIPID</a>&#160;&#160;&#160;0xD0</td></tr>
+<tr class="separator:aad94298a355e512569f4c8e9bc7d094f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c6d5de492ac61ad29aec7aa9a436bbf" id="r_a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>&#160;&#160;&#160;0xD1</td></tr>
+<tr class="separator:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f1e19a96edc95c89342b63605aaaf30" id="r_a6f1e19a96edc95c89342b63605aaaf30"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a6f1e19a96edc95c89342b63605aaaf30">SOFTRESET</a>&#160;&#160;&#160;0xE0</td></tr>
+<tr class="separator:a6f1e19a96edc95c89342b63605aaaf30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50142b9d1cc5093e80488ff8419febb5" id="r_a50142b9d1cc5093e80488ff8419febb5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a50142b9d1cc5093e80488ff8419febb5">BME280_RESET</a>&#160;&#160;&#160;0xB6</td></tr>
+<tr class="separator:a50142b9d1cc5093e80488ff8419febb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a789f4479cfad2b01bd1e22445ec68449" id="r_a789f4479cfad2b01bd1e22445ec68449"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a789f4479cfad2b01bd1e22445ec68449">CAL26</a>&#160;&#160;&#160;0xE1</td></tr>
+<tr class="separator:a789f4479cfad2b01bd1e22445ec68449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ddd8c72f17212383c3e210b1dfb1913" id="r_a3ddd8c72f17212383c3e210b1dfb1913"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a3ddd8c72f17212383c3e210b1dfb1913">CONTROLHUMID</a>&#160;&#160;&#160;0xF2</td></tr>
+<tr class="separator:a3ddd8c72f17212383c3e210b1dfb1913"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a553a124e1d5855773c74cb5561dec040" id="r_a553a124e1d5855773c74cb5561dec040"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a553a124e1d5855773c74cb5561dec040">CONTROL</a>&#160;&#160;&#160;0xF4</td></tr>
+<tr class="separator:a553a124e1d5855773c74cb5561dec040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76ea3cf49247a07c54b3db005a3c7f57" id="r_a76ea3cf49247a07c54b3db005a3c7f57"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a76ea3cf49247a07c54b3db005a3c7f57">CONFIG</a>&#160;&#160;&#160;0xF5</td></tr>
+<tr class="separator:a76ea3cf49247a07c54b3db005a3c7f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebdd61e7e04bf50fff04b49112ba5edd" id="r_aebdd61e7e04bf50fff04b49112ba5edd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#aebdd61e7e04bf50fff04b49112ba5edd">PRESSUREDATA</a>&#160;&#160;&#160;0xF7</td></tr>
+<tr class="separator:aebdd61e7e04bf50fff04b49112ba5edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad85c50d1f6e8fb6bba261da3691fcb3f" id="r_ad85c50d1f6e8fb6bba261da3691fcb3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ad85c50d1f6e8fb6bba261da3691fcb3f">TEMPDATA</a>&#160;&#160;&#160;0xFA</td></tr>
+<tr class="separator:ad85c50d1f6e8fb6bba261da3691fcb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1a61d644600903f7b0f33f18cb21995" id="r_ac1a61d644600903f7b0f33f18cb21995"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#ac1a61d644600903f7b0f33f18cb21995">HUMIDDATA</a>&#160;&#160;&#160;0xFD</td></tr>
+<tr class="separator:ac1a61d644600903f7b0f33f18cb21995"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1064327af21b1275cd64ab0d739aabe8" id="r_a1064327af21b1275cd64ab0d739aabe8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bme280_8h.html#a1064327af21b1275cd64ab0d739aabe8">MEAN_SEA_LEVEL_PRESSURE</a>&#160;&#160;&#160;1013</td></tr>
+<tr class="separator:a1064327af21b1275cd64ab0d739aabe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe pour le composant <a class="el" href="classi2c.html">i2c</a> <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a>. </p>
+<dl class="section author"><dt>Auteur</dt><dd>Philippe SIMIER (Touchard Washington le Mans) \license BSD (see license.txt) </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>2.2 </dd></dl>
+</div><h2 class="groupheader">Documentation des macros</h2>
+<a id="a729d35579033cd8afd481459c3f07346" name="a729d35579033cd8afd481459c3f07346"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a729d35579033cd8afd481459c3f07346">&#9670;&#160;</a></span>ADRESSE_I2C_BME280</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ADRESSE_I2C_BME280&#160;&#160;&#160;0x77</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a50142b9d1cc5093e80488ff8419febb5" name="a50142b9d1cc5093e80488ff8419febb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50142b9d1cc5093e80488ff8419febb5">&#9670;&#160;</a></span>BME280_RESET</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BME280_RESET&#160;&#160;&#160;0xB6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a789f4479cfad2b01bd1e22445ec68449" name="a789f4479cfad2b01bd1e22445ec68449"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a789f4479cfad2b01bd1e22445ec68449">&#9670;&#160;</a></span>CAL26</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CAL26&#160;&#160;&#160;0xE1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aad94298a355e512569f4c8e9bc7d094f" name="aad94298a355e512569f4c8e9bc7d094f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad94298a355e512569f4c8e9bc7d094f">&#9670;&#160;</a></span>CHIPID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHIPID&#160;&#160;&#160;0xD0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a76ea3cf49247a07c54b3db005a3c7f57" name="a76ea3cf49247a07c54b3db005a3c7f57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76ea3cf49247a07c54b3db005a3c7f57">&#9670;&#160;</a></span>CONFIG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONFIG&#160;&#160;&#160;0xF5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a553a124e1d5855773c74cb5561dec040" name="a553a124e1d5855773c74cb5561dec040"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a553a124e1d5855773c74cb5561dec040">&#9670;&#160;</a></span>CONTROL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONTROL&#160;&#160;&#160;0xF4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ddd8c72f17212383c3e210b1dfb1913" name="a3ddd8c72f17212383c3e210b1dfb1913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ddd8c72f17212383c3e210b1dfb1913">&#9670;&#160;</a></span>CONTROLHUMID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONTROLHUMID&#160;&#160;&#160;0xF2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac096d348fd5f47d93cd14cdf21445dcb" name="ac096d348fd5f47d93cd14cdf21445dcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac096d348fd5f47d93cd14cdf21445dcb">&#9670;&#160;</a></span>DIG_H1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H1&#160;&#160;&#160;0xA1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa519b22dcabca5f63551cd1f68cc3607" name="aa519b22dcabca5f63551cd1f68cc3607"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa519b22dcabca5f63551cd1f68cc3607">&#9670;&#160;</a></span>DIG_H2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H2&#160;&#160;&#160;0xE1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb51e2e5e3b1c14d3e3abfd5e428f836" name="acb51e2e5e3b1c14d3e3abfd5e428f836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb51e2e5e3b1c14d3e3abfd5e428f836">&#9670;&#160;</a></span>DIG_H3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H3&#160;&#160;&#160;0xE3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9062191b7a26c4c0af7c724220b70c7d" name="a9062191b7a26c4c0af7c724220b70c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9062191b7a26c4c0af7c724220b70c7d">&#9670;&#160;</a></span>DIG_H4</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H4&#160;&#160;&#160;0xE4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa478f4c5637c0430818f76cee891ff4f" name="aa478f4c5637c0430818f76cee891ff4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa478f4c5637c0430818f76cee891ff4f">&#9670;&#160;</a></span>DIG_H5</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H5&#160;&#160;&#160;0xE5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0d0304a31c328f2ce5cea96a1bb25681" name="a0d0304a31c328f2ce5cea96a1bb25681"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d0304a31c328f2ce5cea96a1bb25681">&#9670;&#160;</a></span>DIG_H6</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_H6&#160;&#160;&#160;0xE7</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a131f0f8fa58e40feff5ce1ea69669615" name="a131f0f8fa58e40feff5ce1ea69669615"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a131f0f8fa58e40feff5ce1ea69669615">&#9670;&#160;</a></span>DIG_P1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P1&#160;&#160;&#160;0x8E</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb2aa7b53e7df41973dc7f070f38a708" name="aeb2aa7b53e7df41973dc7f070f38a708"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb2aa7b53e7df41973dc7f070f38a708">&#9670;&#160;</a></span>DIG_P2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P2&#160;&#160;&#160;0x90</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9bcb12d298114f707b6aee7757738997" name="a9bcb12d298114f707b6aee7757738997"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bcb12d298114f707b6aee7757738997">&#9670;&#160;</a></span>DIG_P3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P3&#160;&#160;&#160;0x92</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5f6cb0ad782fac25286f04ed239f0cf" name="aa5f6cb0ad782fac25286f04ed239f0cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5f6cb0ad782fac25286f04ed239f0cf">&#9670;&#160;</a></span>DIG_P4</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P4&#160;&#160;&#160;0x94</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae85e93920d8d5a650bff87b1de0e723b" name="ae85e93920d8d5a650bff87b1de0e723b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae85e93920d8d5a650bff87b1de0e723b">&#9670;&#160;</a></span>DIG_P5</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P5&#160;&#160;&#160;0x96</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a630998bb1fda5852f0b97d6bca7421b5" name="a630998bb1fda5852f0b97d6bca7421b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a630998bb1fda5852f0b97d6bca7421b5">&#9670;&#160;</a></span>DIG_P6</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P6&#160;&#160;&#160;0x98</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a29b13d27dcc11d3c1e5e36cb4a216510" name="a29b13d27dcc11d3c1e5e36cb4a216510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29b13d27dcc11d3c1e5e36cb4a216510">&#9670;&#160;</a></span>DIG_P7</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P7&#160;&#160;&#160;0x9A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b7b7ab9607f7d14ea0e39177eeec4f6" name="a6b7b7ab9607f7d14ea0e39177eeec4f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b7b7ab9607f7d14ea0e39177eeec4f6">&#9670;&#160;</a></span>DIG_P8</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P8&#160;&#160;&#160;0x9C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba0b797b808c93e0b7d0edc3e0b62c42" name="aba0b797b808c93e0b7d0edc3e0b62c42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba0b797b808c93e0b7d0edc3e0b62c42">&#9670;&#160;</a></span>DIG_P9</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_P9&#160;&#160;&#160;0x9E</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4abdaf6be1790bbbf0de1cd37e0f605" name="ad4abdaf6be1790bbbf0de1cd37e0f605"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4abdaf6be1790bbbf0de1cd37e0f605">&#9670;&#160;</a></span>DIG_T1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_T1&#160;&#160;&#160;0x88</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a59597844d5edbfe5980597d42c76a3d7" name="a59597844d5edbfe5980597d42c76a3d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59597844d5edbfe5980597d42c76a3d7">&#9670;&#160;</a></span>DIG_T2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_T2&#160;&#160;&#160;0x8A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad847ce1218143c8615cc89958f92241b" name="ad847ce1218143c8615cc89958f92241b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad847ce1218143c8615cc89958f92241b">&#9670;&#160;</a></span>DIG_T3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DIG_T3&#160;&#160;&#160;0x8C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac1a61d644600903f7b0f33f18cb21995" name="ac1a61d644600903f7b0f33f18cb21995"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1a61d644600903f7b0f33f18cb21995">&#9670;&#160;</a></span>HUMIDDATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HUMIDDATA&#160;&#160;&#160;0xFD</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1064327af21b1275cd64ab0d739aabe8" name="a1064327af21b1275cd64ab0d739aabe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1064327af21b1275cd64ab0d739aabe8">&#9670;&#160;</a></span>MEAN_SEA_LEVEL_PRESSURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MEAN_SEA_LEVEL_PRESSURE&#160;&#160;&#160;1013</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aebdd61e7e04bf50fff04b49112ba5edd" name="aebdd61e7e04bf50fff04b49112ba5edd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebdd61e7e04bf50fff04b49112ba5edd">&#9670;&#160;</a></span>PRESSUREDATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PRESSUREDATA&#160;&#160;&#160;0xF7</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f1e19a96edc95c89342b63605aaaf30" name="a6f1e19a96edc95c89342b63605aaaf30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f1e19a96edc95c89342b63605aaaf30">&#9670;&#160;</a></span>SOFTRESET</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SOFTRESET&#160;&#160;&#160;0xE0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad85c50d1f6e8fb6bba261da3691fcb3f" name="ad85c50d1f6e8fb6bba261da3691fcb3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad85c50d1f6e8fb6bba261da3691fcb3f">&#9670;&#160;</a></span>TEMPDATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TEMPDATA&#160;&#160;&#160;0xFA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c6d5de492ac61ad29aec7aa9a436bbf" name="a1c6d5de492ac61ad29aec7aa9a436bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c6d5de492ac61ad29aec7aa9a436bbf">&#9670;&#160;</a></span>VERSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION&#160;&#160;&#160;0xD1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

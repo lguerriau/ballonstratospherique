@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>LM75: Référence du fichier main.cpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">LM75
+   </div>
+   <div id="projectbrief">Température Interne</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Fonctions</a>  </div>
+  <div class="headertitle"><div class="title">Référence du fichier main.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
+<code>#include &quot;<a class="el" href="LM75_8h_source.html">LM75.h</a>&quot;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graphe des dépendances par inclusion de main.cpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#amain_8cpp" alt=""/></div>
+<map name="amain_8cpp" id="amain_8cpp">
+<area shape="rect" title=" " alt="" coords="298,5,373,31"/>
+<area shape="rect" title=" " alt="" coords="5,79,65,104"/>
+<area shape="poly" title=" " alt="" coords="299,31,79,82,78,77,297,26"/>
+<area shape="rect" title=" " alt="" coords="53,225,125,251"/>
+<area shape="poly" title=" " alt="" coords="299,29,242,48,213,62,186,81,157,112,132,148,100,213,95,211,128,145,152,109,183,77,210,58,240,43,297,24"/>
+<area shape="rect" title=" " alt="" coords="338,79,405,104"/>
+<area shape="poly" title=" " alt="" coords="344,30,362,65,357,68,339,32"/>
+<area shape="rect" href="LM75_8h.html" title=" " alt="" coords="197,79,263,104"/>
+<area shape="poly" title=" " alt="" coords="320,33,260,73,257,69,317,28"/>
+<area shape="rect" title=" " alt="" coords="368,152,436,177"/>
+<area shape="poly" title=" " alt="" coords="333,32,324,65,323,85,328,103,345,125,367,143,364,147,341,129,324,105,318,85,319,65,328,30"/>
+<area shape="rect" title=" " alt="" coords="429,79,490,104"/>
+<area shape="poly" title=" " alt="" coords="357,28,429,69,426,74,354,33"/>
+<area shape="rect" title=" " alt="" coords="514,79,581,104"/>
+<area shape="poly" title=" " alt="" coords="370,28,502,72,500,77,369,33"/>
+<area shape="rect" title=" " alt="" coords="605,79,674,104"/>
+<area shape="poly" title=" " alt="" coords="373,25,592,76,590,81,372,30"/>
+<area shape="poly" title=" " alt="" coords="220,106,111,217,108,214,217,103"/>
+<area shape="rect" href="i2c_8h.html" title=" " alt="" coords="293,152,343,177"/>
+<area shape="poly" title=" " alt="" coords="246,102,295,141,291,145,242,106"/>
+<area shape="rect" title=" " alt="" coords="149,225,215,251"/>
+<area shape="poly" title=" " alt="" coords="229,105,193,213,188,211,224,104"/>
+<area shape="rect" title=" " alt="" coords="239,225,301,251"/>
+<area shape="poly" title=" " alt="" coords="236,104,266,211,261,213,231,105"/>
+<area shape="poly" title=" " alt="" coords="259,102,362,144,360,149,257,106"/>
+<area shape="poly" title=" " alt="" coords="293,176,138,224,137,219,292,171"/>
+<area shape="poly" title=" " alt="" coords="297,180,217,221,215,217,295,175"/>
+<area shape="rect" title=" " alt="" coords="514,225,578,251"/>
+<area shape="poly" title=" " alt="" coords="345,171,501,220,500,225,343,177"/>
+<area shape="poly" title=" " alt="" coords="312,179,288,216,283,213,308,176"/>
+<area shape="rect" title=" " alt="" coords="603,225,665,251"/>
+<area shape="poly" title=" " alt="" coords="344,171,357,175,471,199,590,223,589,228,470,204,356,180,343,176"/>
+<area shape="rect" title=" " alt="" coords="689,225,755,251"/>
+<area shape="poly" title=" " alt="" coords="344,171,357,175,445,191,515,199,586,208,676,222,675,228,585,213,514,205,444,196,356,180,343,177"/>
+<area shape="rect" title=" " alt="" coords="325,225,383,251"/>
+<area shape="poly" title=" " alt="" coords="326,176,344,212,340,214,322,179"/>
+<area shape="rect" title=" " alt="" coords="407,225,490,251"/>
+<area shape="poly" title=" " alt="" coords="340,175,417,216,414,221,338,180"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:aac4a14ac12cdb5f5a320c468b6ed4c54" id="r_aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aac4a14ac12cdb5f5a320c468b6ed4c54">getTimestamp</a> ()</td></tr>
+<tr class="memdesc:aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Génère un horodatage textuel précis basé sur l'heure système.  <br /></td></tr>
+<tr class="separator:aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627" id="r_a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
+<tr class="memdesc:a3c04138a5bfe5d72780bb7e82a18e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Point d'entrée de l'application de suivi thermique.  <br /></td></tr>
+<tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentation des fonctions</h2>
+<a id="aac4a14ac12cdb5f5a320c468b6ed4c54" name="aac4a14ac12cdb5f5a320c468b6ed4c54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac4a14ac12cdb5f5a320c468b6ed4c54">&#9670;&#160;</a></span>getTimestamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string getTimestamp </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Génère un horodatage textuel précis basé sur l'heure système. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>string Chaîne de caractères au format "AAAA-MM-JJ HH:MM:SS". </dd></dl>
+
+</div>
+</div>
+<a id="a3c04138a5bfe5d72780bb7e82a18e627" name="a3c04138a5bfe5d72780bb7e82a18e627"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c04138a5bfe5d72780bb7e82a18e627">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>argv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Point d'entrée de l'application de suivi thermique. </p>
+<p>Initialise le capteur <a class="el" href="classLM75.html" title="Classe de gestion du capteur de température LM75 via le bus I2C.">LM75</a>, puis effectue une acquisition continue toutes les secondes pour un affichage sur la console et une sauvegarde historique dans un fichier local au format JSON. </p><dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">argc</td><td>Nombre d'arguments en ligne de commande. </td></tr>
+    <tr><td class="paramname">argv</td><td>Tableau des arguments en ligne de commande. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>int Code de retour de l'application (0 en cas de fonctionnement normal). </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

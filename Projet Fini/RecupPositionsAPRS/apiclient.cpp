@@ -1,3 +1,12 @@
+/**
+ * @file apiclient.cpp
+ * @brief Implémentation de la classe ApiClient
+ * @details Gestion des requêtes HTTP vers l'API APRS.fi avec polling automatique
+ * @version 4.0
+ * @date 22/05/2026
+ * @author Guerriau Lucien
+ */
+
 #include "apiclient.h"
 #include <QUrl>
 #include <QUrlQuery>
@@ -5,6 +14,10 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+/**
+ * @brief Constructeur — initialise le gestionnaire réseau et le timer de polling
+ * @param parent Objet parent Qt
+ */
 ApiClient::ApiClient(QObject *parent)
     : QObject(parent)
     , networkManager(nullptr)
@@ -16,10 +29,20 @@ ApiClient::ApiClient(QObject *parent)
     connect(pollTimer, &QTimer::timeout, this, &ApiClient::sendRequest);
 }
 
+/**
+ * @brief Destructeur — arrête le polling si actif
+ */
 ApiClient::~ApiClient() {
     stopPolling();
 }
 
+/**
+ * @brief Configure les paramètres de la requête API
+ * @param callsign Indicatif APRS à interroger
+ * @param what Type de données demandées ("loc" ou "wx")
+ * @param apiKey Clé d'accès à l'API APRS.fi
+ * @param intervalMs Intervalle de polling en millisecondes
+ */
 void ApiClient::configure(const QString &callsign, const QString &what, const QString &apiKey, int intervalMs) {
     this->callsign = callsign;
     this->what = what;
@@ -27,6 +50,11 @@ void ApiClient::configure(const QString &callsign, const QString &what, const QS
     this->intervalMs = intervalMs;
 }
 
+/**
+ * @brief Démarre le polling périodique
+ * @details Envoie immédiatement une première requête puis répète selon intervalMs.
+ *          Sans effet si le polling est déjà actif.
+ */
 void ApiClient::startPolling() {
     if (!pollTimer->isActive()) {
         sendRequest();
@@ -35,12 +63,19 @@ void ApiClient::startPolling() {
     }
 }
 
+/**
+ * @brief Arrête le polling périodique
+ */
 void ApiClient::stopPolling() {
     if (pollTimer->isActive()) {
         pollTimer->stop();
     }
 }
 
+/**
+ * @brief Envoie une requête HTTP GET immédiate vers l'API APRS.fi
+ * @details Construit l'URL avec les paramètres name, what, apikey et format=json
+ */
 void ApiClient::sendRequest() {
     QUrl url("https://api.aprs.fi/api/get");
     QUrlQuery query;
@@ -54,6 +89,11 @@ void ApiClient::sendRequest() {
     connect(reply, &QNetworkReply::finished, this, &ApiClient::onReplyFinished);
 }
 
+/**
+ * @brief Slot interne appelé à la fin d'une requête HTTP
+ * @details Parse la réponse JSON, émet rawResponse puis dataReceived si résultat "ok",
+ *          ou errorOccurred en cas d'erreur réseau ou API.
+ */
 void ApiClient::onReplyFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 
@@ -70,7 +110,6 @@ void ApiClient::onReplyFinished() {
     QByteArray data = reply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
 
-    // On envoie le type de requête avec la raw response
     emit rawResponse(doc.toJson(QJsonDocument::Indented), what);
 
     QJsonObject obj = doc.object();

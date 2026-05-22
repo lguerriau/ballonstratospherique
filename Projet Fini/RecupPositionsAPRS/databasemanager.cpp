@@ -1,14 +1,34 @@
+/**
+ * @file databasemanager.cpp
+ * @brief Implémentation de la classe DatabaseManager
+ * @details Gestion de la connexion et des opérations sur la base de données MySQL
+ * @version 4.0
+ * @date 22/05/2026
+ * @author Guerriau Lucien
+ */
+
 #include "databasemanager.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
 
+/**
+ * @brief Constructeur de DatabaseManager
+ * @param parent Objet parent Qt
+ */
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent) {}
 
+/**
+ * @brief Destructeur — ferme la connexion si ouverte
+ */
 DatabaseManager::~DatabaseManager() {
     disconnect();
 }
 
+/**
+ * @brief Charge les paramètres de connexion depuis config.ini
+ * @param settings Pointeur vers l'objet QSettings du fichier config.ini
+ */
 void DatabaseManager::loadConfig(QSettings *settings) {
     m_host = settings->value("Database/host").toString();
     m_user = settings->value("Database/username").toString();
@@ -16,6 +36,11 @@ void DatabaseManager::loadConfig(QSettings *settings) {
     m_dbName = settings->value("Database/database").toString();
 }
 
+/**
+ * @brief Établit la connexion à la base de données MySQL
+ * @details Réutilise la connexion par défaut si elle existe déjà, sinon en crée une nouvelle.
+ * @return DB_SUCCESS si la connexion est établie, DB_ERROR_CONNECTION sinon
+ */
 DbStatus DatabaseManager::connectToDatabase() {
     DbStatus status = DB_ERROR_CONNECTION;
 
@@ -41,6 +66,9 @@ DbStatus DatabaseManager::connectToDatabase() {
     return status;
 }
 
+/**
+ * @brief Ferme la connexion à la base de données
+ */
 void DatabaseManager::disconnect() {
     if (db.isOpen()) {
         db.close();
@@ -48,6 +76,13 @@ void DatabaseManager::disconnect() {
     }
 }
 
+/**
+ * @brief Sauvegarde une entrée de position APRS complète
+ * @details Appelle insertIntoHistory et updatePosition. Retourne le premier statut
+ *          d'erreur rencontré, ou DB_SUCCESS si les deux réussissent.
+ * @param entry Objet JSON contenant les champs de la trame APRS
+ * @return Code DbStatus correspondant au résultat global
+ */
 DbStatus DatabaseManager::saveEntry(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_NOT_CONNECTED;
 
@@ -65,6 +100,11 @@ DbStatus DatabaseManager::saveEntry(const QJsonObject &entry) {
     return status;
 }
 
+/**
+ * @brief Insère une trame APRS dans la table HISTORIQUE
+ * @param entry Objet JSON de la trame APRS (name, type, time, lasttime, lat, lng, ...)
+ * @return DB_SUCCESS si l'insertion réussit, DB_ERROR_INSERT sinon
+ */
 DbStatus DatabaseManager::insertIntoHistory(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_INSERT;
 
@@ -94,6 +134,12 @@ DbStatus DatabaseManager::insertIntoHistory(const QJsonObject &entry) {
     return status;
 }
 
+/**
+ * @brief Met à jour ou crée l'entrée de position dans la table POSITIONS
+ * @details Vérifie l'existence de la station. Si elle existe : UPDATE, sinon : INSERT.
+ * @param entry Objet JSON contenant name, lat, lng, lasttime
+ * @return DB_SUCCESS si l'opération réussit, DB_ERROR_UPDATE sinon
+ */
 DbStatus DatabaseManager::updatePosition(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_UPDATE;
     QString name = entry.value("name").toString();
@@ -130,16 +176,20 @@ DbStatus DatabaseManager::updatePosition(const QJsonObject &entry) {
     return status;
 }
 
+/**
+ * @brief Sauvegarde une entrée de télémétrie météo
+ * @details Utilise REPLACE INTO pour éviter les doublons sur la clé composée name+time.
+ *          L'id_telemetrie est construit sous la forme "name_time".
+ * @param entry Objet JSON contenant name, time, temp, pressure, humidity
+ * @return DB_SUCCESS si la sauvegarde réussit, DB_ERROR_INSERT ou DB_ERROR_NOT_CONNECTED sinon
+ */
 DbStatus DatabaseManager::saveTelemetry(const QJsonObject &entry) {
     DbStatus status = DB_ERROR_NOT_CONNECTED;
 
     if (db.isOpen()) {
         QSqlQuery query(db);
-        // query.prepare("REPLACE INTO TELEMETRIES (id_telemetrie, name, time, temp, pressure, humidity, wind_direction, wind_speed) "
-        //               "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity, :wind_direction, :wind_speed)");
-
         query.prepare("REPLACE INTO TELEMETRIES (id_telemetrie, name, time, temp, pressure, humidity) "
-                      "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity) ; ");
+                      "VALUES (:id_telemetrie, :name, :time, :temp, :pressure, :humidity)");
 
         QString name = entry.value("name").toString();
         QString timeStr = entry.value("time").toString();
@@ -151,8 +201,6 @@ DbStatus DatabaseManager::saveTelemetry(const QJsonObject &entry) {
         query.bindValue(":temp", entry.value("temp").toVariant().toString());
         query.bindValue(":pressure", entry.value("pressure").toVariant().toString());
         query.bindValue(":humidity", entry.value("humidity").toVariant().toString());
-      /*  query.bindValue(":wind_direction", entry.value("wind_direction").toVariant().toString());
-        query.bindValue(":wind_speed", entry.value("wind_speed").toVariant().toString());*/
 
         if (query.exec()) {
             emit logMessage("Sauvegarde Telemetrie OK pour : " + name);
@@ -165,12 +213,18 @@ DbStatus DatabaseManager::saveTelemetry(const QJsonObject &entry) {
     return status;
 }
 
+/**
+ * @brief Récupère les dernières positions connues avec leur télémétrie associée
+ * @details Jointure LEFT JOIN entre POSITIONS et la dernière entrée TELEMETRIES
+ *          de chaque station, identifiée par MAX(time).
+ * @return Tableau JSON des positions avec champs : name, lat, lng, temp, pressure, humidity
+ */
 QJsonArray DatabaseManager::getCurrentPositions() {
     QJsonArray positions;
 
     if (db.isOpen()) {
         QSqlQuery query(db);
-        QString sql = "SELECT p.name, p.lat, p.lng, t.temp, t.pressure, t.humidity, t.wind_direction, t.wind_speed "
+        QString sql = "SELECT p.name, p.lat, p.lng, t.temp, t.pressure, t.humidity "
                       "FROM POSITIONS p "
                       "LEFT JOIN TELEMETRIES t ON p.name = t.name "
                       "AND t.time = (SELECT MAX(time) FROM TELEMETRIES WHERE name = p.name)";
@@ -184,8 +238,6 @@ QJsonArray DatabaseManager::getCurrentPositions() {
                 pos["temp"] = query.value(3).toString();
                 pos["pressure"] = query.value(4).toString();
                 pos["humidity"] = query.value(5).toString();
-                pos["wind_direction"] = query.value(6).toString();
-                pos["wind_speed"] = query.value(7).toString();
                 positions.append(pos);
             }
         }

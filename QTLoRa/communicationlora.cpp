@@ -1,7 +1,15 @@
+/**
+ * @file communicationlora.cpp
+ * @brief Implémentation de la classe CommunicationLora
+ * @version 1.0
+ * @author nbrands
+ * @date 26/05/2026
+ * @details Implémente la configuration du flux UART et le traitement asynchrone des données entrantes.
+ */
+
 #include "communicationlora.h"
 #include <QDebug>
 
-// --- Constructeur ---
 CommunicationLora::CommunicationLora(QObject *parent) : QObject(parent)
 {
     // C'est ici qu'on branche "l'oreille" du port série.
@@ -9,7 +17,6 @@ CommunicationLora::CommunicationLora(QObject *parent) : QObject(parent)
     connect(&portComLora, &QSerialPort::readyRead, this, &CommunicationLora::onReadyRead);
 }
 
-// --- Destructeur ---
 CommunicationLora::~CommunicationLora()
 {
     // Sécurité : on s'assure de bien fermer le port quand on quitte le programme
@@ -20,7 +27,6 @@ CommunicationLora::~CommunicationLora()
     }
 }
 
-// --- Configuration et Ouverture du Port ---
 bool CommunicationLora::ouvrirPort(const QString &nomPort)
 {
     portComLora.setPortName(nomPort);
@@ -34,7 +40,6 @@ bool CommunicationLora::ouvrirPort(const QString &nomPort)
     return portComLora.open(QIODevice::ReadWrite);
 }
 
-// --- Envoi de la commande à la Gateway ---
 void CommunicationLora::demandeRssiSnr()
 {
     if (portComLora.isOpen()) {
@@ -46,7 +51,6 @@ void CommunicationLora::demandeRssiSnr()
     }
 }
 
-// --- Réception et Traitement des données ---
 void CommunicationLora::onReadyRead()
 {
     // On extrait les données brutes

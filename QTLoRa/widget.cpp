@@ -1,3 +1,13 @@
+/**
+ * @file widget.cpp
+ * @brief Implémentation de la classe Widget
+ * @version 1.0
+ * @author nbrands
+ * @date 26/05/2026
+ * @details Implémente la logique d'interaction utilisateur, le parsing des trames MPU6050 
+ * et la mise à jour dynamique des styles (QSS) selon les alertes.
+ */
+
 #include "widget.h"
 #include "ui_widget.h"
 #include <QDebug>
@@ -19,30 +29,30 @@ Widget::Widget(QWidget *parent)
     // 3. (Optionnel) On donne une taille fixe aux deux autres
     ui->table_requetes->setColumnWidth(0, 150);
     ui->table_requetes->setColumnWidth(2, 150);
+    
     // 1. Instanciation de notre nouvelle classe métier
     lora = new CommunicationLora(this);
 
     // 2. Connexion du signal (quand la classe LoRa reçoit un texte) vers notre slot (pour l'afficher)
     connect(lora, &CommunicationLora::messageRecu, this, &Widget::lireDonneesSerie);
 
-
     // --- OUVERTURE DU PORT (RETOUR AU ACM0) ---
-        if (lora->ouvrirPort("/dev/ttyACM0")) {
-            qDebug() << "✅ Port /dev/ttyACM0 ouvert !";
+    if (lora->ouvrirPort("/dev/ttyACM0")) {
+        qDebug() << "✅ Port /dev/ttyACM0 ouvert !";
 
-            // On débloque le bandeau de chargement immédiatement
-            ui->lbl_status_vol->setProperty("status", "LANDING"); // Devient Vert
-            ui->lbl_status_vol->setText("SYSTÈME CONNECTÉ - PRÊT");
-        } else {
-            qDebug() << "❌ ÉCHEC : /dev/ttyACM0 introuvable ou verrouillé.";
+        // On débloque le bandeau de chargement immédiatement
+        ui->lbl_status_vol->setProperty("status", "LANDING"); // Devient Vert
+        ui->lbl_status_vol->setText("SYSTÈME CONNECTÉ - PRÊT");
+    } else {
+        qDebug() << "❌ ÉCHEC : /dev/ttyACM0 introuvable ou verrouillé.";
 
-            ui->lbl_status_vol->setProperty("status", "BURST"); // Devient Rouge
-            ui->lbl_status_vol->setText("ERREUR PORT : /dev/ttyACM0");
-        }
+        ui->lbl_status_vol->setProperty("status", "BURST"); // Devient Rouge
+        ui->lbl_status_vol->setText("ERREUR PORT : /dev/ttyACM0");
+    }
 
-        // Rafraîchissement du style pour que la couleur change bien
-        ui->lbl_status_vol->style()->unpolish(ui->lbl_status_vol);
-        ui->lbl_status_vol->style()->polish(ui->lbl_status_vol);
+    // Rafraîchissement du style pour que la couleur change bien
+    ui->lbl_status_vol->style()->unpolish(ui->lbl_status_vol);
+    ui->lbl_status_vol->style()->polish(ui->lbl_status_vol);
 }
 
 Widget::~Widget()

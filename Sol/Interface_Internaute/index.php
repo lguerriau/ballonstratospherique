@@ -14,7 +14,7 @@ try {
 
 // --- 1. RÉCUPÉRATION DES DONNÉES TÉLÉMÉTRIE ---
 try {
-    $requete = $db->query('SELECT temp, humidity, pressure, time FROM TELEMETRIE ORDER BY time DESC LIMIT 50');
+    $requete = $db->query('SELECT temp, humidity, pressure, time FROM TELEMETRIES ORDER BY time DESC LIMIT 50');
     $toutes_donnees = $requete->fetchAll(PDO::FETCH_ASSOC);
     
     $donnees = !empty($toutes_donnees) ? $toutes_donnees[0] : false;
@@ -26,7 +26,7 @@ try {
 
 // --- 2. RÉCUPÉRATION DES IMAGES SSTV ---
 try {
-    $requete_images = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAGE ORDER BY id_image DESC LIMIT 24');
+    $requete_images = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAGES ORDER BY id_image DESC LIMIT 24');
     $images_sstv = $requete_images->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     $images_sstv = [];

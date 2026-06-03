@@ -21,20 +21,16 @@ GestionLoRa::GestionLoRa(Modele* bdd, Log* logger)
     strncpy(validCommand, "RSSI/SNR", sizeof(validCommand) - 1);
     validCommand[sizeof(validCommand) - 1] = '\0';
 
-    // Initialisation statique du message selon la NASA (Règle 3)
     bool initOk = mes.init("F4KMN-9", "APLT00", "WIDE1-1", "F4KMN    ", "Hello");
     
-    // Règle 5 & 7 : Assertion et action correctrice si l'initialisation échoue
     if (!initOk && erreurLog != nullptr) {
         erreurLog->enregistrerErreur("ALERTE : Echec de l'initialisation du Message LoRa !");
     }
 }
 
 bool GestionLoRa::begin() {
-    // Règle 5 (Assertion 1) : Validation du pointeur de dépendance BDD
     if (laBdd == nullptr) return false; 
     
-    // Règle 5 (Assertion 2) : Validation du pointeur de dépendance Journal de Log
     if (erreurLog == nullptr) return false; 
 
     pinMode(pinLED, OUTPUT);
@@ -55,20 +51,17 @@ bool GestionLoRa::begin() {
     LoRa.enableCrc();
     LoRa.setTxPower(20);
     
-    return true; // Règle 7 : Statut renvoyé
+    return true; 
 }
 
 void GestionLoRa::process() {
-    // Règle 5 (Assertions) : Sécurité opérationnelle pré-calcul
     if (laBdd == nullptr || erreurLog == nullptr) return;
 
-    // 1. Gestion des entrées du port Série
     if (Serial.available() > 0) {
         char input = Serial.read();
         
-        // Règle 2 : Boucle de vidage avec borne supérieure fixe (max 64 itérations)
         for (int i = 0; (i < 64) && (Serial.available() > 0); i++) {
-            (void)Serial.read(); // Règle 7 : Cast explicite pour ignorer la valeur
+            (void)Serial.read(); 
         }
 
         if (input == 'm') {
@@ -76,7 +69,6 @@ void GestionLoRa::process() {
             char pduAEnvoyer[150];
             memset(pduAEnvoyer, 0, sizeof(pduAEnvoyer));
             
-            // Règle 7 : Chaque valeur de retour de fonction est vérifiée
             if (mes.getPduMes(true, pduAEnvoyer, sizeof(pduAEnvoyer))) {
                 if (sendLoRa(pduAEnvoyer, strlen(pduAEnvoyer))) {
                     lastSentMsgId = mes.getMessageId();
@@ -92,27 +84,23 @@ void GestionLoRa::process() {
         else if (input == 'l') { Serial.println("ST:LANDING"); }
     }
 
-    // 2. Gestion du Timeout d'attente d'ACK
     if (waitForAck && (millis() - lastSentTime > ACK_TIMEOUT)) { 
         erreurLog->enregistrerErreur("[TIMEOUT] Pas de reponse de la nacelle."); 
         waitForAck = false; 
         digitalWrite(pinLED, LOW); 
     }
 
-    // 3. Écoute active et traitement
     bool resRx = receiveLoRa();
-    (void)resRx; // Règle 7 : Acquittement explicite de la valeur de retour
+    (void)resRx; 
 }
 
 bool GestionLoRa::sendLoRa(const char* msg, int length) {
-    // Règle 5 (Assertion 1) : Pointeur valide
     if (msg == nullptr) return false;
-    // Règle 5 (Assertion 2) : Hors limites de taille mémoire
     if (length <= 0 || length >= 150) return false;
 
     if (LoRa.beginPacket() == 0) return false;
 
-    LoRa.write('<'); // KISS Header
+    LoRa.write('<'); 
     LoRa.write(0xFF);
     LoRa.write(0x01);
     
@@ -123,23 +111,19 @@ bool GestionLoRa::sendLoRa(const char* msg, int length) {
 }
 
 bool GestionLoRa::sendAck(int msgId, const char* status) {
-    // Règle 5 (Assertions) : Validation stricte des données d'entrée
     if (msgId < 0 || status == nullptr) return false;
 
     char pduAck[150];
     memset(pduAck, 0, sizeof(pduAck));
     
-    // Règle 8 : Utilisation sécurisée de snprintf
     snprintf(pduAck, sizeof(pduAck), "F4KMN-9>APLT00,WIDE1-1::NACELLE  :%s{%d", status, msgId);
     
     return sendLoRa(pduAck, strlen(pduAck));
 }
 
 void GestionLoRa::decoderTrameWeather(const char* trame) {
-    // Règle 5 (Assertions) : Intégrité de la chaîne de caractères
     if (trame == nullptr || strlen(trame) == 0) return;
 
-    // Règle 9 : Recherche via pointeurs sans double déréférencement
     const char* tPtr = strchr(trame, 't');
     const char* hPtr = strchr(trame, 'h');
     const char* bPtr = strchr(trame, 'b');
@@ -162,14 +146,12 @@ void GestionLoRa::decoderTrameWeather(const char* trame) {
 
 bool GestionLoRa::receiveLoRa() {
     int packetSize = LoRa.parsePacket();
-    // Règle 5 (Assertion 1) : Absence de paquet = comportement nominal
     if (packetSize == 0) return true;
     
     char incoming[150];
     memset(incoming, 0, sizeof(incoming));
     int count = 0;
 
-    // Règle 2 & 5 (Assertion 2) : Lecture avec borne fixe (max 149 itérations)
     for (int i = 0; (i < 149) && (LoRa.available() > 0); i++) {
         incoming[i] = (char)LoRa.read();
         count++;

@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BME280: Référence du fichier main.cpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">BME280
+   </div>
+   <div id="projectbrief">Télémétrie Température, Humidité, Pression atmosphérique</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Fonctions</a>  </div>
+  <div class="headertitle"><div class="title">Référence du fichier main.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Point d'entrée de la station météo - Lecture du <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a> et stockage JSON.  
+<a href="#details">Plus de détails...</a></p>
+<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;thread&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &quot;<a class="el" href="bme280_8h_source.html">bme280.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graphe des dépendances par inclusion de main.cpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#amain_8cpp" alt=""/></div>
+<map name="amain_8cpp" id="amain_8cpp">
+<area shape="rect" title="Point d&#39;entrée de la station météo &#45; Lecture du BME280 et stockage JSON." alt="" coords="272,5,346,31"/>
+<area shape="rect" title=" " alt="" coords="300,225,372,251"/>
+<area shape="poly" title=" " alt="" coords="272,24,205,29,126,39,56,56,29,67,13,80,8,91,13,103,39,134,71,160,106,181,144,197,221,220,286,230,285,236,219,225,142,202,104,185,68,164,35,138,8,105,3,91,8,77,27,63,54,51,125,34,204,24,271,18"/>
+<area shape="rect" title=" " alt="" coords="22,79,92,104"/>
+<area shape="poly" title=" " alt="" coords="272,32,106,79,104,74,271,27"/>
+<area shape="rect" title=" " alt="" coords="116,79,171,104"/>
+<area shape="poly" title=" " alt="" coords="284,33,184,76,182,71,282,28"/>
+<area shape="rect" title=" " alt="" coords="196,79,254,104"/>
+<area shape="poly" title=" " alt="" coords="297,33,251,72,248,67,294,29"/>
+<area shape="rect" title=" " alt="" coords="278,79,340,104"/>
+<area shape="poly" title=" " alt="" coords="312,31,312,65,306,65,306,31"/>
+<area shape="rect" title=" " alt="" coords="364,79,430,104"/>
+<area shape="poly" title=" " alt="" coords="325,29,374,68,370,72,322,33"/>
+<area shape="rect" title=" " alt="" coords="434,152,501,177"/>
+<area shape="poly" title=" " alt="" coords="347,24,398,43,423,58,445,77,461,106,468,137,463,138,456,108,440,80,420,62,395,48,346,29"/>
+<area shape="rect" title=" " alt="" coords="505,79,564,104"/>
+<area shape="poly" title=" " alt="" coords="346,28,493,74,491,79,345,33"/>
+<area shape="rect" href="bme280_8h.html" title="Classe pour le composant i2c BME280." alt="" coords="588,79,667,104"/>
+<area shape="poly" title=" " alt="" coords="348,25,576,76,574,81,346,30"/>
+<area shape="poly" title=" " alt="" coords="617,106,573,142,514,180,449,208,386,227,385,222,447,203,512,175,570,137,614,102"/>
+<area shape="poly" title=" " alt="" coords="603,106,507,149,505,144,601,102"/>
+<area shape="rect" href="i2c_8h.html" title=" " alt="" coords="664,152,714,177"/>
+<area shape="poly" title=" " alt="" coords="640,103,672,140,668,143,636,106"/>
+<area shape="rect" title=" " alt="" coords="936,225,1002,251"/>
+<area shape="poly" title=" " alt="" coords="656,102,931,218,929,222,654,107"/>
+<area shape="rect" title=" " alt="" coords="576,152,639,177"/>
+<area shape="poly" title=" " alt="" coords="627,105,617,140,612,138,622,104"/>
+<area shape="poly" title=" " alt="" coords="664,177,651,180,520,205,386,228,385,223,520,200,650,175,663,171"/>
+<area shape="poly" title=" " alt="" coords="715,170,924,223,923,228,714,175"/>
+<area shape="rect" title=" " alt="" coords="396,225,460,251"/>
+<area shape="poly" title=" " alt="" coords="665,176,651,180,474,228,472,222,650,175,663,171"/>
+<area shape="rect" title=" " alt="" coords="484,225,545,251"/>
+<area shape="poly" title=" " alt="" coords="665,179,556,223,554,218,663,174"/>
+<area shape="rect" title=" " alt="" coords="570,225,632,251"/>
+<area shape="poly" title=" " alt="" coords="677,179,628,219,625,214,673,175"/>
+<area shape="rect" title=" " alt="" coords="656,225,722,251"/>
+<area shape="poly" title=" " alt="" coords="692,178,692,212,686,212,686,178"/>
+<area shape="rect" title=" " alt="" coords="746,225,805,251"/>
+<area shape="poly" title=" " alt="" coords="705,175,753,214,749,219,701,179"/>
+<area shape="rect" title=" " alt="" coords="829,225,912,251"/>
+<area shape="poly" title=" " alt="" coords="716,173,829,218,827,223,714,178"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:aac4a14ac12cdb5f5a320c468b6ed4c54" id="r_aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aac4a14ac12cdb5f5a320c468b6ed4c54">getTimestamp</a> ()</td></tr>
+<tr class="memdesc:aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Génère un horodatage textuel précis basé sur l'heure système.  <br /></td></tr>
+<tr class="separator:aac4a14ac12cdb5f5a320c468b6ed4c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4" id="r_ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
+<tr class="memdesc:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boucle principale du programme.  <br /></td></tr>
+<tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Point d'entrée de la station météo - Lecture du <a class="el" href="classBME280.html" title="Gestion du capteur environnemental BME280 via le bus I2C.">BME280</a> et stockage JSON. </p>
+</div><h2 class="groupheader">Documentation des fonctions</h2>
+<a id="aac4a14ac12cdb5f5a320c468b6ed4c54" name="aac4a14ac12cdb5f5a320c468b6ed4c54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac4a14ac12cdb5f5a320c468b6ed4c54">&#9670;&#160;</a></span>getTimestamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string getTimestamp </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Génère un horodatage textuel précis basé sur l'heure système. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>Chaîne de caractères au format "AAAA-MM-JJ HH:MM:SS". </dd></dl>
+
+</div>
+</div>
+<a id="ae66f6b31b5ad750f1fe042a706a4e3d4" name="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae66f6b31b5ad750f1fe042a706a4e3d4">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Boucle principale du programme. </p>
+<ul>
+<li>Initialise le capteur sur le bus I2C local, effectue une lecture séquentielle toutes les 10 secondes et stocke les données formatées en JSON en vue d'une future intégration RadioLib / LoRa.</li>
+<li><dl class="section return"><dt>Renvoie</dt><dd>0 en cas de fonctionnement normal, -1 en cas d'erreur matérielle. </dd></dl>
+</li>
+</ul>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

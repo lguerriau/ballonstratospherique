@@ -10,11 +10,3 @@ RA02
 ---------------------------------------------------------------
 Programme d'envoi des données télémétrique, trame APRS Weather
 _______________________________________________________________
-
-
-Interface_Internaute 
----------------------------------------------------------------
-Programme de visualisation WEB des données, MAJ toutes les 10 minutes *(limitation API)*
-
-*(merge avec **Harold** dans **main**)*
-

@@ -1,0 +1,12 @@
+<map id="StationApp.h" name="StationApp.h">
+<area shape="rect" id="Node000001" title="Automate et interface utilisateur de la station météo." alt="" coords="71,5,169,31"/>
+<area shape="rect" id="Node000002" href="$RadioManager_8h.html" title="Gestionnaire matériel de l&#39;émetteur LoRa." alt="" coords="129,79,245,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,29,168,67,165,70,129,33"/>
+<area shape="rect" id="Node000005" href="$AprsBuilder_8h.html" title="Gestionnaire de formatage des trames au standard APRS Weather." alt="" coords="5,79,104,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="111,33,76,70,73,67,107,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="51,152,106,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="171,106,109,147,106,142,168,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="155,152,219,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="189,104,189,138,184,138,184,104"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="61,103,73,138,68,140,56,105"/>
+</map>

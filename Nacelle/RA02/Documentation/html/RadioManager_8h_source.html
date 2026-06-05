@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RA02:  Fichier source de RadioManager.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">RA02
+   </div>
+   <div id="projectbrief">Envoi télémétrique sous forme de trame APRS Weather et Tests Unitaire</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">RadioManager.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="RadioManager_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef RADIO_MANAGER_H</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define RADIO_MANAGER_H</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// Astuce de compatibilité : on définit _Bool pour le compilateur C++</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#ifndef _Bool</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="RadioManager_8h.html#aeaff0db5524987a2f50d71ac0162ceb2">   13</a></span><span class="preprocessor">#define _Bool bool</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #include &quot;LoRa.h&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classRadioManager.html">   24</a></span><span class="keyword">class </span><a class="code hl_class" href="classRadioManager.html">RadioManager</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classRadioManager.html#ac936c2fc72abcb6853ce32c5bb325810">   26</a></span>    LoRa_ctl <a class="code hl_variable" href="classRadioManager.html#ac936c2fc72abcb6853ce32c5bb325810">modem</a>;       </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classRadioManager.html#a3c1dbf485e26ccf1522958593e89553f">   27</a></span>    <span class="keywordtype">char</span> <a class="code hl_variable" href="classRadioManager.html#a3c1dbf485e26ccf1522958593e89553f">txbuf</a>[255];      </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_function" href="classRadioManager.html#ab5c4fbfbf74f9321e3cba603ce22a39a">RadioManager</a>();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classRadioManager.html#a7667701968cf8b01c92b99d12e7bf09c">initialiser</a>();</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classRadioManager.html#acc7213e57329ceb834abcadbe03511e0">envoyer</a>(<span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassRadioManager_html"><div class="ttname"><a href="classRadioManager.html">RadioManager</a></div><div class="ttdoc">Pilote l'interface matérielle radio LoRa via le bus SPI pour l'envoi de trames.</div><div class="ttdef"><b>Definition</b> RadioManager.h:24</div></div>
+<div class="ttc" id="aclassRadioManager_html_a3c1dbf485e26ccf1522958593e89553f"><div class="ttname"><a href="classRadioManager.html#a3c1dbf485e26ccf1522958593e89553f">RadioManager::txbuf</a></div><div class="ttdeci">char txbuf[255]</div><div class="ttdef"><b>Definition</b> RadioManager.h:27</div></div>
+<div class="ttc" id="aclassRadioManager_html_a7667701968cf8b01c92b99d12e7bf09c"><div class="ttname"><a href="classRadioManager.html#a7667701968cf8b01c92b99d12e7bf09c">RadioManager::initialiser</a></div><div class="ttdeci">bool initialiser()</div><div class="ttdoc">Configure les broches GPIO, le SPI et les paramètres RF du module LoRa.</div><div class="ttdef"><b>Definition</b> RadioManager.cpp:26</div></div>
+<div class="ttc" id="aclassRadioManager_html_ab5c4fbfbf74f9321e3cba603ce22a39a"><div class="ttname"><a href="classRadioManager.html#ab5c4fbfbf74f9321e3cba603ce22a39a">RadioManager::RadioManager</a></div><div class="ttdeci">RadioManager()</div><div class="ttdoc">Constructeur par défaut. Initialise les structures mémoires.</div><div class="ttdef"><b>Definition</b> RadioManager.cpp:19</div></div>
+<div class="ttc" id="aclassRadioManager_html_ac936c2fc72abcb6853ce32c5bb325810"><div class="ttname"><a href="classRadioManager.html#ac936c2fc72abcb6853ce32c5bb325810">RadioManager::modem</a></div><div class="ttdeci">LoRa_ctl modem</div><div class="ttdef"><b>Definition</b> RadioManager.h:26</div></div>
+<div class="ttc" id="aclassRadioManager_html_acc7213e57329ceb834abcadbe03511e0"><div class="ttname"><a href="classRadioManager.html#acc7213e57329ceb834abcadbe03511e0">RadioManager::envoyer</a></div><div class="ttdeci">void envoyer(const std::string &amp;message)</div><div class="ttdoc">Encapsule et transmet un message texte brut sur le canal LoRa configuré.</div><div class="ttdef"><b>Definition</b> RadioManager.cpp:64</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

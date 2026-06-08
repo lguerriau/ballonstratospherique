@@ -24,11 +24,9 @@ Matériel Embarqué (Nacelle)
 
         Environnemental : BME280 (Pression, Température, Humidité).
 
+        Température : LM75.
+
         Mouvement : MPU 6050 / HW123 (Accéléromètre 3 axes).
-
-        Température Interne : LM75.
-
-    Positionnement : GPS SIRFstar IV.
 
     Communication : Module LoRa RA-02 (433 MHz) et Émetteur VHF pour la SSTV.
 
@@ -44,46 +42,28 @@ Logiciels et Protocoles
 
     Protocoles Radio :
 
-        LoRa + APRS : Pour la télémétrie courte et longue distance.
+        LoRa + APRS Weather : Pour la télémétrie courte et longue distance.
 
         SSTV (Martin M1) : Pour la transmission d'images via ondes VHF.
 
     Base de données : MariaDB pour l'archivage des trames et événements.
 
-📂 Structure du Code Source
-
-Le dossier PBS/ contient l'application de la station sol développée avec Qt :
-
-    PBS.pro : Fichier de configuration du projet Qt (incluant les modules serialport et widgets).
-
-    communicationlora.h/cpp : Classe gérant la communication série avec la passerelle LoRa (ESP32 TTGO).
-
-    widget.h/cpp : Interface graphique principale pour visualiser la télémétrie et envoyer des requêtes.
-
-    main.cpp : Point d'entrée de l'application.
-
-🚀 Installation et Utilisation
-
-    Environnement : Utilisez l'IDE NetBeans avec le plugin C/C++ (requis par le projet) ou Qt Creator.
-
-    Compilation :
-
-        Ouvrez le fichier PBS.pro.
-
-        Assurez-vous d'avoir Qt 6 installé avec le module Qt Serial Port.
-
-        Compilez le projet en mode Debug ou Release.
-
-    Connexion : Connectez la Gateway LoRa (ESP32) au PC via USB. L'application utilise /dev/ttyACM0 (ou le port COM correspondant) pour communiquer.
-
 👥 Équipe du Projet (Groupe TW4)
 
-    PAIN Iako : Développement du module de télémesure et sauvegarde CSV.
+    PAIN Iako : Développement du module de télémesure et communication APRS Weather
+                Sauvegarde .json sur la Nacelle
+                Interface de visualisation télémétrique en direct
 
-    BRANDS Noé : Interface utilisateur permettant l'envoi et la réception de requête, communication LoRa/Requêtes et détection de chute/atterrissage.
+    BRANDS Noé : Interface utilisateur permettant l'envoi et la réception de requête
+                 Communication LoRa/Requêtes 
+                 Détection de chute/atterrissage
 
-    KALO Harold : Transmission d'images SSTV, serveur Web et traitement vidéo.
+    KALO Harold : Transmission d'images SSTV
+                  Serveur Web 
+                  Traitement vidéo
 
-    GUERRIAU Lucien : Récupération des données APRS.fi, base de données et cartographie.
+    GUERRIAU Lucien : Récupération des données APRS.fi
+                      Base de données 
+                      Cartographie
 
 Projet soutenu par le CNES et l'association Planète Sciences.

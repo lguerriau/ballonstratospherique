@@ -15,7 +15,7 @@ Capture d'images :                  Prise de photos en haute altitude et transmi
 
 Récupération de la nacelle :        Utilisation d'un dispositif de localisation GPS pour garantir la récupération du                                       matériel après l'atterrissage
 ___
-Structure du projet
+📂️ Structure du projet
 -
 *Documentation* : Contiens toutes les documentations et guides utiles aux programmes
 

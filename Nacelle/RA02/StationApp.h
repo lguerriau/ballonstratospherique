@@ -8,6 +8,7 @@
 
 #include "RadioManager.h"
 #include "AprsBuilder.h"
+#include "DataLogger.h"
 
 /**
  * @class StationApp
@@ -17,6 +18,7 @@ class StationApp {
 private:
     RadioManager radio;    /*!< Instance du contrôleur d'émission radio */
     AprsBuilder builder;   /*!< Instance de formatage du protocole APRS */
+    DataLogger logger;
 
     /**
      * @brief Boucle d'acquisition automatique continue des capteurs physiques et envoi radio périodique.

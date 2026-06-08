@@ -84,8 +84,19 @@ foreach ($donnees_chronologiques as $row) {
 
         <div id="tab-telemetrie" class="tab-content active">
             <?php if ($donnees): ?>
-                <p class="timestamp">Dernière mise à jour : <?php echo htmlspecialchars($date_affichage); ?></p>
-                <p class="timestamp" style="margin-top: -20px; margin-bottom: 30px; color: #888; font-size: 0.95rem;">Prochaine mise à jour : <?php echo htmlspecialchars($prochaine_affichage); ?></p>
+                <div class="info-bar">
+                    <div class="info-timestamps">
+                        <p class="timestamp">Dernière mise à jour : <?php echo htmlspecialchars($date_affichage); ?></p>
+                        <p class="timestamp" style="color: #888; font-size: 0.95rem;">Prochaine mise à jour : <?php echo htmlspecialchars($prochaine_affichage); ?></p>
+                    </div>
+                    <div class="info-actions">
+                        <button class="btn-import" onclick="document.getElementById('json-import-input').click()">
+                            ↑ Importer JSON
+                        </button>
+                        <input type="file" id="json-import-input" accept=".json" style="display:none" onchange="importJson(event)">
+                        <span id="import-status" class="import-status"></span>
+                    </div>
+                </div>
 
                 <div class="dashboard">
                     <div class="card-group-tp">
@@ -155,7 +166,7 @@ foreach ($donnees_chronologiques as $row) {
                 <div class="galerie-sstv">
                     <?php foreach ($images_sstv as $img): ?>
                         <div class="photo-card">
-                            <img src="ARCHIVE_PHOTOS/<?php echo htmlspecialchars(basename($img['chemin_image'])); ?>" alt="SSTV du ballon">
+                            <img src="photos_sstv/<?php echo htmlspecialchars(basename($img['chemin_image'])); ?>" alt="SSTV du ballon">
                             <div class="photo-info">
                                 <span class="photo-id">ID: #<?php echo htmlspecialchars($img['id_image']); ?></span>
                                 <span class="photo-date">Reçue le : <?php echo htmlspecialchars($img['horodatage_image']); ?></span>
@@ -357,7 +368,7 @@ foreach ($donnees_chronologiques as $row) {
                         // Pressure in tenths of hPa, 5 digits (e.g. 1013.2 hPa → 10132)
                         const pField = String(Math.round(parseFloat(row.pressure) * 10)).padStart(5, '0');
 
-                        const trame = `F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_${aprsTimestamp}c...s...g...t${tField}h${hField}b${pField}`;
+                        const trame = row._aprs || `F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_${aprsTimestamp}c...s...g...t${tField}h${hField}b${pField}`;
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -373,6 +384,69 @@ foreach ($donnees_chronologiques as $row) {
                 refreshChart();
                 document.getElementById('log-table').classList.add('mode-decoded');
                 renderLog();
+            }
+
+            function importJson(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const status = document.getElementById('import-status');
+                status.textContent = 'Chargement…';
+                status.style.color = '#aaa';
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        // Parse NDJSON (one JSON object per line)
+                        const lines = e.target.result.trim().split('\n').filter(l => l.trim());
+                        const parsed = lines.map(l => JSON.parse(l));
+
+                        // Map to rawData format: {time, temp, humidity, pressure}
+                        const imported = parsed.map(row => {
+                            const ts = new Date(row.ts);
+                            const unix = Math.floor(ts.getTime() / 1000) - 7200; // undo +7200 offset
+                            return {
+                                time: String(unix),
+                                temp: String(row.t),
+                                humidity: String(row.h),
+                                pressure: String(row.p),
+                                _aprs: row.aprs || null
+                            };
+                        }).sort((a, b) => parseInt(a.time) - parseInt(b.time));
+
+                        // Override rawData and chart data
+                        rawData.length = 0;
+                        imported.forEach(r => rawData.push(r));
+
+                        // Rebuild chart arrays
+                        labels.length = 0;
+                        tempData.length = 0;
+                        humidityData.length = 0;
+                        pressureData.length = 0;
+
+                        imported.forEach(row => {
+                            const ts = parseInt(row.time);
+                            labels.push(isNaN(ts) ? row.time : new Date((ts + 7200) * 1000).toISOString().substr(11, 8));
+                            tempData.push(Math.round((parseFloat(row.temp) + 273.15) * 100) / 100);
+                            humidityData.push(parseFloat(row.humidity));
+                            pressureData.push(parseFloat(row.pressure));
+                        });
+
+                        configs.temp.data = tempData;
+                        configs.humidity.data = humidityData;
+                        configs.pressure.data = pressureData;
+
+                        refreshChart();
+                        status.textContent = `✓ ${imported.length} trames importées`;
+                        status.style.color = '#2ecc71';
+                    } catch(err) {
+                        status.textContent = '✗ Fichier invalide';
+                        status.style.color = '#ff4d4d';
+                        console.error(err);
+                    }
+                    // Reset input so same file can be re-imported
+                    event.target.value = '';
+                };
+                reader.readAsText(file);
             }
         </script>
     </body>

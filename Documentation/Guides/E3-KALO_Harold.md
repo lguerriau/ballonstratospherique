@@ -9,9 +9,7 @@ Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas).
 - allumer le poste Windows et ouvrir Yoniq.
 
 
-- Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé
-
-est inscrit).
+- Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
 
 
 

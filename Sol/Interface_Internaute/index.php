@@ -116,9 +116,21 @@ foreach ($donnees_chronologiques as $row) {
                     <div class="chart-container">
                         <canvas id="historyChart"></canvas>
                     </div>
-                    <div class="history-container">
-                        <h3 id="history-title">Historique</h3>
-                        <div id="history-list" class="history-list"></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-header">
+                        <h3 class="log-title">Journal de télémétrie</h3>
+                        <div class="log-mode-toggle">
+                            <button id="btn-mode-decoded" class="mode-btn active" onclick="setLogMode('decoded')">Décodé</button>
+                            <button id="btn-mode-raw" class="mode-btn" onclick="setLogMode('raw')">Brut (APRS)</button>
+                        </div>
+                    </div>
+                    <div class="log-table-wrapper">
+                        <table class="log-table" id="log-table">
+                            <thead id="log-thead"></thead>
+                            <tbody id="log-tbody"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -195,15 +207,19 @@ foreach ($donnees_chronologiques as $row) {
             }
 
             function buildScales() {
+                // Color left Y axis based on whichever metric uses it
+                const leftMetric = activeMetrics.has('temp') ? 'temp' : [...activeMetrics][0];
+                const leftColor = configs[leftMetric] ? configs[leftMetric].color : '#bbb';
+
                 const scales = {
                     x: { grid: { color: '#444' }, ticks: { color: '#bbb' } },
-                    y: { grid: { color: '#444' }, ticks: { color: '#bbb' }, position: 'left' }
+                    y: { grid: { color: '#444' }, ticks: { color: leftColor }, position: 'left' }
                 };
                 // If both temp and pressure are active, use dual Y axis
                 if (activeMetrics.has('temp') && activeMetrics.has('pressure')) {
                     scales.y2 = {
                         grid: { color: '#333', drawOnChartArea: false },
-                        ticks: { color: '#2ecc71' },
+                        ticks: { color: configs.pressure.color },
                         position: 'right'
                     };
                 }
@@ -226,7 +242,7 @@ foreach ($donnees_chronologiques as $row) {
                 historyChart.data.datasets = buildDatasets();
                 historyChart.options.scales = buildScales();
                 historyChart.update();
-                renderHistoryList();
+                renderLog();
                 saveState();
             }
 
@@ -268,42 +284,95 @@ foreach ($donnees_chronologiques as $row) {
                 refreshChart();
             }
 
-            function renderHistoryList() {
-                const listContainer = document.getElementById('history-list');
-                const titleContainer = document.getElementById('history-title');
-                if (!listContainer || !titleContainer) return;
+            let logMode = 'decoded';
 
-                const metricsArr = [...activeMetrics];
-                titleContainer.textContent = "Log " + metricsArr.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(' + ');
-                listContainer.innerHTML = '';
+            function setLogMode(mode) {
+                logMode = mode;
+                document.getElementById('btn-mode-decoded').classList.toggle('active', mode === 'decoded');
+                document.getElementById('btn-mode-raw').classList.toggle('active', mode === 'raw');
+                const table = document.getElementById('log-table');
+                table.classList.toggle('mode-decoded', mode === 'decoded');
+                table.classList.toggle('mode-raw', mode === 'raw');
+                renderLog();
+            }
 
-                rawData.forEach((row, i) => {
-                    let timestamp = parseInt(row['time']);
-                    let timeStr = isNaN(timestamp) ? row['time'] : new Date((timestamp + 7200) * 1000).toISOString().substr(11, 8);
+            function renderLog() {
+                const thead = document.getElementById('log-thead');
+                const tbody = document.getElementById('log-tbody');
+                if (!thead || !tbody) return;
 
-                    const item = document.createElement('div');
-                    item.className = 'history-item';
+                if (logMode === 'decoded') {
+                    thead.innerHTML = `<tr>
+                        <th>Horodatage</th>
+                        <th>Source</th>
+                        <th style="color:${configs.temp.color}">Température</th>
+                        <th style="color:${configs.humidity.color}">Humidité</th>
+                        <th style="color:${configs.pressure.color}">Pression</th>
+                    </tr>`;
+                    tbody.innerHTML = '';
+                    rawData.forEach(row => {
+                        let ts = parseInt(row['time']);
+                        let timeStr = isNaN(ts) ? row['time'] : new Date((ts + 7200) * 1000).toLocaleString('fr-FR');
+                        const kelvin = Math.round((parseFloat(row.temp) + 273.15) * 100) / 100;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="log-time">${timeStr}</td>
+                            <td class="log-source">F4KMN-9</td>
+                            <td><span style="color:${configs.temp.color}">${kelvin} °K</span> <span class="log-sub">(${row.temp} °C)</span></td>
+                            <td><span style="color:${configs.humidity.color}">${row.humidity} %</span></td>
+                            <td><span style="color:${configs.pressure.color}">${row.pressure} hPa</span></td>`;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    // Raw APRS mode — reconstruct trame from APRS Weather format
+                    // Format: F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_MMJJHHmm c...s...g... tTTT hHH bPPPPP
+                    thead.innerHTML = `<tr>
+                        <th>Horodatage</th>
+                        <th>Trame APRS reconstituée</th>
+                    </tr>`;
+                    tbody.innerHTML = '';
+                    rawData.forEach(row => {
+                        let ts = parseInt(row['time']);
+                        let timeStr = isNaN(ts) ? row['time'] : new Date((ts + 7200) * 1000).toLocaleString('fr-FR');
 
-                    let valuesHtml = metricsArr.map(metric => {
-                        let val = row[metric];
-                        let unit = configs[metric].unit;
-                        let displayVal = val;
-                        if (metric === 'temp') {
-                            const kelvin = Math.round((parseFloat(val) + 273.15) * 100) / 100;
-                            displayVal = `${kelvin}°K <small style="color:#888">(${val}°C)</small>`;
-                            unit = '';
+                        // Build timestamp MMJJHHmm from unix
+                        let aprsTimestamp = '00000000';
+                        if (!isNaN(ts)) {
+                            const d = new Date((ts + 7200) * 1000);
+                            const MM = String(d.getUTCMonth() + 1).padStart(2, '0');
+                            const JJ = String(d.getUTCDate()).padStart(2, '0');
+                            const HH = String(d.getUTCHours()).padStart(2, '0');
+                            const mm = String(d.getUTCMinutes()).padStart(2, '0');
+                            aprsTimestamp = MM + JJ + HH + mm;
                         }
-                        return `<span class="val" style="color:${configs[metric].color}">${displayVal}${unit ? ' ' + unit : ''}</span>`;
-                    }).join(' | ');
 
-                    item.innerHTML = `<span class="time">${timeStr}</span> : ${valuesHtml}`;
-                    listContainer.appendChild(item);
-                });
+                        // Temp in °F (APRS standard), rounded integer, padded to 3 digits
+                        const tempF = Math.round(parseFloat(row.temp) * 9/5 + 32);
+                        const tField = String(Math.abs(tempF)).padStart(3, '0');
+
+                        // Humidity: 00 = 100%, else padded 2 digits
+                        const h = parseInt(row.humidity);
+                        const hField = (h >= 100) ? '00' : String(h).padStart(2, '0');
+
+                        // Pressure in tenths of hPa, 5 digits (e.g. 1013.2 hPa → 10132)
+                        const pField = String(Math.round(parseFloat(row.pressure) * 10)).padStart(5, '0');
+
+                        const trame = `F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_${aprsTimestamp}c...s...g...t${tField}h${hField}b${pField}`;
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="log-time">${timeStr}</td>
+                            <td class="log-raw"><code>${trame}</code></td>`;
+                        tbody.appendChild(tr);
+                    });
+                }
             }
 
             if (rawData.length > 0) {
                 updateCardStates();
                 refreshChart();
+                document.getElementById('log-table').classList.add('mode-decoded');
+                renderLog();
             }
         </script>
     </body>

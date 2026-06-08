@@ -11,7 +11,7 @@
 
 using namespace std;
 
-StationApp::StationApp() : builder("F4KMN-9") {
+StationApp::StationApp() : builder("F4KMN-9"), logger("telemetrie.json") {
     assert(cin.good());
     assert(cout.good());
 }
@@ -68,7 +68,7 @@ void StationApp::modeProduction() {
 
     while (true) {
         // Recuperation des donnees brutes
-        float hum = capteurBME.obtenirHumidite();
+        float hum   = capteurBME.obtenirHumidite();
         float press = capteurBME.obtenirPression();
 
         float tempC_LM = capteurLM.getTemperature();
@@ -76,6 +76,9 @@ void StationApp::modeProduction() {
 
         // Construction de la trame Weather
         string trame = builder.buildTrame(tempF_LM, hum, press);
+
+        // --- SAUVEGARDE LOCALE (n'interrompt pas l'envoi radio) ---
+        logger.log(tempC_LM, hum, press, trame);
         
         if (trame.find("ERREUR") != string::npos) {
             cout << "[ALERTE] " << trame << " (T:" << tempF_LM << "F, H:" << hum << "%, P:" << press << "hPa)" << endl;

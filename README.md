@@ -81,11 +81,12 @@ ___
 
 *KALO Harold* : 
 - Transmission d'images SSTV
-- Serveur Web
+- Interface de visualisation de photos en direct
 - Traitement vidéo
 
 *GUERRIAU Lucien* : 
 - Récupération des données APRS.fi
+- Serveur Web
 - Base de données
 - Cartographie
   

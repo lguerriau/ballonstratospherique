@@ -19,7 +19,7 @@ ___
 -
 *Documentation* : 
 - Contiens toutes les documentations et guides utiles aux programmes
-    - *Guides* : contiens les guides afin de faire fonctionner les parties de chaque étudiant
+    - *Guides* : Contiens les guides afin de faire fonctionner les parties de chaque étudiant
 
 *Nacelle* :
 - *BME280* : Programme permettant la mesure des valeurs télémétrique de température, humidité et pression atmosphérique

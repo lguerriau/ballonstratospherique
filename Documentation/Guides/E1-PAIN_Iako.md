@@ -1,6 +1,6 @@
 # Installation 
 
-(a ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ce qui est le cas pour l'examin oral final de BTS CIEL)
+(a ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ***ce qui est le cas pour l'examin oral final de BTS CIEL***)
 
 ---
 

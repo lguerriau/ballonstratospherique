@@ -1,10 +1,10 @@
 # Installation 
 
-(a ne pas faire si ces fichiers sont déja installés sur la carte RasPi, ce qui est le cas pour l'examin oral final de BTS CIEL)
+(a ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ce qui est le cas pour l'examin oral final de BTS CIEL)
 
 ---
 
-0) *Vérifier que la RasPi est branchée*
+0) *Vérifier que la Raspi est branchée*
 
 1) Dans **ballonstratospherique/Nacelle/**, télécharger **BME280**, **LM75**, **RA02**
 
@@ -12,13 +12,13 @@
 
 3) Mettre tous ces fichiers dans le dossier **NetBeansProjects** local a votre PC
 
-4) Executer **BME280** puis **LM75** puis **RA02** en remote sur la RasPi
+4) Executer **BME280** puis **LM75** puis **RA02** en remote sur la Raspi
 
-# Connection a la RasPi
+# Connection à la Raspi
 
 ---
 
-0) *Vérifier que la RasPi est branchée*
+0) *Vérifier que la Raspi est branchée*
 
 1) Faire la commande "**ssh pbs@172.18.59.66**"
 

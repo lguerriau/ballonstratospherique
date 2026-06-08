@@ -28,6 +28,7 @@ Structure du projet
 - Interface_Internaute : Interface de visualisation des données télémétriques et photos SSTV
 - Interface_Opérateur : Interface de communication RSSI avec la Nacelle
 - Reception : Programme de reception RSSI
+- BDD : Contiens ce qui est relatif a la Base de Données
 ___
 🛠️ Architecture Technique
 -

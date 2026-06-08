@@ -17,11 +17,17 @@ Récupération de la nacelle :        Utilisation d'un dispositif de localisatio
 ___
 Structure du projet
 -
-Documentation : Contiens toutes les documentations et guides utiles aux programmes
+*Documentation* : Contiens toutes les documentations et guides utiles aux programmes
 
-Nacelle :
+*Nacelle* :
+- BME280 : Programme permettant la mesure des valeurs télémétrique de température, humidité et pression atmosphérique
+- LM75 : Programme premettant la mesure de la température interne
+- RA02 : Programme d'envoi des données télémétrique, trame APRS Weather
 
-Sol :
+*Sol* :
+- Interface_Internaute : Interface de visualisation des données télémétriques et photos SSTV
+- Interface_Opérateur : Interface de communication RSSI avec la Nacelle
+- Reception : Programme de reception RSSI
 ___
 🛠️ Architecture Technique
 -

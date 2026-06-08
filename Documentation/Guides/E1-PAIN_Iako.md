@@ -40,7 +40,7 @@
 
 # Visualiser la télémétrie
 
--
+---
 
 1) Lancer le projet "**Interface_Internaute**" (aka "**test_ihm**") pour observer la mise a jour en toutes les 10 minutes des données télémétriques (limite API)
 

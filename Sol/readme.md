@@ -1,15 +1,15 @@
 Reception
 ---------------------------------------------------------------
-Programme permettant ...
+Programme de reception RSSI
 
 BDD 
 ---------------------------------------------------------------
-Programme premettant ...
+Contiens ce qui est relatif a la Base de Données
 
 Interface_Operateur 
 ---------------------------------------------------------------
-Programme premettant ...
+Interface de communication RSSI avec la Nacelle
 
 Interface_Internaute 
 ---------------------------------------------------------------
-Programme permettant ...
+Interface de visualisation des données télémétriques et photos SSTV

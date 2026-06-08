@@ -15,6 +15,11 @@ est inscrit).
 
 
 
+
+
+
+
+
 Partie Raspberry :
 
 - prendre le code pour la prise de photos nommé RaspberryPi et l'ouvrir ou le copier avec NETBEANS.
@@ -30,6 +35,13 @@ Partie Raspberry :
 
 
 - les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> History 
+
+
+
+
+
+
+
 
 
 
@@ -49,6 +61,12 @@ Partie Importation photos :
 - Puis Cliquez sur importer avec le bouton et les photos seront enregistrées dans le fichier local inscrit.
 
 
+
+
+
+
+
+
 Partie Watchdog : 
 
 - prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
@@ -57,6 +75,13 @@ Partie Watchdog :
 - lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites
 
   pour la détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
+
+
+
+
+
+
+
 
 
 Partie IHM : 

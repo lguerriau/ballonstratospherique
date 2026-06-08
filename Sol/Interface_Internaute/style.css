@@ -1,4 +1,198 @@
-<?php
+body { 
+    font-family: Arial, sans-serif; 
+    background: #1a1a1a; 
+    color: white; 
+    text-align: center; 
+    margin: 0;
+    padding: 20px;
+}
+h1 { margin-bottom: 5px; }
+.timestamp { color: #bbb; font-style: italic; margin-bottom: 30px; }
+.dashboard { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px; margin-bottom: 25px; }
+
+/* Groupe fusionné Temp + Pression */
+.card-group-tp {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.card-group-tp .data-card {
+    border-radius: 0;
+    box-shadow: none;
+    min-width: 180px;
+}
+.card-group-tp .data-card:first-child {
+    border-right: 1px solid #3a3a3a;
+}
+
+.data-card { background: #2a2a2a; padding: 20px; border-radius: 8px; min-width: 240px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; transition: background-color 0.2s; position: relative; }
+/* Humidité card matches the width of a single card in the fused group */
+#btn-humidity { min-width: 180px; }
+.data-card:hover { background: #333; }
+.data-card.active { background: #3a3a3a; }
+.data-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+.data-card .valeur { font-size: 2.3rem; font-weight: bold; margin: 0; }
+/* Sub-value for °C shown under °K */
+.data-card .valeur-sub { position: absolute; bottom: 8px; right: 12px; font-size: 1rem; color: #aaa; margin: 0; font-style: italic; font-weight: bold; }
+.card-temp { border-bottom: 4px solid #ff4d4d; }
+.card-temp h3, .card-temp.active .valeur { color: #ff4d4d; }
+.card-humidity { border-bottom: 4px solid #3498db; }
+.card-humidity h3, .card-humidity.active .valeur { color: #3498db; }
+.card-pressure { border-bottom: 4px solid #2ecc71; }
+.card-pressure h3, .card-pressure.active .valeur { color: #2ecc71; }
+.analytics-section { display: flex; width: 100%; max-width: 1400px; margin: 0 auto; gap: 20px; height: 380px; }
+.chart-container { flex: 1; background: #222; padding: 15px; border-radius: 8px; box-sizing: border-box; position: relative; }
+
+/* Log section */
+.log-section { max-width: 1400px; margin: 20px auto 0 auto; background: #222; border-radius: 8px; padding: 15px 20px; }
+.log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.log-title { margin: 0; font-size: 1rem; color: #eee; font-weight: bold; }
+.log-mode-toggle { display: flex; background: #1a1a1a; border-radius: 20px; padding: 3px; gap: 2px; }
+.mode-btn { background: transparent; border: none; color: #888; padding: 5px 16px; border-radius: 16px; font-size: 0.85rem; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.mode-btn.active { background: #90a4ae; color: #1a1a1a; font-weight: bold; }
+.mode-btn:hover:not(.active) { color: #fff; }
+.log-table-wrapper { overflow-x: auto; max-height: 300px; overflow-y: auto; }
+.log-table-wrapper::-webkit-scrollbar { height: 6px; width: 6px; }
+.log-table-wrapper::-webkit-scrollbar-track { background: #222; }
+.log-table-wrapper::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+.log-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; font-family: monospace; table-layout: fixed; }
+.log-table thead { position: sticky; top: 0; background: #2a2a2a; z-index: 1; }
+.log-table th, .log-table td { padding: 7px 12px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-table th { color: #aaa; font-weight: normal; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; }
+.log-table td { border-bottom: 1px solid #2c2c2c; vertical-align: middle; }
+/* Decoded mode column widths */
+.log-table.mode-decoded th:nth-child(1), .log-table.mode-decoded td:nth-child(1) { width: 18%; }
+.log-table.mode-decoded th:nth-child(2), .log-table.mode-decoded td:nth-child(2) { width: 12%; }
+.log-table.mode-decoded th:nth-child(3), .log-table.mode-decoded td:nth-child(3) { width: 26%; }
+.log-table.mode-decoded th:nth-child(4), .log-table.mode-decoded td:nth-child(4) { width: 22%; }
+.log-table.mode-decoded th:nth-child(5), .log-table.mode-decoded td:nth-child(5) { width: 22%; }
+/* Raw mode column widths */
+.log-table.mode-raw th:nth-child(1), .log-table.mode-raw td:nth-child(1) { width: 18%; }
+.log-table.mode-raw th:nth-child(2), .log-table.mode-raw td:nth-child(2) { width: 82%; }
+.log-raw code { color: #c5e8c5; font-size: 0.82rem; white-space: nowrap; letter-spacing: 0.02em; }
+.error-card { background: #c0392b; padding: 20px; display: inline-block; border-radius: 5px; margin-top: 20px; }
+.error-card small { display: block; margin-top: 10px; color: #ffd2d2; }
+
+/* Barre des onglets */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 30px auto;
+    max-width: 600px;
+    background: #222;
+    padding: 6px;
+    border-radius: 30px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    color: #888;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+/* Onglet Sélectionné - Style Argenté / Gris-Bleuté */
+.tab-btn.active {
+    background: #90a4ae; 
+    color: #1a1a1a;     
+    box-shadow: 0 4px 10px rgba(144, 164, 174, 0.4);
+}
+
+/* Affichage du contenu */
+.tab-content {
+    display: none;
+    animation: fadeEffect 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeEffect {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Actions Galerie */
+.sstv-actions {
+    margin-bottom: 25px;
+}
+.btn-video {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #7da18a; /* Vert cassé argenté (Sauge / Vert-de-gris métallique) */
+    color: #1a1a1a;      /* Texte sombre pour un contraste moderne et propre */
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(125, 161, 138, 0.25);
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-video:hover {
+    transform: translateY(-2px);
+    background: #94b5a0; /* Teinte plus claire et plus "argentée" au survol */
+    box-shadow: 0 6px 15px rgba(125, 161, 138, 0.4);
+}
+
+/* Configuration Galerie SSTV */
+.galerie-sstv {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.photo-card {
+    background: #222;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    border: 1px solid #333;
+    transition: border-color 0.2s;
+}
+
+.photo-card:hover {
+    border-color: #90a4ae;
+}
+
+.photo-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    background: #111;
+}
+
+.photo-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-family: monospace;
+}
+
+.photo-id {
+    color: #90a4ae;
+    font-weight: bold;
+}
+
+.photo-date {
+    color: #aaa;
+}<?php
 // Connexion à la base de données
 $host = '172.18.58.85';
 $dbname = 'ballon2026';

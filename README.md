@@ -17,7 +17,8 @@ Récupération de la nacelle :        Utilisation d'un dispositif de localisatio
 ___
 📂️ Structure du projet
 -
-*Documentation* : Contiens toutes les documentations et guides utiles aux programmes
+*Documentation* : 
+- Contiens toutes les documentations et guides utiles aux programmes
 
 *Nacelle* :
 - BME280 : Programme permettant la mesure des valeurs télémétrique de température, humidité et pression atmosphérique

@@ -30,9 +30,9 @@
 
 1) Lancer le projet "**RA02**" :
 
-  1.1) A partir de "**pbs@PBS:~ $**" , faire la commande "**cd ./.netbeans/remote/172.18.59.66/b106tu4p2-Linux-x86_64/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/RA02/dist/Debug/GNU-Linux/**"
+- A partir de "**pbs@PBS:~ $**" , faire la commande "**cd ./.netbeans/remote/172.18.59.66/b106tu4p2-Linux-x86_64/home/USERS/ELEVES/CIEL2024/ipain/NetBeansProjects/RA02/dist/Debug/GNU-Linux/**"
 
-  1.2) Lancer le programme avec "**sudo ./ra02**"
+- Lancer le programme avec "**sudo ./ra02**"
 
 2) Quand le menu est affiché, tappez "**1**"
 

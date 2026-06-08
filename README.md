@@ -19,19 +19,19 @@ ___
 -
 *Documentation* : 
 - Contiens toutes les documentations et guides utiles aux programmes
-      - Guides contiens les guides afin de faire fonctionner les parties de chaque étudiant
+    - *Guides* : contiens les guides afin de faire fonctionner les parties de chaque étudiant
 
 *Nacelle* :
-- BME280 : Programme permettant la mesure des valeurs télémétrique de température, humidité et pression atmosphérique
-- LM75 : Programme premettant la mesure de la température interne
-- RA02 : Programme d'envoi des données télémétrique, trame APRS Weather
+- *BME280* : Programme permettant la mesure des valeurs télémétrique de température, humidité et pression atmosphérique
+- *LM75* : Programme premettant la mesure de la température interne
+- *RA02* : Programme d'envoi des données télémétrique, trame APRS Weather
 
 *Sol* :
-- Interface_Internaute : Interface de visualisation des données télémétriques et photos SSTV
+- *Interface_Internaute* : Interface de visualisation des données télémétriques et photos SSTV
     - Contiens un fichier exemple pour la télémétrie a importer
-- Interface_Opérateur : Interface de communication RSSI avec la Nacelle
-- Reception : Programme de reception RSSI
-- BDD : Contiens ce qui est relatif a la Base de Données
+- *Interface_Opérateur* : Interface de communication RSSI avec la Nacelle
+- *Reception* : Programme de reception RSSI
+- *BDD* : Contiens ce qui est relatif a la Base de Données
 ___
 🛠️ Architecture Technique
 -

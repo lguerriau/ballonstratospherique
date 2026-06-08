@@ -1,4 +1,4 @@
-# Installation 
+# A. Installation 
 
 
 > [!IMPORTANT]
@@ -15,7 +15,7 @@
 
 4) Executer "**BME280**" puis "**LM75**" puis "**RA02**" en remote sur la Raspi
 
-# Connection à la Raspi
+# B. Connection à la Raspi
 
 ---
 
@@ -25,7 +25,7 @@
 
 2) Mettre le mot de passe "**pbs**"
 
-# Récupérer la télémétrie
+# C. Obtention des grandeurs physiques
 
 ---
 
@@ -39,7 +39,7 @@
 
 3) Sur "**https://aprs.fi/?c=raw&call=F4KMN-9**", vérifier que les trames sont bien reçues
 
-# Visualiser la télémétrie
+# D. Visualiser la télémétrie
 
 ---
 

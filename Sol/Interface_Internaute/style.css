@@ -9,11 +9,30 @@ body {
 h1 { margin-bottom: 5px; }
 .timestamp { color: #bbb; font-style: italic; margin-bottom: 30px; }
 .dashboard { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px; margin-bottom: 25px; }
-.data-card { background: #2a2a2a; padding: 20px; border-radius: 8px; min-width: 240px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s; }
+
+/* Groupe fusionné Temp + Pression */
+.card-group-tp {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.card-group-tp .data-card {
+    border-radius: 0;
+    box-shadow: none;
+    min-width: 180px;
+}
+.card-group-tp .data-card:first-child {
+    border-right: 1px solid #3a3a3a;
+}
+
+.data-card { background: #2a2a2a; padding: 20px; border-radius: 8px; min-width: 240px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s; position: relative; }
 .data-card:hover { transform: translateY(-3px); background: #333; }
 .data-card.active { background: #3a3a3a; box-shadow: 0 0 12px rgba(255, 255, 255, 0.15); }
 .data-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
 .data-card .valeur { font-size: 2.3rem; font-weight: bold; margin: 0; }
+/* Sub-value for °C shown under °K */
+.data-card .valeur-sub { position: absolute; bottom: 8px; right: 12px; font-size: 0.78rem; color: #888; margin: 0; font-style: italic; }
 .card-temp { border-bottom: 4px solid #ff4d4d; }
 .card-temp h3, .card-temp.active .valeur { color: #ff4d4d; }
 .card-humidity { border-bottom: 4px solid #3498db; }

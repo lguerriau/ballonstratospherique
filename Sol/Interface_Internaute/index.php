@@ -88,19 +88,27 @@ foreach ($donnees_chronologiques as $row) {
                 <p class="timestamp" style="margin-top: -20px; margin-bottom: 30px; color: #888; font-size: 0.95rem;">Prochaine mise à jour : <?php echo htmlspecialchars($prochaine_affichage); ?></p>
 
                 <div class="dashboard">
-                    <div id="btn-temp" class="data-card card-temp active" onclick="selectMetric('temp')">
-                        <h3>Température</h3>
-                        <p class="valeur"><?php echo htmlspecialchars($donnees['temp']); ?> °C</p>
+                    <div class="card-group-tp">
+                        <div id="btn-temp" class="data-card card-temp active" onclick="toggleMetric('temp')">
+                            <h3>Température</h3>
+                            <p class="valeur">
+                                <?php
+                                $tempC = floatval($donnees['temp']);
+                                $tempK = round($tempC + 273.15, 2);
+                                echo htmlspecialchars($tempK);
+                                ?> °K
+                            </p>
+                            <p class="valeur-sub">(<?php echo htmlspecialchars($donnees['temp']); ?> °C)</p>
+                        </div>
+                        <div id="btn-pressure" class="data-card card-pressure" onclick="toggleMetric('pressure')">
+                            <h3>Pression</h3>
+                            <p class="valeur"><?php echo htmlspecialchars($donnees['pressure']); ?> hPa</p>
+                        </div>
                     </div>
 
                     <div id="btn-humidity" class="data-card card-humidity" onclick="selectMetric('humidity')">
                         <h3>Humidité</h3>
                         <p class="valeur"><?php echo htmlspecialchars($donnees['humidity']); ?> %</p>
-                    </div>
-
-                    <div id="btn-pressure" class="data-card card-pressure" onclick="selectMetric('pressure')">
-                        <h3>Pression</h3>
-                        <p class="valeur"><?php echo htmlspecialchars($donnees['pressure']); ?> hPa</p>
                     </div>
                 </div>
 
@@ -156,83 +164,146 @@ foreach ($donnees_chronologiques as $row) {
         <script src="js.js"></script>
         <script>
             const labels = <?php echo json_encode($js_labels); ?>;
-            const tempData = <?php echo json_encode($js_temp); ?>;
+            const tempData = <?php echo json_encode($js_temp); ?>.map(v => Math.round((parseFloat(v) + 273.15) * 100) / 100);
+            const tempDataC = <?php echo json_encode($js_temp); ?>;
             const humidityData = <?php echo json_encode($js_humidity); ?>;
             const pressureData = <?php echo json_encode($js_pressure); ?>;
             const rawData = <?php echo json_encode($toutes_donnees); ?>;
 
             const configs = {
-                temp: { label: 'Température (°C)', data: tempData, color: '#ff4d4d', unit: '°C' },
-                humidity: { label: 'Humidité (%)', data: humidityData, color: '#3498db', unit: '%' },
-                pressure: { label: 'Pression (hPa)', data: pressureData, color: '#2ecc71', unit: 'hPa' }
+                temp:     { label: 'Température (°K)', data: tempData,     color: '#ff4d4d', unit: '°K' },
+                humidity: { label: 'Humidité (%)',      data: humidityData, color: '#3498db', unit: '%'  },
+                pressure: { label: 'Pression (hPa)',    data: pressureData, color: '#2ecc71', unit: 'hPa'}
             };
 
+            // Active metrics state (temp active by default)
+            let activeMetrics = new Set(JSON.parse(localStorage.getItem('activeMetrics') || '["temp"]'));
+
             const ctx = document.getElementById('historyChart').getContext('2d');
-            let currentMetric = localStorage.getItem('selectedMetric') || 'temp';
-            
+
+            function buildDatasets() {
+                return [...activeMetrics].map(metric => ({
+                    label: configs[metric].label,
+                    data: configs[metric].data,
+                    borderColor: configs[metric].color,
+                    backgroundColor: configs[metric].color + '1a',
+                    borderWidth: 3,
+                    tension: 0.2,
+                    pointRadius: 2,
+                    yAxisID: metric === 'pressure' && activeMetrics.has('temp') ? 'y2' : 'y'
+                }));
+            }
+
+            function buildScales() {
+                const scales = {
+                    x: { grid: { color: '#444' }, ticks: { color: '#bbb' } },
+                    y: { grid: { color: '#444' }, ticks: { color: '#bbb' }, position: 'left' }
+                };
+                // If both temp and pressure are active, use dual Y axis
+                if (activeMetrics.has('temp') && activeMetrics.has('pressure')) {
+                    scales.y2 = {
+                        grid: { color: '#333', drawOnChartArea: false },
+                        ticks: { color: '#2ecc71' },
+                        position: 'right'
+                    };
+                }
+                return scales;
+            }
+
             const historyChart = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: configs[currentMetric].label,
-                        data: configs[currentMetric].data,
-                        borderColor: configs[currentMetric].color,
-                        backgroundColor: configs[currentMetric].color + '1a',
-                        borderWidth: 3,
-                        tension: 0.2,
-                        pointRadius: 2
-                    }]
-                },
+                data: { labels: labels, datasets: buildDatasets() },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     animation: false,
                     plugins: { legend: { labels: { color: '#fff' } } },
-                    scales: {
-                        x: { grid: { color: '#444' }, ticks: { color: '#bbb' } },
-                        y: { grid: { color: '#444' }, ticks: { color: '#bbb' } }
-                    }
+                    scales: buildScales()
                 }
             });
 
-            function selectMetric(metric) {
-                currentMetric = metric;
-                localStorage.setItem('selectedMetric', metric);
-                
-                document.querySelectorAll('.dashboard .data-card').forEach(card => card.classList.remove('active'));
-                document.getElementById('btn-' + metric).classList.add('active');
-
-                historyChart.data.datasets[0].label = configs[metric].label;
-                historyChart.data.datasets[0].data = configs[metric].data;
-                historyChart.data.datasets[0].borderColor = configs[metric].color;
-                historyChart.data.datasets[0].backgroundColor = configs[metric].color + '1a';
+            function refreshChart() {
+                historyChart.data.datasets = buildDatasets();
+                historyChart.options.scales = buildScales();
                 historyChart.update();
-
-                renderHistoryList(metric);
+                renderHistoryList();
+                saveState();
             }
 
-            function renderHistoryList(metric) {
+            function saveState() {
+                localStorage.setItem('activeMetrics', JSON.stringify([...activeMetrics]));
+            }
+
+            function updateCardStates() {
+                document.querySelectorAll('.dashboard .data-card').forEach(card => card.classList.remove('active'));
+                activeMetrics.forEach(m => {
+                    const el = document.getElementById('btn-' + m);
+                    if (el) el.classList.add('active');
+                });
+            }
+
+            // Toggle temp or pressure (they can coexist)
+            function toggleMetric(metric) {
+                // If humidity was active, clear it first
+                activeMetrics.delete('humidity');
+
+                if (activeMetrics.has(metric)) {
+                    // Prevent deselecting if it's the only one left
+                    if (activeMetrics.size > 1) {
+                        activeMetrics.delete(metric);
+                    }
+                } else {
+                    activeMetrics.add(metric);
+                }
+
+                updateCardStates();
+                refreshChart();
+            }
+
+            // Selecting humidity clears temp & pressure
+            function selectMetric(metric) {
+                activeMetrics.clear();
+                activeMetrics.add(metric);
+                updateCardStates();
+                refreshChart();
+            }
+
+            function renderHistoryList() {
                 const listContainer = document.getElementById('history-list');
                 const titleContainer = document.getElementById('history-title');
-                if(!listContainer || !titleContainer) return;
-                
-                titleContainer.textContent = "Log " + metric.charAt(0).toUpperCase() + metric.slice(1);
+                if (!listContainer || !titleContainer) return;
+
+                const metricsArr = [...activeMetrics];
+                titleContainer.textContent = "Log " + metricsArr.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(' + ');
                 listContainer.innerHTML = '';
 
-                rawData.forEach(row => {
+                rawData.forEach((row, i) => {
                     let timestamp = parseInt(row['time']);
                     let timeStr = isNaN(timestamp) ? row['time'] : new Date((timestamp + 7200) * 1000).toISOString().substr(11, 8);
-                    
+
                     const item = document.createElement('div');
                     item.className = 'history-item';
-                    item.innerHTML = `<span class="time">${timeStr}</span> : <span class="val" style="color:${configs[metric].color}">${row[metric]} ${configs[metric].unit}</span>`;
+
+                    let valuesHtml = metricsArr.map(metric => {
+                        let val = row[metric];
+                        let unit = configs[metric].unit;
+                        let displayVal = val;
+                        if (metric === 'temp') {
+                            const kelvin = Math.round((parseFloat(val) + 273.15) * 100) / 100;
+                            displayVal = `${kelvin}°K <small style="color:#888">(${val}°C)</small>`;
+                            unit = '';
+                        }
+                        return `<span class="val" style="color:${configs[metric].color}">${displayVal}${unit ? ' ' + unit : ''}</span>`;
+                    }).join(' | ');
+
+                    item.innerHTML = `<span class="time">${timeStr}</span> : ${valuesHtml}`;
                     listContainer.appendChild(item);
                 });
             }
 
-            if(rawData.length > 0) {
-                selectMetric(currentMetric);
+            if (rawData.length > 0) {
+                updateCardStates();
+                refreshChart();
             }
         </script>
     </body>

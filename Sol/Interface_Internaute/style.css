@@ -1,195 +1,379 @@
-body { 
-    font-family: Arial, sans-serif; 
-    background: #1a1a1a; 
-    color: white; 
-    text-align: center; 
-    margin: 0;
-    padding: 20px;
-}
-h1 { margin-bottom: 5px; }
-.timestamp { color: #bbb; font-style: italic; margin-bottom: 30px; }
-.dashboard { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px; margin-bottom: 25px; }
+<?php
+// Connexion à la base de données
+$host = '172.18.58.85';
+$dbname = 'ballon2026';
+$user = 'root';
+$pass = 'toto';
 
-/* Groupe fusionné Temp + Pression */
-.card-group-tp {
-    display: flex;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-}
-.card-group-tp .data-card {
-    border-radius: 0;
-    box-shadow: none;
-    min-width: 180px;
-}
-.card-group-tp .data-card:first-child {
-    border-right: 1px solid #3a3a3a;
+try {
+    $db = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (Exception $e) {
+    die('Erreur de connexion : ' . $e->getMessage());
 }
 
-.data-card { background: #2a2a2a; padding: 20px; border-radius: 8px; min-width: 240px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; transition: background-color 0.2s; position: relative; }
-/* Humidité card matches the width of a single card in the fused group */
-#btn-humidity { min-width: 180px; }
-.data-card:hover { background: #333; }
-.data-card.active { background: #3a3a3a; }
-.data-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
-.data-card .valeur { font-size: 2.3rem; font-weight: bold; margin: 0; }
-/* Sub-value for °C shown under °K */
-.data-card .valeur-sub { position: absolute; bottom: 8px; right: 12px; font-size: 1rem; color: #aaa; margin: 0; font-style: italic; font-weight: bold; }
-.card-temp { border-bottom: 4px solid #ff4d4d; }
-.card-temp h3, .card-temp.active .valeur { color: #ff4d4d; }
-.card-humidity { border-bottom: 4px solid #3498db; }
-.card-humidity h3, .card-humidity.active .valeur { color: #3498db; }
-.card-pressure { border-bottom: 4px solid #2ecc71; }
-.card-pressure h3, .card-pressure.active .valeur { color: #2ecc71; }
-.analytics-section { display: flex; width: 100%; max-width: 1400px; margin: 0 auto; gap: 20px; height: 380px; }
-.chart-container { flex: 1; background: #222; padding: 15px; border-radius: 8px; box-sizing: border-box; position: relative; }
-
-/* Log section */
-.log-section { max-width: 1400px; margin: 20px auto 0 auto; background: #222; border-radius: 8px; padding: 15px 20px; }
-.log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-.log-title { margin: 0; font-size: 1rem; color: #eee; font-weight: bold; }
-.log-mode-toggle { display: flex; background: #1a1a1a; border-radius: 20px; padding: 3px; gap: 2px; }
-.mode-btn { background: transparent; border: none; color: #888; padding: 5px 16px; border-radius: 16px; font-size: 0.85rem; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
-.mode-btn.active { background: #90a4ae; color: #1a1a1a; font-weight: bold; }
-.mode-btn:hover:not(.active) { color: #fff; }
-.log-table-wrapper { overflow-x: auto; max-height: 300px; overflow-y: auto; }
-.log-table-wrapper::-webkit-scrollbar { height: 6px; width: 6px; }
-.log-table-wrapper::-webkit-scrollbar-track { background: #222; }
-.log-table-wrapper::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-.log-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; font-family: monospace; table-layout: fixed; }
-.log-table thead { position: sticky; top: 0; background: #2a2a2a; z-index: 1; }
-.log-table th, .log-table td { padding: 7px 12px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.log-table th { color: #aaa; font-weight: normal; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; }
-.log-table td { border-bottom: 1px solid #2c2c2c; vertical-align: middle; }
-/* Decoded mode column widths */
-.log-table.mode-decoded th:nth-child(1), .log-table.mode-decoded td:nth-child(1) { width: 18%; }
-.log-table.mode-decoded th:nth-child(2), .log-table.mode-decoded td:nth-child(2) { width: 12%; }
-.log-table.mode-decoded th:nth-child(3), .log-table.mode-decoded td:nth-child(3) { width: 26%; }
-.log-table.mode-decoded th:nth-child(4), .log-table.mode-decoded td:nth-child(4) { width: 22%; }
-.log-table.mode-decoded th:nth-child(5), .log-table.mode-decoded td:nth-child(5) { width: 22%; }
-/* Raw mode column widths */
-.log-table.mode-raw th:nth-child(1), .log-table.mode-raw td:nth-child(1) { width: 18%; }
-.log-table.mode-raw th:nth-child(2), .log-table.mode-raw td:nth-child(2) { width: 82%; }
-.log-raw code { color: #c5e8c5; font-size: 0.82rem; white-space: nowrap; letter-spacing: 0.02em; }
-.error-card { background: #c0392b; padding: 20px; display: inline-block; border-radius: 5px; margin-top: 20px; }
-.error-card small { display: block; margin-top: 10px; color: #ffd2d2; }
-
-/* Barre des onglets */
-.tabs-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto 30px auto;
-    max-width: 600px;
-    background: #222;
-    padding: 6px;
-    border-radius: 30px;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+// --- 1. RÉCUPÉRATION DES DONNÉES TÉLÉMÉTRIE ---
+try {
+    $requete = $db->query('SELECT temp, humidity, pressure, time FROM TELEMETRIES ORDER BY time DESC LIMIT 50');
+    $toutes_donnees = $requete->fetchAll(PDO::FETCH_ASSOC);
+    
+    $donnees = !empty($toutes_donnees) ? $toutes_donnees[0] : false;
+} catch (Exception $e) {
+    $donnees = false;
+    $toutes_donnees = [];
+    $erreur_sql = $e->getMessage();
 }
 
-.tab-btn {
-    flex: 1;
-    background: transparent;
-    color: #888;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 25px;
+// --- 2. RÉCUPÉRATION DES IMAGES SSTV ---
+try {
+    $requete_images = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAGES ORDER BY id_image DESC LIMIT 24');
+    $images_sstv = $requete_images->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $images_sstv = [];
+    $erreur_sstv = $e->getMessage();
 }
 
-.tab-btn:hover {
-    color: #fff;
+// Gestion des temps
+$date_affichage = "Aucune donnée";
+$prochaine_affichage = "Aucune donnée";
+if ($donnees && isset($donnees['time'])) {
+    if (is_numeric($donnees['time'])) {
+        $timestamp_ajuste = $donnees['time'] + 7200;
+        $date_affichage = date('d/m/Y H:i:s', $timestamp_ajuste);
+        $prochaine_affichage = date('d/m/Y H:i:s', $timestamp_ajuste + 600);
+    } else {
+        $date_affichage = $donnees['time'];
+        $prochaine_affichage = "Inconnue";
+    }
 }
 
-/* Onglet Sélectionné - Style Argenté / Gris-Bleuté */
-.tab-btn.active {
-    background: #90a4ae; 
-    color: #1a1a1a;     
-    box-shadow: 0 4px 10px rgba(144, 164, 174, 0.4);
-}
+$js_labels = [];
+$js_temp = [];
+$js_humidity = [];
+$js_pressure = [];
 
-/* Affichage du contenu */
-.tab-content {
-    display: none;
-    animation: fadeEffect 0.4s ease;
+$donnees_chronologiques = array_reverse($toutes_donnees);
+foreach ($donnees_chronologiques as $row) {
+    if (is_numeric($row['time'])) {
+        $js_labels[] = date('H:i:s', $row['time'] + 7200);
+    } else {
+        $js_labels[] = $row['time'];
+    }
+    $js_temp[] = $row['temp'];
+    $js_humidity[] = $row['humidity'];
+    $js_pressure[] = $row['pressure'];
 }
+?>
 
-.tab-content.active {
-    display: block;
-}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="600">
+        <title>APRS Mission Control - Télémesure et SSTV</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <h1>Télémesure du Ballon Stratosphérique</h1>
 
-@keyframes fadeEffect {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('telemetrie')">Télémétrie</button>
+            <button class="tab-btn" onclick="switchTab('sstv')">Galerie SSTV</button>
+        </div>
 
-/* Actions Galerie */
-.sstv-actions {
-    margin-bottom: 25px;
-}
-.btn-video {
-    display: inline-block;
-    padding: 12px 24px;
-    background: #7da18a; /* Vert cassé argenté (Sauge / Vert-de-gris métallique) */
-    color: #1a1a1a;      /* Texte sombre pour un contraste moderne et propre */
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(125, 161, 138, 0.25);
-    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-}
+        <div id="tab-telemetrie" class="tab-content active">
+            <?php if ($donnees): ?>
+                <p class="timestamp">Dernière mise à jour : <?php echo htmlspecialchars($date_affichage); ?></p>
+                <p class="timestamp" style="margin-top: -20px; margin-bottom: 30px; color: #888; font-size: 0.95rem;">Prochaine mise à jour : <?php echo htmlspecialchars($prochaine_affichage); ?></p>
 
-.btn-video:hover {
-    transform: translateY(-2px);
-    background: #94b5a0; /* Teinte plus claire et plus "argentée" au survol */
-    box-shadow: 0 6px 15px rgba(125, 161, 138, 0.4);
-}
+                <div class="dashboard">
+                    <div class="card-group-tp">
+                        <div id="btn-temp" class="data-card card-temp active" onclick="toggleMetric('temp')">
+                            <h3>Température</h3>
+                            <p class="valeur">
+                                <?php
+                                $tempC = floatval($donnees['temp']);
+                                $tempK = round($tempC + 273.15, 2);
+                                echo htmlspecialchars($tempK);
+                                ?> °K
+                            </p>
+                            <p class="valeur-sub">(<?php echo htmlspecialchars($donnees['temp']); ?> °C)</p>
+                        </div>
+                        <div id="btn-pressure" class="data-card card-pressure" onclick="toggleMetric('pressure')">
+                            <h3>Pression</h3>
+                            <p class="valeur"><?php echo htmlspecialchars($donnees['pressure']); ?> hPa</p>
+                        </div>
+                    </div>
 
-/* Configuration Galerie SSTV */
-.galerie-sstv {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 10px;
-}
+                    <div id="btn-humidity" class="data-card card-humidity" onclick="selectMetric('humidity')">
+                        <h3>Humidité</h3>
+                        <p class="valeur"><?php echo htmlspecialchars($donnees['humidity']); ?> %</p>
+                    </div>
+                </div>
 
-.photo-card {
-    background: #222;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    border: 1px solid #333;
-    transition: border-color 0.2s;
-}
+                <div class="analytics-section">
+                    <div class="chart-container">
+                        <canvas id="historyChart"></canvas>
+                    </div>
+                </div>
 
-.photo-card:hover {
-    border-color: #90a4ae;
-}
+                <div class="log-section">
+                    <div class="log-header">
+                        <h3 class="log-title">Journal de télémétrie</h3>
+                        <div class="log-mode-toggle">
+                            <button id="btn-mode-decoded" class="mode-btn active" onclick="setLogMode('decoded')">Décodé</button>
+                            <button id="btn-mode-raw" class="mode-btn" onclick="setLogMode('raw')">Brut (APRS)</button>
+                        </div>
+                    </div>
+                    <div class="log-table-wrapper">
+                        <table class="log-table" id="log-table">
+                            <thead id="log-thead"></thead>
+                            <tbody id="log-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
 
-.photo-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-    background: #111;
-}
+            <?php else: ?>
+                <div class="error-card">
+                    <p>Aucune donnée trouvée dans la table TELEMETRIE.</p>
+                    <?php if (isset($erreur_sql)): ?>
+                        <small>Erreur SQL : <?php echo htmlspecialchars($erreur_sql); ?></small>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 
-.photo-info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    font-size: 0.85rem;
-    font-family: monospace;
-}
+        <div id="tab-sstv" class="tab-content">
+            <p class="timestamp">Images reçues en direct de l'émetteur embarqué</p>
+            
+            <div class="sstv-actions">
+                <a href="generer_video.php" class="btn-video">Générer la Vidéo Timelapse</a>
+            </div>
 
-.photo-id {
-    color: #90a4ae;
-    font-weight: bold;
-}
+            <?php if (!empty($images_sstv)): ?>
+                <div class="galerie-sstv">
+                    <?php foreach ($images_sstv as $img): ?>
+                        <div class="photo-card">
+                            <img src="photos_sstv/<?php echo htmlspecialchars(basename($img['chemin_image'])); ?>" alt="SSTV du ballon">
+                            <div class="photo-info">
+                                <span class="photo-id">ID: #<?php echo htmlspecialchars($img['id_image']); ?></span>
+                                <span class="photo-date">Reçue le : <?php echo htmlspecialchars($img['horodatage_image']); ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="error-card">
+                    <p>Aucune image SSTV enregistrée pour le moment.</p>
+                    <?php if (isset($erreur_sstv)): ?>
+                        <small>Erreur SQL : <?php echo htmlspecialchars($erreur_sstv); ?></small>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 
-.photo-date {
-    color: #aaa;
-}
+        <script src="js.js"></script>
+        <script>
+            const labels = <?php echo json_encode($js_labels); ?>;
+            const tempData = <?php echo json_encode($js_temp); ?>.map(v => Math.round((parseFloat(v) + 273.15) * 100) / 100);
+            const tempDataC = <?php echo json_encode($js_temp); ?>;
+            const humidityData = <?php echo json_encode($js_humidity); ?>;
+            const pressureData = <?php echo json_encode($js_pressure); ?>;
+            const rawData = <?php echo json_encode($toutes_donnees); ?>;
+
+            const configs = {
+                temp:     { label: 'Température (°K)', data: tempData,     color: '#ff4d4d', unit: '°K' },
+                humidity: { label: 'Humidité (%)',      data: humidityData, color: '#3498db', unit: '%'  },
+                pressure: { label: 'Pression (hPa)',    data: pressureData, color: '#2ecc71', unit: 'hPa'}
+            };
+
+            // Active metrics state (temp active by default)
+            let activeMetrics = new Set(JSON.parse(localStorage.getItem('activeMetrics') || '["temp"]'));
+
+            const ctx = document.getElementById('historyChart').getContext('2d');
+
+            function buildDatasets() {
+                return [...activeMetrics].map(metric => ({
+                    label: configs[metric].label,
+                    data: configs[metric].data,
+                    borderColor: configs[metric].color,
+                    backgroundColor: configs[metric].color + '1a',
+                    borderWidth: 3,
+                    tension: 0.2,
+                    pointRadius: 2,
+                    yAxisID: metric === 'pressure' && activeMetrics.has('temp') ? 'y2' : 'y'
+                }));
+            }
+
+            function buildScales() {
+                // Color left Y axis based on whichever metric uses it
+                const leftMetric = activeMetrics.has('temp') ? 'temp' : [...activeMetrics][0];
+                const leftColor = configs[leftMetric] ? configs[leftMetric].color : '#bbb';
+
+                const scales = {
+                    x: { grid: { color: '#444' }, ticks: { color: '#bbb' } },
+                    y: { grid: { color: '#444' }, ticks: { color: leftColor }, position: 'left' }
+                };
+                // If both temp and pressure are active, use dual Y axis
+                if (activeMetrics.has('temp') && activeMetrics.has('pressure')) {
+                    scales.y2 = {
+                        grid: { color: '#333', drawOnChartArea: false },
+                        ticks: { color: configs.pressure.color },
+                        position: 'right'
+                    };
+                }
+                return scales;
+            }
+
+            const historyChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: buildDatasets() },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { labels: { color: '#fff' } } },
+                    scales: buildScales()
+                }
+            });
+
+            function refreshChart() {
+                historyChart.data.datasets = buildDatasets();
+                historyChart.options.scales = buildScales();
+                historyChart.update();
+                renderLog();
+                saveState();
+            }
+
+            function saveState() {
+                localStorage.setItem('activeMetrics', JSON.stringify([...activeMetrics]));
+            }
+
+            function updateCardStates() {
+                document.querySelectorAll('.dashboard .data-card').forEach(card => card.classList.remove('active'));
+                activeMetrics.forEach(m => {
+                    const el = document.getElementById('btn-' + m);
+                    if (el) el.classList.add('active');
+                });
+            }
+
+            // Toggle temp or pressure (they can coexist)
+            function toggleMetric(metric) {
+                // If humidity was active, clear it first
+                activeMetrics.delete('humidity');
+
+                if (activeMetrics.has(metric)) {
+                    // Prevent deselecting if it's the only one left
+                    if (activeMetrics.size > 1) {
+                        activeMetrics.delete(metric);
+                    }
+                } else {
+                    activeMetrics.add(metric);
+                }
+
+                updateCardStates();
+                refreshChart();
+            }
+
+            // Selecting humidity clears temp & pressure
+            function selectMetric(metric) {
+                activeMetrics.clear();
+                activeMetrics.add(metric);
+                updateCardStates();
+                refreshChart();
+            }
+
+            let logMode = 'decoded';
+
+            function setLogMode(mode) {
+                logMode = mode;
+                document.getElementById('btn-mode-decoded').classList.toggle('active', mode === 'decoded');
+                document.getElementById('btn-mode-raw').classList.toggle('active', mode === 'raw');
+                const table = document.getElementById('log-table');
+                table.classList.toggle('mode-decoded', mode === 'decoded');
+                table.classList.toggle('mode-raw', mode === 'raw');
+                renderLog();
+            }
+
+            function renderLog() {
+                const thead = document.getElementById('log-thead');
+                const tbody = document.getElementById('log-tbody');
+                if (!thead || !tbody) return;
+
+                if (logMode === 'decoded') {
+                    thead.innerHTML = `<tr>
+                        <th>Horodatage</th>
+                        <th>Source</th>
+                        <th style="color:${configs.temp.color}">Température</th>
+                        <th style="color:${configs.humidity.color}">Humidité</th>
+                        <th style="color:${configs.pressure.color}">Pression</th>
+                    </tr>`;
+                    tbody.innerHTML = '';
+                    rawData.forEach(row => {
+                        let ts = parseInt(row['time']);
+                        let timeStr = isNaN(ts) ? row['time'] : new Date((ts + 7200) * 1000).toLocaleString('fr-FR');
+                        const kelvin = Math.round((parseFloat(row.temp) + 273.15) * 100) / 100;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="log-time">${timeStr}</td>
+                            <td class="log-source">F4KMN-9</td>
+                            <td><span style="color:${configs.temp.color}">${kelvin} °K</span> <span class="log-sub">(${row.temp} °C)</span></td>
+                            <td><span style="color:${configs.humidity.color}">${row.humidity} %</span></td>
+                            <td><span style="color:${configs.pressure.color}">${row.pressure} hPa</span></td>`;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    // Raw APRS mode — reconstruct trame from APRS Weather format
+                    // Format: F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_MMJJHHmm c...s...g... tTTT hHH bPPPPP
+                    thead.innerHTML = `<tr>
+                        <th>Horodatage</th>
+                        <th>Trame APRS reconstituée</th>
+                    </tr>`;
+                    tbody.innerHTML = '';
+                    rawData.forEach(row => {
+                        let ts = parseInt(row['time']);
+                        let timeStr = isNaN(ts) ? row['time'] : new Date((ts + 7200) * 1000).toLocaleString('fr-FR');
+
+                        // Build timestamp MMJJHHmm from unix
+                        let aprsTimestamp = '00000000';
+                        if (!isNaN(ts)) {
+                            const d = new Date((ts + 7200) * 1000);
+                            const MM = String(d.getUTCMonth() + 1).padStart(2, '0');
+                            const JJ = String(d.getUTCDate()).padStart(2, '0');
+                            const HH = String(d.getUTCHours()).padStart(2, '0');
+                            const mm = String(d.getUTCMinutes()).padStart(2, '0');
+                            aprsTimestamp = MM + JJ + HH + mm;
+                        }
+
+                        // Temp in °F (APRS standard), rounded integer, padded to 3 digits
+                        const tempF = Math.round(parseFloat(row.temp) * 9/5 + 32);
+                        const tField = String(Math.abs(tempF)).padStart(3, '0');
+
+                        // Humidity: 00 = 100%, else padded 2 digits
+                        const h = parseInt(row.humidity);
+                        const hField = (h >= 100) ? '00' : String(h).padStart(2, '0');
+
+                        // Pressure in tenths of hPa, 5 digits (e.g. 1013.2 hPa → 10132)
+                        const pField = String(Math.round(parseFloat(row.pressure) * 10)).padStart(5, '0');
+
+                        const trame = `F4KMN-9>APRS,WIDE1-1,qAO,F4KMN-6:_${aprsTimestamp}c...s...g...t${tField}h${hField}b${pField}`;
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="log-time">${timeStr}</td>
+                            <td class="log-raw"><code>${trame}</code></td>`;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+
+            if (rawData.length > 0) {
+                updateCardStates();
+                refreshChart();
+                document.getElementById('log-table').classList.add('mode-decoded');
+                renderLog();
+            }
+        </script>
+    </body>
+</html>

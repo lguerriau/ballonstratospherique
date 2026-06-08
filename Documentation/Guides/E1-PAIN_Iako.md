@@ -4,9 +4,9 @@
 
 -
 
-*0) Vérifier que la RasPi est branchée*
+0) *Vérifier que la RasPi est branchée*
 
-1) Dans **ballonstratospherique/Nacelle/**, télécharger **BME280**, LM75**, **RA02**
+1) Dans **ballonstratospherique/Nacelle/**, télécharger **BME280**, **LM75**, **RA02**
 
 2) Dans **ballonstratospherique/Sol/**, télécharger **Interface_Internaute**
 
@@ -18,7 +18,7 @@
 
 - 
 
-*0) Vérifier que la RasPi est branchée*
+0) *Vérifier que la RasPi est branchée*
 
 1) Faire la commande "**ssh pbs@172.18.59.66**"
 

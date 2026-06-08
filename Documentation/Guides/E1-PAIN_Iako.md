@@ -2,7 +2,7 @@
 
 (a ne pas faire si ces fichiers sont déja installés sur la carte RasPi, ce qui est le cas pour l'examin oral final de BTS CIEL)
 
--
+---
 
 0) *Vérifier que la RasPi est branchée*
 
@@ -16,7 +16,7 @@
 
 # Connection a la RasPi
 
-- 
+---
 
 0) *Vérifier que la RasPi est branchée*
 
@@ -26,7 +26,7 @@
 
 # Récupérer la télémétrie
 
--
+---
 
 1) Lancer le projet **RA02** :
 

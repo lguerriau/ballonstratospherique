@@ -27,6 +27,7 @@ ___
 
 *Sol* :
 - Interface_Internaute : Interface de visualisation des données télémétriques et photos SSTV
+    - Contiens un fichier exemple pour la télémétrie a importer
 - Interface_Opérateur : Interface de communication RSSI avec la Nacelle
 - Reception : Programme de reception RSSI
 - BDD : Contiens ce qui est relatif a la Base de Données

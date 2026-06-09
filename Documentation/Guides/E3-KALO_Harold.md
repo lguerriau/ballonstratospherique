@@ -84,7 +84,7 @@
 
 2) Cliquer sur l'onglet 'Galerie SSTV' et les photos seront mises dans l'ordre chronologique. 
 
-3) Pour la vidéo, cliquer sur l'onglet 'Générer la vidéo Timelapse' et la vidéo sera générer. Un bouton retour est présent pour revenir sur la page et actualiser est présent pour actualiser l'ordre de passage des photos. 
+3) Pour la vidéo, cliquer sur l'onglet 'Générer la vidéo Timelapse' et la vidéo sera générée. Un bouton 'retour' est présent pour revenir sur la page et un bouton 'actualiser' est présent pour actualiser l'ordre de passage des photos. 
 
 
 

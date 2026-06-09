@@ -81,14 +81,13 @@ Camera::~Camera() {
  * @author Harold KALO
  */
 void Camera::envoyerPhoto() {
-    // Règle 5: Deux assertions pour valider l'état avant émission
+    
     assert(this->frequence >= 29000000); 
     assert(this->nbPhotos > 0); 
 
     char convert[256];
     char commande[256];
 
-    // Règle 3 & 6: Portée minimale et pas d'allocation
     int indexPhoto = this->nbPhotos - 1;
     assert(indexPhoto >= 0);
 
@@ -136,7 +135,7 @@ void Camera::envoyerMire() {
  * @author Harold KALO
  */
 void Camera::enregistrerPhoto() {
-    // Règle 5: Garantir que le compteur n'est pas corrompu avant capture
+  
     assert(this->nbPhotos >= 0);
     assert(this->nbPhotos < 1000); 
 
@@ -151,7 +150,7 @@ void Camera::enregistrerPhoto() {
 
     std::cout << "Capture HD : " << nomFinal << std::endl;
 
-    // Règle 7: Vérification impérative du succès matériel de la caméra
+    
     if (std::system(commande) == 0) {
         char commandeAnnotation[512];
         

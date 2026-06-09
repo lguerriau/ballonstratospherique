@@ -21,14 +21,10 @@ int main() {
     Camera maCam(29000000, "F4KMN");
     int compteurSSTV = 9;
 
-    // Règle 2: Estimation du temps max de vol du ballon (ex: 4 heures = 14400 secondes).
-    // Une boucle toutes les 30s => Max 480 itérations. On borne à 1000 itérations max.
     const unsigned int MAX_CYCLES_VOL = 1000; 
 
-    // Règle 1 & 2: Plus de while(true), boucle strictement bornée et vérifiable statiquement
     for (unsigned int cycle = 0; cycle < MAX_CYCLES_VOL; ++cycle) {
         
-        // Règle 5: Deux assertions de contrôle d'état
         assert(compteurSSTV >= 0);
         assert(compteurSSTV <= 10);
 
@@ -45,7 +41,6 @@ int main() {
         sleep(30); 
     }
 
-    // Règle 5: L'assertion finale pour prouver la sortie normale
     assert(compteurSSTV < 10);
 
     return 0;

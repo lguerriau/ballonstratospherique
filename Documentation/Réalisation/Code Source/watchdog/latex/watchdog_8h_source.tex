@@ -1,0 +1,34 @@
+\doxysection{watchdog.\+h}
+\hypertarget{watchdog_8h_source}{}\label{watchdog_8h_source}\mbox{\hyperlink{watchdog_8h}{Aller à la documentation de ce fichier.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ WATCHDOG\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ WATCHDOG\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QFileSystemWatcher>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{bdd_8h}{bdd.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ QT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceUi}{Ui}}\ \{\ \textcolor{keyword}{class\ }Widget;\ \}}
+\DoxyCodeLine{00010\ QT\_END\_NAMESPACE}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classWatchdog}{Watchdog}}\ :\ \textcolor{keyword}{public}\ QWidget\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{classWatchdog}{Watchdog}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{classWatchdog_ad836a36b5eb5dbe134d4050d49a95d4e}{\string~Watchdog}}();}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classWatchdog_a3912b5c6cf9a7f03f0c0e3a874addba5}{onDossierModifie}}(\textcolor{keyword}{const}\ QString\ \&path);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00023\ \ \ \ \ Ui::Widget\ *\mbox{\hyperlink{classWatchdog_adac22aea1fe76a78ee0eccd7accc59e9}{ui}};}
+\DoxyCodeLine{00024\ \ \ \ \ QFileSystemWatcher\ *\mbox{\hyperlink{classWatchdog_ab9356fbc6618a90018e391865d25dded}{watcher}};}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{classBdd}{Bdd}}\ *\mbox{\hyperlink{classWatchdog_aa5734ebdf9a3b474a069728a513e198b}{maSql}};\ \textcolor{comment}{//\ On\ l'appelle\ GestionBDD\ pour\ ne\ pas\ confondre\ avec\ le\ Widget}}
+\DoxyCodeLine{00026\ \ \ \ \ QStringList\ \mbox{\hyperlink{classWatchdog_a0f3a4d125e7e00c1787f00c6dc6df59e}{imagesTraitees}};}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ WATCHDOG\_H}}
+
+\end{DoxyCode}

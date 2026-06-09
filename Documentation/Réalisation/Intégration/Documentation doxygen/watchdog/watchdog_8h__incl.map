@@ -1,0 +1,20 @@
+<map id="watchdog.h" name="watchdog.h">
+<area shape="rect" id="Node000001" title="Déclaration de la classe Watchdog." alt="" coords="92,5,181,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,152,79,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,33,62,51,46,64,34,80,29,94,28,109,34,138,29,139,22,109,23,93,29,77,42,60,59,47,95,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="44,79,131,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,33,105,69,101,66,126,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="155,79,220,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="147,29,173,66,169,69,143,33"/>
+<area shape="rect" id="Node000005" href="$bdd_8h.html" title="Déclaration de la classe Bdd." alt="" coords="244,79,299,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="160,28,238,70,236,74,157,33"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="244,104,93,150,91,145,243,99"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="120,152,175,177"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="253,106,181,147,178,143,250,102"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="199,152,306,177"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="271,105,262,140,257,138,266,104"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="330,152,410,177"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="289,102,344,142,341,146,286,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="434,152,501,177"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="300,100,423,145,422,150,298,105"/>
+</map>

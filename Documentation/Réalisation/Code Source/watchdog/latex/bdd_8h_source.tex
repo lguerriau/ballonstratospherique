@@ -1,0 +1,43 @@
+\doxysection{bdd.\+h}
+\hypertarget{bdd_8h_source}{}\label{bdd_8h_source}\mbox{\hyperlink{bdd_8h}{Aller à la documentation de ce fichier.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ BDD\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ BDD\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QtSql>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <QSqlDatabase>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <QSettings>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QDebug>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ QT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceUi}{Ui}}\ \{\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBdd}{Bdd}};\ \}}
+\DoxyCodeLine{00013\ QT\_END\_NAMESPACE}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBdd}{Bdd}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{classBdd}{Bdd}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classBdd_a1a234e773787295f521d66685149176b}{connecter}}();}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBdd_ab96ce89242bf4448336176be401f937d}{deconnecter}}();}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classBdd_a65460c655f6992df5af38c6999be0596}{enregistrerPhoto}}(QString\ cheminLocal,\ \textcolor{keywordtype}{bool}\ pourWeb);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00028\ \ \ \ \ QSqlDatabase\ \mbox{\hyperlink{classBdd_a8628c1686deda86999f86689c3e7268e}{db}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ QString\ \mbox{\hyperlink{classBdd_a82d040d4c8c3b5ef3d4065825a9f48c7}{host}};}
+\DoxyCodeLine{00031\ \ \ \ \ QString\ \mbox{\hyperlink{classBdd_a062c65c7b5c666c508c7430b2977029e}{user}};}
+\DoxyCodeLine{00032\ \ \ \ \ QString\ \mbox{\hyperlink{classBdd_a7d683270479507e781c83dc7c1d08af2}{password}};}
+\DoxyCodeLine{00033\ \ \ \ \ QString\ \mbox{\hyperlink{classBdd_a3384a01f1c9d6d938e1beda70584ce74}{dbName}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBdd_a2a16b5eb50fb13d6b9438213c701da46}{chargerConfiguration}}();}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ BDD\_H}}
+
+\end{DoxyCode}

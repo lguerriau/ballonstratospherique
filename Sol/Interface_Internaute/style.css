@@ -257,7 +257,7 @@ h1 { margin-bottom: 5px; }
 .gaz-solve-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
 .gaz-solve-label { color: #888; font-size: 0.82rem; white-space: nowrap; }
 .gaz-solve-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-.gaz-solve-btn { background: #2a2a2a; border: 1px solid #444; color: #ddd; padding: 5px 12px; border-radius: 14px; font-size: 0.82rem; font-weight: bold; cursor: pointer; font-family: monospace; transition: background 0.15s; }
+.gaz-solve-btn { background: #2a2a2a; border: 1px solid #444; color: #ddd; padding: 5px 12px; border-radius: 14px; font-size: 0.82rem; font-weight: bold; cursor: pointer; font-family: monospace; transition: background 0.15s;width: 100%;text-align: center; }
 .gaz-solve-btn:hover { background: #3a3a3a; color: #fff; }
 .gaz-verify-btn { border-color: #90a4ae; color: #90a4ae; }
 .gaz-verify-btn:hover { background: #90a4ae22; }

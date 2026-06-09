@@ -82,39 +82,41 @@ foreach ($donnees_chronologiques as $row) {
 
         <!-- Panel Gaz Parfaits -->
         <div id="gaz-panel" class="gaz-panel" style="display:none">
-            <div class="gaz-panel-header">
-                <span>Loi des gaz parfaits — <em>PV = nRT</em></span>
-                <button class="gaz-close" onclick="toggleGazPanel()">✕</button>
-            </div>
-            <div class="gaz-body">
-                <div class="gaz-row">
-                    <label>P — Pression <span class="gaz-unit">(Pa)</span></label>
-                    <input type="text" id="gaz-P" inputmode="decimal">
-                </div>
-                <div class="gaz-row">
-                    <label>V — Volume <span class="gaz-unit">(m³)</span></label>
-                    <input type="text" id="gaz-V" inputmode="decimal">
-                </div>
-                <div class="gaz-row">
-                    <label>n — Quantité de matière <span class="gaz-unit">(mol)</span></label>
-                    <input type="text" id="gaz-n" inputmode="decimal">
-                </div>
-                <div class="gaz-row">
-                    <label>R — Constante universelle <span class="gaz-unit">(J·mol⁻¹·K⁻¹)</span></label>
-                    <span class="gaz-const">8,314</span>
-                </div>
-                <div class="gaz-row">
-                    <label>T — Température <span class="gaz-unit">(K)</span></label>
-                    <input type="text" id="gaz-T" inputmode="decimal">
-                </div>
-
-                <div class="gaz-solve-row">
-                    <button class="gaz-verify-btn gaz-solve-btn" onclick="gazVerify()">Vérifier</button>
-                </div>
-
-                <div id="gaz-result" class="gaz-result"></div>
-            </div>
+    <div class="gaz-panel-header">
+        <span>Loi des gaz parfaits — <em>PV = nRT</em></span>
+    </div>
+    <div class="gaz-body">
+        <div class="gaz-row">
+            <label>P — Pression <span class="gaz-unit">(Pa)</span></label>
+            <input type="text" id="gaz-P" inputmode="decimal">
         </div>
+        
+        <div class="gaz-row" title="Estimez le volume en mesurant le rayon du ballon à l'aide des images de la galerie SSTV (V = 4/3 × π×r³)">
+            <label style="cursor: help;">V — Volume <span class="gaz-unit">(m³)</span> ⓘ</label>
+            <input type="text" id="gaz-V" inputmode="decimal" title="Estimer via l'expansion du ballon sur les photos SSTV">
+        </div>
+        
+        <div class="gaz-row" title="La quantité de gaz reste constante pendant le vol. Déterminez-la au sol avant le lancement avec les mesures initiales (n = P·V / R·T).">
+            <label style="cursor: help;">n — Quantité de matière <span class="gaz-unit">(mol)</span> ⓘ</label>
+            <input type="text" id="gaz-n" inputmode="decimal" title="Calculer au sol avant le lancement (n = P·V / R·T)">
+        </div>
+        
+        <div class="gaz-row">
+            <label>R — Constante universelle <span class="gaz-unit">(J·mol⁻¹·K⁻¹)</span></label>
+            <span class="gaz-const">8,314</span>
+        </div>
+        <div class="gaz-row">
+            <label>T — Température <span class="gaz-unit">(°K)</span></label>
+            <input type="text" id="gaz-T" inputmode="decimal">
+        </div>
+
+        <div class="gaz-solve-row">
+            <button class="gaz-verify-btn gaz-solve-btn" onclick="gazVerify()">Vérifier</button>
+        </div>
+
+        <div id="gaz-result" class="gaz-result"></div>
+    </div>
+</div>
 
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('telemetrie')">Télémétrie</button>

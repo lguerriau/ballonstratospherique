@@ -9,7 +9,7 @@ ___
 -
 Suivi en temps réel :               Localisation précise du ballon via les liaisons radio LoRa et APRS
 
-Collecte de données scientifiques : Mesure de la température, pression et accélération pour l'étude de l'atmosphère et                                     la vérification de la loi des gaz parfaits
+Collecte de données scientifiques : Mesure de la température, pression et accélération pour l'étude de l'atmosphère et                                     la ***vérification de la loi des gaz parfaits***
 
 Capture d'images :                  Prise de photos en haute altitude et transmission au sol via le protocole SSTV
 

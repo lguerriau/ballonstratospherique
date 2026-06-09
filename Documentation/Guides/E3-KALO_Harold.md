@@ -53,7 +53,7 @@
 
 2) Lancer le programme : affiche un widget où faut rentrer le mdp de la raspi (pbs). 
 
-  (l'adresse IP et le dossier local "/home/USERS/ELEVES/CIEL2024/hkalo/sstvYoniq/ARCHIVES_PHOTOS_IMPORTATION et déjà écrit) et se connecter via le bouton.
+  (l'adresse IP et le dossier local "/home/USERS/ELEVES/CIEL2024/hkalo/sstvYoniq/ARCHIVES_PHOTOS_IMPORTATION sont déjà écrit) et se connecter via le bouton.
 
 
 3) Dans la fenêtre, les fichiers .jpg de la raspi sont affichées.
@@ -70,9 +70,7 @@
 1) Prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
 
 
-2) Lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites
-
-  pour la détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
+2) Lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites : La détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
 
 
 
@@ -81,7 +79,7 @@
 
 ---
 
-1) Prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS.
+1) Prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS (Partie Harold) ou Prendre le code dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**".(Partie intégration) et l'ouvrir avec NETBEANS.
    
 
 2) Cliquer sur l'onglet 'Galerie SSTV' et les photos seront mises dans l'ordre chronologique. 

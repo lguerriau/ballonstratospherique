@@ -1,8 +1,6 @@
 # avant la demo :
 
-0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet).
-
-Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
+0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet). Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 
 
 1) Allumer le poste Windows et ouvrir Yoniq.

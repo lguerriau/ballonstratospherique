@@ -1,6 +1,6 @@
 # avant la demo :
 
-0) Allumer la station radio : ouvrir vanne, mettre alimentation et allumer la radio (bouton violet).
+0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet).
 
 Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 
@@ -79,6 +79,8 @@ Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas).
 
 
 # E. Partie IHM : 
+
+---
 
 1) Prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS.
    

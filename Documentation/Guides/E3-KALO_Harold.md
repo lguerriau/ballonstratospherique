@@ -1,38 +1,22 @@
-avant la demo :
+# avant la demo :
 
-
-- allumer la station radio : ouvrir vanne, mettre alimentation et allumer la radio (bouton violet).
+0) Allumer la station radio : ouvrir vanne, mettre alimentation et allumer la radio (bouton violet).
 
 Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 
 
-- allumer le poste Windows et ouvrir Yoniq.
+1) Allumer le poste Windows et ouvrir Yoniq.
 
 
-- Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
+2) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
+---
+
+# A. Installation 
 
 
-
-
-
-
-
-
-Partie Raspberry :
-
-- prendre le code pour la prise de photos nommé RaspberryPi et l'ouvrir ou le copier avec NETBEANS.
-
-
-- lancer le programme : le programme prend une photo toutes les 30 secondes et émet la sstv toutes les 5 minutes.
-
-
-- pour vérifier la prise de photos, on peut se connecter via ssh (172.18.59.60) sur la RaspberryPi.
-
-
-- pour vérifier la sstv, il faut voir yoniq et le logiciel affiche la photo ligne par ligne. 
-
-
-- les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> History 
+> [!IMPORTANT]
+> A ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ***ce qui est le cas pour l'examin oral final de BTS CIEL*** $\color{red}{\text{(Recompilation pas necessaire, vous pouvez passer a l'étape "Connection a la Raspi")}}$ 
+---
 
 
 
@@ -40,55 +24,68 @@ Partie Raspberry :
 
 
 
+# B. Partie Raspberry :
+
+---
+
+1) Prendre le code pour la prise de photos nommé RaspberryPi et l'ouvrir ou le copier avec NETBEANS.
+
+
+2) Lancer le programme : le programme prend une photo toutes les 30 secondes et émet la sstv toutes les 5 minutes.
+
+
+3) Pour vérifier la prise de photos, on peut se connecter via ssh (172.18.59.60) sur la RaspberryPi.
+
+
+4) Pour vérifier la sstv, il faut voir yoniq et le logiciel affiche la photo ligne par ligne. 
+
+
+5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> History 
 
 
 
-Partie Importation photos : 
 
-- prendre le code pour l'importation de photos de la raspi nommé 'importation_photos' et l'ouvrir ou le copier avec QTCreator.
+# C. Partie Importation photos : 
+
+---
+
+1) Prendre le code pour l'importation de photos de la raspi nommé 'importation_photos' et l'ouvrir ou le copier avec QTCreator.
 
 
-- lancer le programme : affiche un widget où faut rentrer le mdp de la raspi (pbs). 
+2) Lancer le programme : affiche un widget où faut rentrer le mdp de la raspi (pbs). 
 
   (l'adresse IP et le dossier local "/home/USERS/ELEVES/CIEL2024/hkalo/sstvYoniq/ARCHIVES_PHOTOS_IMPORTATION et déjà écrit) et se connecter via le bouton.
 
 
-- Dans la fenêtre, les fichiers .jpg de la raspi sont affichées.
+3) Dans la fenêtre, les fichiers .jpg de la raspi sont affichées.
 
 
-- Puis Cliquez sur importer avec le bouton et les photos seront enregistrées dans le fichier local inscrit.
-
-
-
+4) Puis Cliquez sur importer avec le bouton et les photos seront enregistrées dans le fichier local inscrit.
 
 
 
+# D. Partie Watchdog : 
+
+---
+
+1) Prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
 
 
-Partie Watchdog : 
-
-- prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
-
-
-- lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites
+2) Lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites
 
   pour la détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
 
 
 
 
+# E. Partie IHM : 
 
+1) Prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS.
+   
 
+2) Cliquer sur l'onglet 'Galerie SSTV' et les photos seront mises dans l'ordre chronologique. 
 
-
-
-Partie IHM : 
-
-- prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS.
-
-- cliquer sur l'onglet 'Galerie SSTV' et les photos seront mises dans l'ordre chronologique. 
-
-- pour la vidéo, cliquer sur l'onglet 'Générer la vidéo Timelapse' et la vidéo sera générer. Un bouton retour est présent pour revenir sur la page et actualiser est présent pour actualiser l'ordre de passage des photos. 
+3) Pour la vidéo, cliquer sur l'onglet 'Générer la vidéo Timelapse' et la vidéo sera générer. Un bouton retour est présent pour revenir sur la page et actualiser est présent pour actualiser l'ordre de passage des photos. 
 
 
 

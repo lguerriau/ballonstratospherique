@@ -199,3 +199,78 @@ h1 { margin-bottom: 5px; }
 .photo-date {
     color: #aaa;
 }
+/* === Loi des Gaz Parfaits === */
+.gaz-fab {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    font-size: 0.82rem;
+    font-weight: bold;
+    font-family: monospace;
+    padding: 7px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, color 0.2s;
+}
+.gaz-fab:hover { background: #3a3a3a; color: #fff; }
+
+.gaz-panel {
+    position: fixed;
+    top: 54px;
+    right: 16px;
+    z-index: 999;
+    width: 340px;
+    background: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    font-size: 0.88rem;
+    animation: fadeEffect 0.2s ease;
+}
+.gaz-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid #333;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+.gaz-panel-header em { color: #90a4ae; font-style: normal; font-weight: bold; }
+.gaz-close { background: none; border: none; color: #888; font-size: 1rem; cursor: pointer; padding: 0 2px; }
+.gaz-close:hover { color: #fff; }
+
+.gaz-body { padding: 12px 14px; }
+.gaz-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.gaz-row label { width: 200px; color: #aaa; font-size: 0.82rem; text-align: right; flex-shrink: 0; }
+.gaz-unit { color: #666; font-size: 0.78rem; }
+.gaz-row input { flex: 1; background: #2a2a2a; border: 1px solid #444; color: #eee; padding: 5px 8px; border-radius: 6px; font-size: 0.88rem; font-family: monospace; width: 0; }
+.gaz-row input[readonly] { color: #777; border-color: #333; }
+.gaz-row input:focus { outline: none; border-color: #90a4ae; }
+.gaz-hint { font-size: 0.75rem; color: #666; font-family: monospace; white-space: nowrap; }
+
+.gaz-solve-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
+.gaz-solve-label { color: #888; font-size: 0.82rem; white-space: nowrap; }
+.gaz-solve-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.gaz-solve-btn { background: #2a2a2a; border: 1px solid #444; color: #ddd; padding: 5px 12px; border-radius: 14px; font-size: 0.82rem; font-weight: bold; cursor: pointer; font-family: monospace; transition: background 0.15s; }
+.gaz-solve-btn:hover { background: #3a3a3a; color: #fff; }
+.gaz-verify-btn { border-color: #90a4ae; color: #90a4ae; }
+.gaz-verify-btn:hover { background: #90a4ae22; }
+
+.gaz-result { margin-top: 10px; padding: 8px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; min-height: 32px; }
+.gaz-ok   { background: #1a3a1a; color: #2ecc71; border: 1px solid #2ecc7133; }
+.gaz-warn { background: #3a2e00; color: #f1c40f; border: 1px solid #f1c40f33; }
+.gaz-error { background: #3a1a1a; color: #ff4d4d; border: 1px solid #ff4d4d33; }
+
+/* Remove number input arrows */
+.gaz-panel input::-webkit-outer-spin-button,
+.gaz-panel input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.gaz-panel input[type=number] { -moz-appearance: textfield; }
+
+/* R constant display */
+.gaz-const { color: #90a4ae; font-family: monospace; font-size: 0.9rem; font-weight: bold; padding: 5px 0; }

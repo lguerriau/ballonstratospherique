@@ -77,6 +77,45 @@ foreach ($donnees_chronologiques as $row) {
     <body>
         <h1>Télémesure du Ballon Stratosphérique</h1>
 
+        <!-- Bouton flottant Gaz Parfaits -->
+        <button class="gaz-fab" onclick="toggleGazPanel()" title="Loi des gaz parfaits">PV=nRT</button>
+
+        <!-- Panel Gaz Parfaits -->
+        <div id="gaz-panel" class="gaz-panel" style="display:none">
+            <div class="gaz-panel-header">
+                <span>Loi des gaz parfaits — <em>PV = nRT</em></span>
+                <button class="gaz-close" onclick="toggleGazPanel()">✕</button>
+            </div>
+            <div class="gaz-body">
+                <div class="gaz-row">
+                    <label>P — Pression <span class="gaz-unit">(Pa)</span></label>
+                    <input type="text" id="gaz-P" inputmode="decimal">
+                </div>
+                <div class="gaz-row">
+                    <label>V — Volume <span class="gaz-unit">(m³)</span></label>
+                    <input type="text" id="gaz-V" inputmode="decimal">
+                </div>
+                <div class="gaz-row">
+                    <label>n — Quantité de matière <span class="gaz-unit">(mol)</span></label>
+                    <input type="text" id="gaz-n" inputmode="decimal">
+                </div>
+                <div class="gaz-row">
+                    <label>R — Constante universelle <span class="gaz-unit">(J·mol⁻¹·K⁻¹)</span></label>
+                    <span class="gaz-const">8,314</span>
+                </div>
+                <div class="gaz-row">
+                    <label>T — Température <span class="gaz-unit">(K)</span></label>
+                    <input type="text" id="gaz-T" inputmode="decimal">
+                </div>
+
+                <div class="gaz-solve-row">
+                    <button class="gaz-verify-btn gaz-solve-btn" onclick="gazVerify()">Vérifier</button>
+                </div>
+
+                <div id="gaz-result" class="gaz-result"></div>
+            </div>
+        </div>
+
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('telemetrie')">Télémétrie</button>
             <button class="tab-btn" onclick="switchTab('sstv')">Galerie SSTV</button>
@@ -447,6 +486,84 @@ foreach ($donnees_chronologiques as $row) {
                     event.target.value = '';
                 };
                 reader.readAsText(file);
+            }
+
+            // --- Loi des Gaz Parfaits ---
+            function toggleGazPanel() {
+                const panel = document.getElementById('gaz-panel');
+                const visible = panel.style.display !== 'none';
+                panel.style.display = visible ? 'none' : 'block';
+                if (!visible) gazPrefill();
+            }
+
+            function gazPrefill() {
+                if (rawData.length > 0) {
+                    const latest = rawData[0];
+                    const tempK = Math.round((parseFloat(latest.temp) + 273.15) * 100) / 100;
+                    const pressurePa = Math.round(parseFloat(latest.pressure) * 100);
+                    document.getElementById('gaz-T').value = tempK;
+                    document.getElementById('gaz-P').value = pressurePa;
+                }
+            }
+
+            function gazGetValues(skip) {
+                const vals = {};
+                ['P','V','n','T'].forEach(k => {
+                    if (k === skip) { vals[k] = null; return; }
+                    const v = parseFloat(document.getElementById('gaz-' + k).value);
+                    vals[k] = isNaN(v) ? null : v;
+                });
+                vals.R = 8.314;
+                return vals;
+            }
+
+            function gazSolve(target) {
+                const v = gazGetValues(target);
+                const res = document.getElementById('gaz-result');
+                const missing = ['P','V','n','T'].filter(k => k !== target && v[k] === null);
+                if (missing.length > 0) {
+                    res.className = 'gaz-result gaz-error';
+                    res.textContent = `Valeur(s) manquante(s) : ${missing.join(', ')}`;
+                    return;
+                }
+                let result;
+                // PV = nRT  →  solve for target
+                if (target === 'P') result = (v.n * v.R * v.T) / v.V;
+                if (target === 'V') result = (v.n * v.R * v.T) / v.P;
+                if (target === 'n') result = (v.P * v.V) / (v.R * v.T);
+                if (target === 'T') result = (v.P * v.V) / (v.n * v.R);
+
+                document.getElementById('gaz-' + target).value = Math.round(result * 10000) / 10000;
+
+                const units = { P:'Pa', V:'m³', n:'mol', T:'K' };
+                let extra = '';
+                if (target === 'T') extra = ` (${Math.round((result - 273.15) * 100) / 100} °C)`;
+                if (target === 'P') extra = ` (${Math.round(result / 100 * 10) / 10} hPa)`;
+
+                res.className = 'gaz-result gaz-ok';
+                res.innerHTML = `<strong>${target} = ${Math.round(result * 10000) / 10000} ${units[target]}</strong>${extra}`;
+            }
+
+            function gazVerify() {
+                const v = gazGetValues(null);
+                const res = document.getElementById('gaz-result');
+                const missing = ['P','V','n','T'].filter(k => v[k] === null);
+                if (missing.length > 0) {
+                    res.className = 'gaz-result gaz-error';
+                    res.textContent = `Valeur(s) manquante(s) : ${missing.join(', ')}`;
+                    return;
+                }
+                const lhs = v.P * v.V;
+                const rhs = v.n * v.R * v.T;
+                const diff = Math.abs(lhs - rhs);
+                const pct = Math.round(diff / rhs * 10000) / 100;
+                if (pct < 1) {
+                    res.className = 'gaz-result gaz-ok';
+                    res.innerHTML = `✓ Loi vérifiée — PV = ${Math.round(lhs*100)/100} J &nbsp;|&nbsp; nRT = ${Math.round(rhs*100)/100} J &nbsp;|&nbsp; écart : ${pct}%`;
+                } else {
+                    res.className = 'gaz-result gaz-warn';
+                    res.innerHTML = `⚠ Écart significatif — PV = ${Math.round(lhs*100)/100} J &nbsp;|&nbsp; nRT = ${Math.round(rhs*100)/100} J &nbsp;|&nbsp; écart : ${pct}%`;
+                }
             }
         </script>
     </body>

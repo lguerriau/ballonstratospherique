@@ -2,7 +2,7 @@
 
 
 > [!IMPORTANT]
-> A ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ***ce qui est le cas pour l'examin oral final de BTS CIEL*** $\color{red}{\text{(Recompilation pas necessaire, vous pouvez passer a l'étape "Connection a la Raspi")}}$ 
+> A ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ***ce qui est le cas pour l'examin oral final de BTS CIEL*** $\color{red}{\text{(Recompilation pas necessaire, vous pouvez passer a l'étape "A. Connection a la Raspi")}}$ 
 ---
 
 1) Dans "**ballonstratospherique/Nacelle/**", télécharger "**BME280**", "**LM75**", "**RA02**"

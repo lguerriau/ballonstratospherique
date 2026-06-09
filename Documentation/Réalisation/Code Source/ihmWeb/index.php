@@ -28,10 +28,10 @@ $requete = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAG
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>🛰️ Station de Réception SSTV</h1>
+        <h1> Station de Réception SSTV</h1>
 
         <div class="actions">
-            <a href="generer_video.php" class="btn">🎬 Générer la Vidéo</a>
+            <a href="generer_video.php" class="btn"> Générer la Vidéo</a>
         </div>
 
         <div class="galerie">
@@ -47,7 +47,7 @@ $requete = $db->query('SELECT id_image, chemin_image, horodatage_image FROM IMAG
         <div class="photo-card">
             <img src="photos_sstv/<?php echo basename($donnees['chemin_image']); ?>" alt="SSTV">
             <p>SÉQUENCE #<?php echo $donnees['id_image']; ?></p>
-            <span>📡 Reçu à : <?php echo date('H:i:s', strtotime($donnees['horodatage_image'])); ?></span>
+            <span> Reçu à : <?php echo date('H:i:s', strtotime($donnees['horodatage_image'])); ?></span>
         </div>
     </body>
 </html>

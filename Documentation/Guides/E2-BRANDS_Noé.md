@@ -18,8 +18,7 @@ après initialisation du capteur, secouez la carte dans tout les sens et faites 
 attention l'ordre des balises envoyé est forcément dans cette ordre
 
 Sur "https://aprs.fi/?c=raw&call=F4KMN-9", vérifier que les trames sont bien reçues, connexion obligatoire. si vous n'avez pas de compte ->
-Email : f4kmn@yahoo.com
-mdp : b112b112
+
 
 **2. Lancer le programme de l'esp32 (gateway)**
 

@@ -42,7 +42,7 @@
 4) Pour vérifier la sstv, il faut voir yoniq et le logiciel affiche la photo ligne par ligne. 
 
 
-5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> History 
+5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> MMSSTV -> History 
 
 
 

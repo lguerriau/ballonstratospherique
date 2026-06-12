@@ -24,3 +24,10 @@ watchdog : programme pour transferer les photos (via un chien de garde) du poste
 importation_photos : programme pour importer des photos en ssh de la raspberryPi
 
 
+
+---
+
+
+**Dans '/Documentation/Realisation/Integration/code_source/phpIntegration'**
+
+phpIntegration : interface web pour visionner les photos et réaliser une vidéo à partir de ces photos ainsi la télémetrie intégrée.

@@ -33,7 +33,7 @@
 1) ouvrir PuTTY, et connecter vous en ssh sur l'adresse de la raspberry (172.18.59.60)
 
 
-2) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : ./rasperrypi
+2) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : sudo ./rasperrypi
 
 
 3) Le programme va prendre une photo et l'enregistrer dans la carte SD (Toutes les 30 secondes) et va envoyer la SSTV pendant 5 minutes (attendre entre 1 et 2 minutes avant que la sstv s'envoie, oui c'est long).   

@@ -1,5 +1,5 @@
 # lors de la demo, vous avez accès à mon repertoire perso. Si vous avez la flemme de lancer github et de retrouver mes fichiers, mes fichers concernant le projet ballon se situent dans :
-/hkalo/Documents/CIEL2/Projet 2025-26/ 
+/hkalo/Documents/CIEL2/Projet_2025-26/ 
 
 # avant la demo :
 
@@ -10,6 +10,8 @@
 
 
 2) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
+
+3) Allumer la RaspberryPi ( celle où il ya la cameraPi), et mettre l'antenne (le grand fil bleu), sinon la sstv ne marchera pas.
 ---
 
 # A. Installation 

@@ -1,14 +1,19 @@
-Partie transmission de photos ballon -> sol du projet ballonstratospherique
+**Partie transmission de photos ballon** -> sol du projet ballonstratospherique
 
-Activités avant projet : phase d'analyse du projet.
+**Activités avant projet** : phase d'analyse du projet.
 
-Activités avant projet 2 : phase de conception du projet.
+**Activités avant projet 2** : phase de conception du projet.
 
-sstvYoniq : photos prise par la raspberry stockée par le poste Yoniq (Windows)
+**sstvYoniq** : photos prise par la raspberry stockée par le poste Yoniq (Windows)
 
-testUnitaire : fiche de test unitaire sur le module ...
+**testUnitaire** : fiche de test unitaire sur le module ...
 
-**Dans /Documentation/Realisation/Code_source**
+
+
+
+
+
+**Dans '/Documentation/Realisation/Code_source'**
 
 ihmWeb : interface web pour visionner les photos et réaliser une vidéo à partir de ces photos.
 

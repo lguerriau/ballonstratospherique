@@ -32,8 +32,7 @@
 
 ---
 
-1) ouvrir PuTTY, et connecter vous en ssh sur l'adresse de la raspberry (172.18.59.60) ou si vous voulez voir le code, prendre le code et l'ouvrir avec
-   NetBeans et éxécuter le code.
+1) ouvrir PuTTY, et connecter vous en ssh sur l'adresse de la raspberry (172.18.59.60) ou si vous voulez voir le code, prendre le code concernant la raspberry (dans github ou mes fichiers de mon dossier perso) et l'ouvrir avec NetBeans et éxécuter le code.
 
 
 3) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : sudo ./rasperrypi (manip ssh uniquement)

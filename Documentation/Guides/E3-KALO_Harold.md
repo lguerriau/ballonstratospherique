@@ -1,4 +1,4 @@
-# lors de la demo, vous avez accès à mon repertoire perso. Si vous avez la flemme de lancer github, mes fichers concernant le projet ballon se situent dans :
+# lors de la demo, vous avez accès à mon repertoire perso. Si vous avez la flemme de lancer github et de retrouver mes fichiers, mes fichers concernant le projet ballon se situent dans :
 /hkalo/Documents/CIEL2/Projet 2025-26/ 
 
 # avant la demo :

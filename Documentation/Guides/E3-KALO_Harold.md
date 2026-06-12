@@ -30,21 +30,19 @@
 
 ---
 
-1) Prendre le code pour la prise de photos nommé RaspberryPi et l'ouvrir ou le copier avec NETBEANS.
+1) ouvrir PuTTY, et connecter vous en ssh sur l'adresse de la raspberry (172.18.59.60)
 
 
-2) Lancer le programme : le programme prend une photo toutes les 30 secondes et émet la sstv toutes les 5 minutes.
+2) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : ./rasperrypi
 
 
-3) Pour vérifier la prise de photos, on peut se connecter via ssh (172.18.59.60) sur la RaspberryPi.
+3) Le programme va prendre une photo et l'enregistrer dans la carte SD (Toutes les 30 secondes) et va envoyer la SSTV pendant 5 minutes (attendre entre 1 et 2 minutes avant que la sstv s'envoie, oui c'est long).   
 
 
-4) Pour vérifier la sstv, il faut voir yoniq et le logiciel affiche la photo ligne par ligne. 
+4) Pour vérifier la sstv, il faut entendre le bruit de la station radio et voir yoniq puis le logiciel affiche la photo ligne par ligne. 
 
 
 5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> MMSSTV -> History 
-
-
 
 
 # C. Partie Importation photos : 

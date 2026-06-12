@@ -35,16 +35,16 @@
 1) ouvrir PuTTY, et connecter vous en ssh sur l'adresse de la raspberry (172.18.59.60) ou si vous voulez voir le code, prendre le code concernant la raspberry (dans github ou mes fichiers de mon dossier perso) et l'ouvrir avec NetBeans et éxécuter le code.
 
 
-3) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : sudo ./rasperrypi (manip ssh uniquement)
+2) Dès que vous ếtes dans le terminal, lancer le programme en ecrivant : sudo ./rasperrypi (manip ssh uniquement)
 
 
-4) Le programme va prendre une photo et l'enregistrer dans la carte SD (Toutes les 30 secondes) et va envoyer la SSTV pendant 5 minutes (attendre entre 1 et 2 minutes avant que la sstv s'envoie, oui c'est long).   
+3) Le programme va prendre une photo et l'enregistrer dans la carte SD (Toutes les 30 secondes) et va envoyer la SSTV pendant 5 minutes (attendre entre 1 et 2 minutes avant que la sstv s'envoie, oui c'est long).   
 
 
-5) Pour vérifier la sstv, il faut entendre le bruit de la station radio et voir yoniq puis le logiciel affiche la photo ligne par ligne. 
+4) Pour vérifier la sstv, il faut entendre le bruit de la station radio et voir yoniq puis le logiciel affiche la photo ligne par ligne. 
 
 
-6) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> MMSSTV -> History 
+5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> MMSSTV -> History 
 
 
 # C. Partie Importation photos : 

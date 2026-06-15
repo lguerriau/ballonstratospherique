@@ -1,7 +1,7 @@
-# lors de la demo, vous avez accès à mon repertoire perso. Si vous avez la flemme de lancer github et de retrouver mes fichiers, mes fichers concernant le projet ballon se situent dans :
+# Lors de la demo, vous avez accès à mon repertoire perso. Si vous avez la flemme de lancer github et de retrouver mes fichiers, mes fichers concernant le projet ballon se situent dans :
 /hkalo/Documents/CIEL2/Projet_2025-26/ 
 
-# avant la demo :
+# Avant la demo :
 
 0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet). Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 

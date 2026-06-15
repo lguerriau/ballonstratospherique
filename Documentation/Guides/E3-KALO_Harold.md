@@ -5,13 +5,14 @@
 
 0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet). Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 
+1) Allumer la RaspberryPi ( celle où il ya la cameraPi), et mettre l'antenne (le grand fil bleu), sinon la sstv ne marchera pas.
 
-1) Allumer le poste Windows et ouvrir Yoniq.
+2) Allumer le poste Windows et ouvrir Yoniq.
 
 
-2) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
+3) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
 
-3) Allumer la RaspberryPi ( celle où il ya la cameraPi), et mettre l'antenne (le grand fil bleu), sinon la sstv ne marchera pas.
+
 ---
 
 # A. Installation 

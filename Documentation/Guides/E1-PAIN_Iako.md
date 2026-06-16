@@ -8,8 +8,8 @@
 
 > [!TIP]
 > Il faut télécharger les fichiers suivnats depuis ***GitHub*** grâce à : https://download-directory.github.io/
->
-> **(Pour l'examin oral final, il faut juste télécharger le fichier "*Interface_Internaute*"**
+
+
 
 1. Dans "**ballonstratospherique/Nacelle/**", télécharger "**BME280**", "**LM75**", "**RA02**"
 
@@ -42,7 +42,7 @@
 
 3) Sur "**https://aprs.fi/?c=raw&call=F4KMN-9**", vérifier que les trames sont bien reçues
 
-# D. Visualiser la télémétrie
+# D. Visualiser la télémétrie et vérifier la Loi des Gaz Parfaits
 
 ---
 
@@ -52,3 +52,5 @@
 > L'iHM peut ne pas se lancer du premier coup, dans ce cas là il faut réessayer et ignorer toute erreur affichée
 
 2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet*, il suffit de l'importer
+
+3) 

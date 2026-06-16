@@ -10,8 +10,10 @@
 1) Vérifier que la Raspi est branchée
 
 2) Faire la commande "ssh pbs@172.18.58.86" sur votre terminal
+   
    **OU**
-2) Allez dans fichier, fichier, se connecter à un serveur en mettant 172.18.58.86 ainsi que le mot de passe SANS OUBLIEZ d'activer le ssh.
+
+2. Allez dans fichier, fichier, se connecter à un serveur en mettant 172.18.58.86 ainsi que le mot de passe SANS OUBLIEZ d'activer le ssh.
 
 
 **B. Lancer le projet "mpu6050" :**

@@ -15,12 +15,13 @@
 
 2. Allez dans fichier, fichier, se connecter à un serveur en mettant 172.18.58.86 ainsi que le mot de passe SANS OUBLIEZ d'activer le ssh.
 
+3) pour lancer le projet, il faudra se trouver dans un terminal dans ./home/pbs/AccelerometreVOL
 
 **B. Lancer le projet "mpu6050" :**
-A partir de "pbs@PBS:~ $" , faire la commande "cd ./home/Accelerometre" ou clique droit -> accéder au terminal à "/home/AccelerometreVOL"
+A partir de "pbs@PBS:~ $" , faire la commande "cd ./home/pbs/AccelerometreVOL" ou clique droit -> accéder au terminal à "/home/AccelerometreVOL"
 
 > [!IMPORTANT]
-> Ne pas ouvrir AccelerometrePING il n'est pas stable et en cours de réalisation.
+> Ne pas ouvrir AccelerometrePING il n'est pas stable.
 ---
 
 

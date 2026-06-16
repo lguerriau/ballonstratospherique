@@ -53,7 +53,7 @@
 
 
 
-2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet*,ici : github.com/lguerriau/ballonstratospherique/blob/main/Sol/Interface_Internaute/telemetrie_exemple.json, il suffit de le télécharger sur votre PC, et de l'importer
+2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet* , ici : https://github.com/lguerriau/ballonstratospherique/blob/main/Sol/Interface_Internaute/telemetrie_exemple.json, il suffit de le télécharger sur votre PC, et de l'importer
 
 3) Pour vérifier la Loi des Gaz Parfaits, cliquez sur le bouton en haut a droite de la page
      - Des aides sont disponibles pour remplir les champs vides

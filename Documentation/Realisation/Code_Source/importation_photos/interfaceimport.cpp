@@ -34,10 +34,10 @@ InterfaceImport::InterfaceImport(QWidget *parent)
     boutonConnexion = new QPushButton("Se connecter", this);
     boutonImporter = new QPushButton("Importer", this);
 
-    listeFichiersVisuels = new QListWidget(this); // Pour voir les fichiers
+    listeFichiersVisuels = new QListWidget(this);
     zoneLogs = new QTextEdit(this);
     zoneLogs->setReadOnly(true);
-    zoneLogs->setFixedHeight(80); // Petite zone juste pour le statut
+    zoneLogs->setFixedHeight(80);
 
     QVBoxLayout *layoutPrincipal = new QVBoxLayout(this);
     QHBoxLayout *layoutFormulaire = new QHBoxLayout();
@@ -54,7 +54,7 @@ InterfaceImport::InterfaceImport(QWidget *parent)
     layoutPrincipal->addLayout(layoutFormulaire);
     layoutPrincipal->addWidget(boutonConnexion);
     layoutPrincipal->addWidget(new QLabel("Contenu du dossier de la Raspberry Pi :"));
-    layoutPrincipal->addWidget(listeFichiersVisuels); // La liste est au centre
+    layoutPrincipal->addWidget(listeFichiersVisuels);
     layoutPrincipal->addWidget(boutonImporter);
     layoutPrincipal->addWidget(zoneLogs);
 
@@ -92,8 +92,6 @@ void InterfaceImport::connecterEtLister() {
     QString programme = "sshpass";
     QStringList arguments;
 
-    // On utilise l'argument "-e" au lieu de "-p".
-    // Cela dit à sshpass d'aller chercher le mot de passe dans la variable SSHPASS qu'on vient de créer.
     arguments << "-e"
               << "ssh"
               << "-o" << "StrictHostKeyChecking=no"
@@ -139,7 +137,6 @@ void InterfaceImport::importerPhotos() {
 
     QProcess *copieDossier = new QProcess(this);
 
-    // --- SÉCURISATION DU MOT DE PASSE VIA L'ENVIRONNEMENT ---
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("SSHPASS", mdp);
     copieDossier->setProcessEnvironment(env);

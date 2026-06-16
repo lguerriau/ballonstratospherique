@@ -13,7 +13,7 @@
 #include <QtSql>
 #include <QSqlDatabase>
 #include <QSettings>
-#include <QString>>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Bdd; }

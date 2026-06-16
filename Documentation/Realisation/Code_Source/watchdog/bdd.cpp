@@ -10,7 +10,6 @@
 #include "watchdog.h"
 #include "ui_watchdog.h"
 #include "bdd.h"
-#include <cassert>
 #include <QDebug>
 
 /**
@@ -22,8 +21,10 @@ Bdd::Bdd(QWidget *parent) : QWidget(parent)
 {
     this->db = QSqlDatabase::addDatabase("QMARIADB");
 
-    // Règle 5 : Vérification que le driver SQL est correctement instancié
-    assert(this->db.isValid());
+    if (!this->db.isValid()) {
+        qDebug() << "[ERREUR CRITIQUE] : Le driver SQL (QMARIADB) n'est pas disponible ou invalide !";
+        return;
+    }
 
     this->chargerConfiguration();
 }
@@ -44,15 +45,19 @@ void Bdd::chargerConfiguration() {
     QSettings settings("config.ini", QSettings::IniFormat);
 
     // Règle 7 & 5 : Validation que le fichier de config est lisible ou possède des valeurs par défaut valides
-    this->host     = settings.value("BDD/host", "172.18.58.85").toString();
+    this->host     = settings.value("BDD/host", "127.0.0.1").toString();
     this->user     = settings.value("BDD/user", "root").toString();
     this->password = settings.value("BDD/password", "toto").toString();
     this->dbName   = settings.value("BDD/dbname", "ballon2026").toString();
 
-    assert(!this->host.isEmpty());
-    assert(!this->dbName.isEmpty());
+    if (this->host.isEmpty()) {
+        qDebug() << "[ATTENTION] : L'hôte de la BDD est vide dans config.ini. Utilisation de localhost par défaut.";
+        this->host = "127.0.0.1";
+    }
+    if (this->dbName.isEmpty()) {
+        qDebug() << "[ERREUR SYSTEME] : Le nom de la base de données est vide.";
+    }
 
-    qDebug() << "Configuration chargée pour l'hôte :" << this->host;
 }
 
 /**
@@ -87,8 +92,11 @@ void Bdd::deconnecter() {
         this->db.close();
         qDebug() << "Déconnexion de la base de données.";
     }
-    // Règle 5 : Post-condition assurant la fermeture
-    assert(!this->db.isOpen());
+
+
+    if (this->db.isOpen()) {
+        qDebug() << "[ATTENTION] : La base de données ne s'est pas déconnectée correctement.";
+    }
 }
 
 /**
@@ -99,8 +107,10 @@ void Bdd::deconnecter() {
  * @author Harold KALO
  */
 bool Bdd::enregistrerPhoto(const QString &cheminFichier, bool pourWeb) {
-    // Règle 5 : Validation des paramètres d'entrée
-    assert(!cheminFichier.isEmpty());
+    if (cheminFichier.isEmpty()) {
+        qDebug() << "[ERREUR SQL] : Impossible d'enregistrer une photo sans nom de fichier.";
+        return false;
+    }
 
     if (!this->db.isOpen()) {
         if (!this->connecter()) {
@@ -108,12 +118,17 @@ bool Bdd::enregistrerPhoto(const QString &cheminFichier, bool pourWeb) {
         }
     }
 
-    // Règle 5 : Deuxième assertion pour garantir l'état du canal SQL avant écriture
-    assert(this->db.isOpen());
+    if (!this->db.isOpen()) {
+        qDebug() << "[ERREUR SQL] : Le canal SQL est fermé. Annulation de l'insertion.";
+        return false;
+    }
 
     QSqlQuery query(this->db);
     bool p_ok = query.prepare("INSERT INTO IMAGES (chemin_image, horodatage_image, disponible_web) VALUES (:path, NOW(), :web)");
-    assert(p_ok);
+    if (!p_ok) {
+        qDebug() << "[ERREUR SQL] : Échec de la préparation de la requête INSERT :" << query.lastError().text();
+        return false;
+    }
 
     query.bindValue(":path", cheminFichier);
     query.bindValue(":web", pourWeb ? 1 : 0);

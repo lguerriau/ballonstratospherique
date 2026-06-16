@@ -25,6 +25,7 @@ public:
     explicit Watchdog(QWidget *parent = nullptr);
     virtual ~Watchdog() override;
 
+    void chargerConfiguration();
 private slots:
     /** Slot déclenché par le timer pour inspecter le dossier réseau. */
     void onDossierModifie(const QString &path);
@@ -37,7 +38,9 @@ private:
     QTimer timerApp;
 
     /** Composant d'interface locale pour les transactions avec MariaDB. */
-    Bdd maSql;
+    Bdd baseDeDonneesImages;
+    QString repertoireDestination;
+    QString repertoireSource;
 
     /** @brief Liste mémoire stockant le nom des fichiers images déjà traités. */
     QStringList imagesTraitees;

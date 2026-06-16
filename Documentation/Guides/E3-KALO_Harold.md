@@ -3,7 +3,7 @@
 
 # Avant la demo :
 
-0) Allumer la station radio : ouvrir vanne (vanne verte en haut de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet). Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
+0) Allumer la station radio : ouvrir vanne (première vanne verte en haut à gauche de la baie), mettre alimentation (générateur noir en bas de la baie) et allumer la radio (bouton violet). Puis avec la roue mettre le récepteur a 29 Mhz (si ce n'est pas déjà le cas). 
 
 1) Allumer la RaspberryPi ( celle où il ya la cameraPi), et mettre l'antenne (le grand fil bleu), sinon la sstv ne marchera pas.
 

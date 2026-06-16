@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <cassert>
 #include <QCoreApplication>
+#include <unistd.h>
 
 /**
  * @brief Watchdog::Watchdog
@@ -37,27 +38,24 @@ Watchdog::Watchdog(QWidget *parent)
         qDebug() << "[SYSTEM] : Dossier de stockage local créé ou existant à :" << cheminLocalDossier;
     }
 
-    // Le chemin réseau de la station au sol Windows (172.18.58.111)
-    QString runtimeDir = qEnvironmentVariable("XDG_RUNTIME_DIR");
-    const QString chemin = runtimeDir + repertoireSource;
+    uid_t monUid = getuid();
+    QString cheminSourceUniversel = QString("/run/user/%1%2").arg(monUid).arg(repertoireSource);
 
-    if (chemin.isEmpty()) {
+    if (cheminSourceUniversel.isEmpty()) {
         qDebug() << "[ERREUR CRITIQUE] : Le chemin réseau calculé est vide !";
         return;
     }
 
-    this->connect(&this->timerApp, &QTimer::timeout, this, [this, chemin]() {
-        this->onDossierModifie(chemin);
+    this->connect(&this->timerApp, &QTimer::timeout, this, [this, cheminSourceUniversel]() {
+        this->onDossierModifie(cheminSourceUniversel);
     });
 
     this->timerApp.start(3000);
     if (!this->timerApp.isActive()) {
         qDebug() << "[ATTENTION] : Le Timer de surveillance du Watchdog a échoué à démarrer !";
     } else {
-        qDebug() << "[SYSTEM] : Surveillance active sur" << chemin;
+        qDebug() << "[SYSTEM] : Surveillance active via config.ini sur :" << cheminSourceUniversel;
     }
-
-    qDebug() << "[SYSTEM] : Surveillance active sur" << chemin;
 }
 
 /**

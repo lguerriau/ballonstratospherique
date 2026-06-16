@@ -7,15 +7,15 @@
 
 
 > [!TIP]
-> Il faut télécharger les fichiers suivnats depuis GitHub grâce à : https://download-directory.github.io/
+> Il faut télécharger les fichiers suivnats depuis ***GitHub*** grâce à : https://download-directory.github.io/
 >
 > **(Pour l'examin oral final, il faut juste télécharger le fichier "*Interface_Internaute*"**
 
 1. Dans "**ballonstratospherique/Nacelle/**", télécharger "**BME280**", "**LM75**", "**RA02**"
 
-1. Dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**"
+1) Dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**"
 
-2. Mettre tous ces fichiers dans le dossier "**NetBeansProjects**" local a votre PC
+2. Mettre tous les dossiers dans le dossier "**NetBeansProjects**" local a votre PC
 
 # B. Connection à la Raspi
 
@@ -46,6 +46,9 @@
 
 ---
 
-1) Lancer le projet "**Interface_Internaute**" (aka "**test_ihm**") pour observer la mise a jour en toutes les 10 minutes des données télémétriques (limite API)
+1) Lancer le projet "**Interface_Internaute**" (aka "**test_ihm**") avec ***NetBeans*** pour observer la mise a jour en toutes les 10 minutes des données télémétriques (limite API)
+
+> [!CAUTION]
+> L'iHM peut ne pas se lancer du premier coup, dans ce cas là il faut réessayer et ignorer toute erreur affichée
 
 2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet*, il suffit de l'importer

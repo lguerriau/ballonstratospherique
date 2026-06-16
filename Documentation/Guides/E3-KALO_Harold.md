@@ -81,7 +81,9 @@ ligne : smb://172.18.58.111/photossstv/, identifiant : admin, mdp : touchard72 c
 # E. Partie IHM : 
 
 ---
-0) > [!IMPORTANT] pour visionner les images dans l'ihm web, taper cette commande sur le pc où l'ihm web tourne :
+0)  [!IMPORTANT] pour visionner les images dans l'ihm web, taper cette commande sur le pc où l'ihm web tourne :
+
+   
     sshfs root@172.18.58.85:/var/www/html/visuBallon/photos_sstv /tmp/remote/
     mot de passe : toto
 

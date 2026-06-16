@@ -28,16 +28,6 @@
 
 - Lancer le programme et appuyer sur le bouton "**Lancer le serveur**"
 
-
-# C. Simulation d'une position
-
----
-1) Lancer "**Thonny**" :
-
-- Lancer le projet "**aprs_send_test.py**" avec ce chemin : ***/home/USERS/ELEVES/CIEL2024/lguerriau/ProjetPBS/Projet Fini/aprs_send_test.py***.
-
-- Lancer le programme.
-
 # C. Simulation d'une position
 
 ---

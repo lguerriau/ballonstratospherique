@@ -5,19 +5,24 @@
 > A ne pas faire si ces fichiers sont déja installés sur la carte Raspi, ***ce qui est le cas pour l'examin oral final de BTS CIEL*** $\color{red}{\text{(Recompilation pas necessaire, vous pouvez passer a l'étape "B. Connection a la Raspi")}}$ 
 ---
 
-1) Dans "**ballonstratospherique/Nacelle/**", télécharger "**BME280**", "**LM75**", "**RA02**"
 
-2) Dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**"
+> [!TIP]
+> Il faut télécharger les fichiers suivnats depuis GitHub grâce à : https://download-directory.github.io/
+>
+> **(Pour l'examin oral final, il faut juste télécharger le fichier "*Interface_Internaute*"**
 
-3) Mettre tous ces fichiers dans le dossier "**NetBeansProjects**" local a votre PC
+1. Dans "**ballonstratospherique/Nacelle/**", télécharger "**BME280**", "**LM75**", "**RA02**"
 
-4) Executer "**BME280**" puis "**LM75**" puis "**RA02**" en remote sur la Raspi
+1. Dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**"
+
+2. Mettre tous ces fichiers dans le dossier "**NetBeansProjects**" local a votre PC
 
 # B. Connection à la Raspi
 
 ---
 
-0) *Vérifier que la Raspi est branchée*
+> [!TIP]
+> *Vérifier que la Raspi est branchée*
 
 1) Faire la commande "**ssh pbs@172.18.59.66**"
 
@@ -43,4 +48,4 @@
 
 1) Lancer le projet "**Interface_Internaute**" (aka "**test_ihm**") pour observer la mise a jour en toutes les 10 minutes des données télémétriques (limite API)
 
-2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis, il suffit de l'importer
+2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet*, il suffit de l'importer

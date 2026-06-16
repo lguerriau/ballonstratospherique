@@ -14,7 +14,7 @@
 
 5) Faire la commande "**USE ballon2026;**" pour se connecter à la bonne base.
 
-5) Effectuer la commande "**TRUNCATE TABLE POSITIONS**" afin déviter tout problème sur les points au niveau de la carte OSM.
+5) Effectuer la commande "**TRUNCATE TABLE POSITIONS;**" afin déviter tout problème sur les points au niveau de la carte OSM.
 
 # B. QT Creator
 

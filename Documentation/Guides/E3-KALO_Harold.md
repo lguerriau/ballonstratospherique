@@ -10,7 +10,7 @@
 2) Allumer le poste Windows et ouvrir Yoniq.
 
 
-3) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit).
+3) Se connecter au poste Windows avec le poste Linux via le navigateur de fichiers (une demo est mise sur le google docs -> notes PBS où le chemin du dossier partagé est inscrit). ligne : smb://172.18.58.111/photossstv/
 
 
 ---

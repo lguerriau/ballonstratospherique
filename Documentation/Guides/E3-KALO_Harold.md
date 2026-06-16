@@ -49,8 +49,17 @@ ligne : smb://172.18.58.111/photossstv/, identifiant : admin, mdp : touchard72 c
 
 5) Les photos Yoniq sont stockées dans l'explorateur de fichiers Windows : OS -> HAM -> MMSSTV -> History 
 
+# C. Partie Watchdog : 
 
-# C. Partie Importation photos : 
+---
+
+1) Prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
+
+
+2) Lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites : La détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
+
+
+# D. Partie Importation photos : 
 
 ---
 
@@ -66,18 +75,6 @@ ligne : smb://172.18.58.111/photossstv/, identifiant : admin, mdp : touchard72 c
 
 
 4) Puis Cliquez sur importer avec le bouton et les photos seront enregistrées dans le fichier local inscrit.
-
-
-
-# D. Partie Watchdog : 
-
----
-
-1) Prendre le code pour la surveillance de fichiers .bmp (sstv) à transmettre sur le poste Linux nommé 'Watchdog' et l'ouvrir ou le copier avec QTCreator
-
-
-2) Lancer le programme : affiche un widget vide (c'est normal il faut regarder la console). Toutes les informations de surveillance seront écrites : La détection de nouveau fichiers et la mise du chemin de la photos dans la base de données table IMAGES. 
-
 
 
 

@@ -42,9 +42,13 @@ Si jamais le jury demande de voir les packets qui transitent ( ce qui n'arrivera
 allez sur Putty et mettez les valeurs suivantes pour ouvrir l'ESP32 :
 
 > SERIAL
+> 
 > SERIAL LINE ( en haut ) :
+> 
 > /dev/ttyACM0 ( pour le premier ) /dev/ttyACM1 ( pour le deuxième )
+> 
 > SPEED : 115200 ( normalement ok )
+> 
 
 puis confirmez, vous verrez une fenetre, il est possible d'appuyer sur la touche "m" pour envoyer un message.
 

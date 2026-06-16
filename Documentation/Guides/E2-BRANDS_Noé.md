@@ -59,7 +59,8 @@ L'esp32 ne sert que pour la partie 3 sur QT.
 Ouvrir QT sur votre session puis ouvrir projet qui se situt dans /home/USERS/ELEVES/CIEL2024/nbrands/ProjetQT/QTLORA
 en cliquant sur le .pro
 
-Si Qt n'est pas content, acceptez, puis refaite la manipe. ( cela peut inclure de configurer le projet, juste faite acceptez ou ok). 
+> [!WARNING]
+> Si Qt n'est pas content, acceptez, puis refaite la manipe. ( cela peut inclure de configurer le projet, juste faite acceptez ou ok). 
 
 **Si le Qlabel est rouge**: alors vous n'avez pas brancher l'esp32, branchez le et relancer le programme.
 

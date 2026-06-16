@@ -57,6 +57,7 @@
 
 3) Pour vérifier la Loi des Gaz Parfaits, cliquez sur le bouton en haut a droite de la page
      - Des aides sont disponibles pour remplir les champs vides
+
   
-     - Si besoin voici des valeurs pour lesquelles la loi fonctionne : 100000Pa, 7.24m³, 289mol, 8.314, 300.95K
-     - Ne fonctionne pas : 100000Pa, 2.24m³, 289mol, 8.314, 300.95K
+     - *Si besoin voici des valeurs pour lesquelles la loi fonctionne : 100000Pa, 7.24m³, 289mol, 8.314, 300.95K*
+     - *Ne fonctionne pas : 100000Pa, 2.24m³, 289mol, 8.314, 300.95K*

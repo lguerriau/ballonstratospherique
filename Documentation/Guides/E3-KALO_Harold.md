@@ -82,10 +82,11 @@
 # E. Partie IHM : 
 
 ---
+0) > [!IMPORTANT] pour visionner les images dans l'ihm web 
 
 1) Prendre le code pour le visionnage de photos et la géneration de vidéo nommé 'IHMWeb' et l'ouvrir ou le copier avec NETBEANS (Partie Harold) ou Prendre le code dans "**ballonstratospherique/Sol/**", télécharger "**Interface_Internaute**".(Partie intégration) et l'ouvrir avec NETBEANS.
 
-1bis. Vous pouvez inscrire cette URL : http://172.18.58.72:8000/  pour visionner l'ihm dans un autre poste du lycée.
+1bis. Vous pouvez inscrire cette URL : http://127.0.0.1:8085/  pour visionner l'ihm dans un autre poste du lycée (faut que le netbeans soit lancer avant).
    
 
 2) Cliquer sur l'onglet 'Galerie SSTV' et les photos seront mises dans l'ordre chronologique. 

@@ -48,9 +48,10 @@
 > [!NOTE]
 > Si le site ne fonctionne pas, faire l'étape A2 et A3, puis :
 > Lancer le projet "**Interface_Internaute**" (aka "**test_ihm**") avec ***NetBeans*** pour observer la mise a jour en toutes les 10 minutes des données télémétriques (limite API)
+> 
+> > L'IHM peut ne pas se lancer du premier coup, dans ce cas là il faut réessayer et ignorer toute erreur affichée
 
-> [!CAUTION]
-> L'iHM peut ne pas se lancer du premier coup, dans ce cas là il faut réessayer et ignorer toute erreur affichée
+
 
 2) Pour plus de données , un fichier "**telemetrie_exemple.json**" est fournis *directement dans le dossier du projet*, il suffit de l'importer
 

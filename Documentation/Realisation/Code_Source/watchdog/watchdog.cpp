@@ -25,8 +25,13 @@ Watchdog::Watchdog(QWidget *parent)
     , ui(new Ui::Widget)
 {
     this->ui->setupUi(this);
-
     assert(this->ui != nullptr);
+
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString cheminLocalDossier = QDir::cleanPath(appDir + "/../../../Documents/CIEL2/Projet_2025-26/Documentation/Realisation/Integration/code_source/PhpIntegration/photos_sstv");
+    if (QDir().mkpath(cheminLocalDossier)) {
+        qDebug() << "[SYSTEM] : Dossier de stockage local créé ou existant à :" << cheminLocalDossier;
+    }
 
     // Le chemin réseau de la station au sol Windows (172.18.58.111)
     const QString chemin = "/run/user/2094/gvfs/smb-share:server=172.18.58.111,share=photossstv/";
@@ -66,19 +71,23 @@ void Watchdog::onDossierModifie(const QString &path) {
     filter << "*.bmp";
 
     QStringList files = dir.entryList(filter, QDir::Files, QDir::Time);
-    const QString appDir = QCoreApplication::applicationDirPath();
+
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString cheminLocalDossier = QDir::cleanPath(appDir + "/../../../Documents/CIEL2/Projet_2025-26/Documentation/Realisation/Integration/code_source/PhpIntegration/photos_sstv");
+    QDir().mkpath(cheminLocalDossier);
 
     if (!files.isEmpty()) {
         const QString nomFichier = files.first();
         assert(!nomFichier.isEmpty());
 
         if (!this->imagesTraitees.contains(nomFichier)) {
-            const QString completPath = path + "/" + nomFichier;
-            const QString localPath = appDir + "/ARCHIVE_PHOTOS/" + nomFichier;
+            const QString completPath = QDir::cleanPath(path + "/" + nomFichier);
+            const QString localPath = QDir::cleanPath(cheminLocalDossier + "/" + nomFichier);
+
             if (!QFile::exists(localPath)) {
                 const bool copie_reussie = QFile::copy(completPath, localPath);
                 if (copie_reussie) {
-                    qDebug() << "[ARCHIVE] : Photo copiée localement dans ARCHIVE_PHOTOS";
+                    qDebug() << "[ARCHIVE] : Photo copiée localement dans photos_sstv";
                 } else {
                     qDebug() << "[ERREUR SYSTEME] : Échec de la copie réseau.";
                 }
@@ -86,7 +95,7 @@ void Watchdog::onDossierModifie(const QString &path) {
 
             qDebug() << "[NOUVEAU] : Nouvelle image détectée :" << nomFichier;
 
-            const bool bdd_ok = this->maSql.enregistrerPhoto(completPath, true);
+            const bool bdd_ok = this->maSql.enregistrerPhoto(nomFichier, true);
             if (bdd_ok) {
                 qDebug() << "[SQL] : Insertion réussie pour" << nomFichier;
                 this->imagesTraitees.append(nomFichier);

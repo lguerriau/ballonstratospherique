@@ -32,7 +32,7 @@ if (count($images) > 0) {
     foreach ($images as $img) {
         // On prend juste le nom du fichier pour éviter les erreurs de chemin stockés en BDD
         $nomFichier = basename($img);
-        $path = "/home/USERS/ELEVES/CIEL2024/hkalo/sstvYoniq/ARCHIVE_PHOTOS/" . $nomFichier;
+        $path = "photos_sstv/" . $nomFichier;
 
         // On écrit le fichier dans la liste
         $content .= "file '$path'\nduration 1\n";

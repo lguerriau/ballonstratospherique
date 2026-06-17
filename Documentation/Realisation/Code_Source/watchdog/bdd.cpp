@@ -42,13 +42,18 @@ Bdd::~Bdd() {
  * @author Harold KALO
  */
 void Bdd::chargerConfiguration() {
-    QSettings settings("config.ini", QSettings::IniFormat);
+    QString pathConfig = QCoreApplication::applicationDirPath() + "/config.ini";
+    QSettings settings(pathConfig, QSettings::IniFormat);
 
-    // Règle 7 & 5 : Validation que le fichier de config est lisible ou possède des valeurs par défaut valides
     this->host     = settings.value("BDD/host", "127.0.0.1").toString();
     this->user     = settings.value("BDD/user", "root").toString();
     this->password = settings.value("BDD/password", "toto").toString();
     this->dbName   = settings.value("BDD/dbname", "ballon2026").toString();
+
+    this->host.remove("\"");
+    this->user.remove("\"");
+    this->password.remove("\"");
+    this->dbName.remove("\"");
 
     if (this->host.isEmpty()) {
         qDebug() << "[ATTENTION] : L'hôte de la BDD est vide dans config.ini. Utilisation de localhost par défaut.";
@@ -73,7 +78,6 @@ bool Bdd::connecter() {
 
     const bool action_ouverte = this->db.open();
 
-    // Règle 7 : Contrôle strict de l'état de retour de la connexion réseau
     if (action_ouverte) {
         qDebug() << "Connexion réussie à MariaDB !";
     } else {

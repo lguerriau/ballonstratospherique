@@ -39,7 +39,7 @@ Watchdog::Watchdog(QWidget *parent)
     }
 
     uid_t monUid = getuid();
-    QString cheminSourceUniversel = QString("/run/user/%1%2").arg(monUid).arg(repertoireSource);
+    QString cheminSourceUniversel = QDir::cleanPath(QString("/run/user/%1/%2").arg(monUid).arg(repertoireSource));
 
     if (cheminSourceUniversel.isEmpty()) {
         qDebug() << "[ERREUR CRITIQUE] : Le chemin réseau calculé est vide !";
@@ -74,22 +74,31 @@ Watchdog::~Watchdog()
  * @author Harold KALO
  */
 void Watchdog::chargerConfiguration() {
-    QSettings settings("config.ini", QSettings::IniFormat);
+    QString pathConfig = QCoreApplication::applicationDirPath() + "/config.ini";
+    QSettings settings(pathConfig, QSettings::IniFormat);
 
-    this->repertoireSource = settings.value("PATHS/watchdir", "toto").toString();
-    this->repertoireDestination = settings.value("PATHS/destination", "titi").toString();
+    this->repertoireSource = settings.value("PATHS/watchdir", "/gvfs/smb-share:server=172.18.58.111,share=photossstv/").toString();
+    this->repertoireDestination = settings.value("PATHS/destination", "/tmp/remote/").toString();
 
-    qDebug()<<"source : "<<this->repertoireSource;
-    qDebug()<<"dst : "<<this->repertoireDestination;
+    this->repertoireSource.remove("\"");
+    this->repertoireDestination.remove("\"");
+
+    if (!this->repertoireSource.startsWith("/")) {
+        this->repertoireSource = "/" + this->repertoireSource;
+    }
+
+    qDebug() << "[CONFIG CHASSÉE] Source brute :" << this->repertoireSource;
+    qDebug() << "[CONFIG CHASSÉE] Destination brute :" << this->repertoireDestination;
+
 }
-
 
 /**
  * @brief Watchdog::onDossierModifie
  * @param path référence constante vers la chaîne contenant le chemin du dossier réseau à surveiller
  * @author Harold KALO
  */
-void Watchdog::onDossierModifie(const QString &path) {
+
+void Watchdog::onDossierModifie (const QString &path) {
     if (path.isEmpty()) {
         qDebug() << "[ERREUR SYSTEME] : Le chemin reçu pour la surveillance est vide.";
         return;
@@ -151,3 +160,4 @@ void Watchdog::onDossierModifie(const QString &path) {
         }
     }
 }
+
